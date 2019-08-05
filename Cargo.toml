@@ -1,0 +1,10 @@
+[package]
+name = "neutrino"
+version = "0.1.0"
+authors = ["Alexis Lozano <alexis.pascal.lozano@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+web-view = "0.4.1"
+serde = { version = "1.0.98", features = ["derive"] }
+serde_json = "1.0.40"

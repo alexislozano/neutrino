@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+}
+
+.label {
+    margin: 10px;
+}
+
+button {
+    margin: 10px;
+    border: 1px solid #b3b5b6;
+    border-radius: 2px;
+    background-color: #e8e9ea;
+    box-shadow: 1px 1px 1px lightgray;
+    font-size: 13px;
+    font-family: 'Noto Sans', sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: default;
+    color: black;
+    outline: 0;
+    transition: border-color 300ms, background-color 300ms, color 300ms;
+    flex-grow: 1;
+}
+
+button:focus {
+    border-color: #3b9ed2;
+    background-color: #389fd5;
+    color: white;
+    transition: border-color 300ms, background-color 300ms, color 300ms;
+}
+
+button:disabled {
+    border-color: #d1d3d4;
+    background-color: #e8eaeb;
+    color: #a6a7a8;
+    transition: border-color 300ms, background-color 300ms, color 300ms;
+}
