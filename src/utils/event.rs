@@ -11,11 +11,3 @@ impl Event {
         Event { event: event.to_string(), source: source.to_string() }
     }
 }
-
-pub trait Listener {
-    fn on_click(&self);
-}
-
-pub trait Observable {
-    fn value(&self) -> String;
-}

@@ -6,7 +6,7 @@ A GUI frontend in Rust based on web-view
 
 For now, one example is usable. Run the following command :
 ```bash
-netrino run --example counter
+neutrino run --example counter
 ```
 
 ![](examples/counter.png)

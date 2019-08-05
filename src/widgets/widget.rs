@@ -1,4 +1,4 @@
-use crate::utils::Event;
+use crate::utils::event::Event;
 
 pub trait Widget {
     fn eval(&self) -> String;

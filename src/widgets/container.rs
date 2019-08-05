@@ -1,5 +1,5 @@
-use crate::widget::Widget;
-use crate::utils::Event;
+use crate::widgets::widget::Widget;
+use crate::utils::event::Event;
 
 pub struct Container {
     children: Vec<Box<Widget>>,
@@ -28,14 +28,11 @@ impl Container {
 
 impl Widget for Container {
     fn eval(&self) -> String {
-        let mut s = format!("{{ type: \"container\", style: \"{}\", children: [", self.style);
-        for (i, widget) in self.children.iter().enumerate() {
+        let mut s = format!("<div class=\"container\" style=\"{}\">", self.style);
+        for widget in self.children.iter() {
             s.push_str(&widget.eval());
-            if i != self.children.len() - 1 {
-                s.push_str(", ");
-            }
         }
-        s.push_str("] }");
+        s.push_str("</div>");
         s
     }
 

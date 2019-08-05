@@ -32,7 +32,6 @@ button {
     color: black;
     outline: 0;
     transition: border-color 300ms, background-color 300ms, color 300ms;
-    flex-grow: 1;
 }
 
 button:focus {
@@ -47,4 +46,18 @@ button:disabled {
     background-color: #e8eaeb;
     color: #a6a7a8;
     transition: border-color 300ms, background-color 300ms, color 300ms;
+}
+
+.progressbar {
+    width: calc(100% - 20px);
+    margin: 10px;
+    height: 6px;
+    background-color: #b5b5b6;
+    border-radius: 3px;
+}
+
+.inner-progressbar {
+    background-color: #3daee9;
+    height: 100%;
+    border-radius: 3px;
 }

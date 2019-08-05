@@ -1,93 +1,21 @@
-use neutrino::{App, Window};
-use neutrino::button::Button;
-use neutrino::container::Container;
-use neutrino::label::Label;
 use std::rc::Rc;
 use std::cell::RefCell;
-use neutrino::utils::{Listener, Observable};
 
-struct Counter {
-    value: i32,
-}
+use neutrino::{App, Window};
+use neutrino::widgets::button::Button;
+use neutrino::widgets::container::Container;
+use neutrino::widgets::label::Label;
+use neutrino::widgets::progressbar::ProgressBar;
 
-impl Counter {
-    fn new() -> Self {
-        Counter { value: 0 }
-    }
+mod counter_mod;
 
-    fn value(&mut self, value: i32) {
-        self.value = value;
-    }
-}
-
-struct Button1Listener {
-    counter: Rc<RefCell<Counter>>,
-}
-
-impl Button1Listener {
-    fn new(counter: Rc<RefCell<Counter>>) -> Self {
-        Button1Listener { counter: counter }
-    }
-}
-
-impl Listener for Button1Listener {
-    fn on_click(&self) {
-        let new_value = self.counter.borrow().value - 1;
-        self.counter.borrow_mut().value(new_value);
-    }
-}
-
-struct Button2Listener {
-    counter: Rc<RefCell<Counter>>,
-}
-
-impl Button2Listener {
-    fn new(counter: Rc<RefCell<Counter>>) -> Self {
-        Button2Listener { counter: counter }
-    }
-}
-
-impl Listener for Button2Listener {
-    fn on_click(&self) {
-        let new_value = self.counter.borrow().value + 1;
-        self.counter.borrow_mut().value(new_value);
-    }
-}
-
-struct Label1Listener {
-    counter: Rc<RefCell<Counter>>,
-}
-
-impl Label1Listener {
-    fn new(counter: Rc<RefCell<Counter>>) -> Self {
-        Label1Listener { counter: counter }
-    }
-}
-
-impl Listener for Label1Listener {
-    fn on_click(&self) {
-        self.counter.borrow_mut().value(0);
-    }
-}
-
-struct Label1Observable {
-    counter: Rc<RefCell<Counter>>,
-}
-
-impl Label1Observable {
-    fn new(counter: Rc<RefCell<Counter>>) -> Self {
-        Label1Observable { counter: counter }
-    }
-}
-
-impl Observable for Label1Observable {
-    fn value(&self) -> String {
-        format!("{}", self.counter.borrow().value)
-    }
-}
+use counter_mod::models::Counter;
+use counter_mod::listeners::{Button1Listener, Button2Listener, Label1Listener};
+use counter_mod::observables::{Label1Observable, ProgressBar1Observable};
 
 fn main() {
-    let counter = Counter::new();
+    let mut counter = Counter::new();
+    counter.set_value(30);
     let rcounter = Rc::new(RefCell::new(counter));
 
     let button1listener = Button1Listener::new(Rc::clone(&rcounter));
@@ -107,14 +35,19 @@ fn main() {
     let label1observable = Label1Observable::new(Rc::clone(&rcounter));
 
     let label1 = Label::new("label1")
-        .text("Wow")
         .listener(Box::new(label1listener))
         .observable(Box::new(label1observable));
+
+    let progressbar1observable = ProgressBar1Observable::new(Rc::clone(&rcounter));
+
+    let progressbar1 = ProgressBar::new("progressbar1")
+        .observable(Box::new(progressbar1observable));
 
     let mut container = Container::vertical();
 
     container.add(Box::new(button1));
     container.add(Box::new(label1));
+    container.add(Box::new(progressbar1));
     container.add(Box::new(button2));
 
     let mut window = Window::new();

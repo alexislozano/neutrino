@@ -1,13 +1,10 @@
 use web_view::*;
 
-pub mod widget;
-pub mod button;
-pub mod container;
-pub mod label;
 pub mod utils;
+pub mod widgets;
 
-use widget::Widget;
-use utils::Event;
+use widgets::widget::Widget;
+use utils::event::Event;
 
 pub struct App {
     title: String,
@@ -61,7 +58,6 @@ impl App {
                 <meta charset="UTF-8">
                 <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
                 {styles}
-                {libraries}
             </head>
             <body>
                 <div id="app"></div>
@@ -70,9 +66,7 @@ impl App {
         </html>
         "#, 
         styles = inline_style(include_str!("www/app.css")),
-        libraries = inline_script(include_str!("www/superfine.js")),
-        scripts = inline_script(include_str!("www/widgets.js")) +
-            &inline_script(include_str!("www/app.js"))
+        scripts = inline_script(include_str!("www/app.js")),
     );
     let webview = web_view::builder()
         .title(&self.title)
@@ -109,7 +103,7 @@ impl Window {
     }
 
     fn render(&self, webview: &mut WebView<&str>) -> WVResult {
-        let tree = &format!("render({})", &self.eval());
+        let tree = &format!("render(`{}`)", &self.eval());
         webview.eval(tree)
     }
 

@@ -1,11 +1,13 @@
-use crate::widget::Widget;
-use crate::utils::{Event, Listener, Observable};
+use crate::widgets::widget::Widget;
+use crate::utils::event::Event;
+use crate::utils::listener::Listener;
+use crate::utils::observable::Observable;
 
 pub struct Label {
     name: String,
     text: String,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable>>,
+    observable: Option<Box<Observable<String>>>,
 }
 
 impl Label {
@@ -36,7 +38,7 @@ impl Label {
         }
     }
 
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    pub fn observable(self, observable: Box<Observable<String>>) -> Self {
         Label {
             name: self.name,
             text: self.text,
@@ -49,7 +51,7 @@ impl Label {
         match &self.observable {
             None => (),
             Some(observable) => {
-                self.text = observable.value();
+                self.text = observable.observe();
             }
         }
     }
@@ -58,19 +60,21 @@ impl Label {
 impl Widget for Label {
     fn eval(&self) -> String {
         format!(
-            "{{ type: \"label\", text: \"{}\", name: \"{}\" }}", 
-            self.text, self.name
+            "<div class=\"label\" onclick=\"(function(){{invoke({{event:'click', source:'{}'}})}})()\">{}</div>", 
+            self.name, self.text
         )
     }
 
     fn trigger(&mut self, event: &Event) {
-        match &self.listener {
-            None => (),
-            Some(listener) => { 
-                if event.event == "click" && event.source == self.name {
-                    listener.on_click();
-                } else if event.event == "update" {
-                    self.on_update();
+        if event.event == "update" {
+            self.on_update();
+        } else if event.source == self.name {
+            match &self.listener {
+                None => (),
+                Some(listener) => {
+                    if event.event == "click" {
+                        listener.on_click();
+                    }
                 }
             } 
         };

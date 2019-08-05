@@ -1,13 +1,7 @@
-let h = superfine.h;
-let patch = superfine.patch;
-
 const node = document.getElementById("app")
 
-function render(obj) {
-    patch(
-        node,
-        widget.render(obj)
-    )
+function render(template) {
+    node.innerHTML = template;
 }
 
 function invoke(arg) {
