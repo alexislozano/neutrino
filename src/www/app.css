@@ -61,3 +61,7 @@ button:disabled {
     height: 100%;
     border-radius: 3px;
 }
+
+h1 {
+    margin: 10px;
+}
