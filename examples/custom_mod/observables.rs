@@ -14,7 +14,7 @@ impl Custom1Observable {
     }
 }
 
-impl Observable<HashMap<String, String>> for Custom1Observable {
+impl Observable<String> for Custom1Observable {
     fn observe(&self) -> HashMap<String, String> {
         let mut fields = HashMap::new();
         fields.insert("firstname".to_string(), self.person.borrow().firstname());

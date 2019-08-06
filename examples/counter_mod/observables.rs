@@ -2,6 +2,7 @@ use neutrino::utils::observable::Observable;
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::models::Counter;
+use std::collections::HashMap;
 
 pub struct Label1Observable {
     counter: Rc<RefCell<Counter>>,
@@ -14,8 +15,10 @@ impl Label1Observable {
 }
 
 impl Observable<String> for Label1Observable {
-    fn observe(&self) -> String {
-        format!("{}", self.counter.borrow().value())
+    fn observe(&self) -> HashMap<String, String> {
+        let mut fields = HashMap::new();
+        fields.insert("text".to_string(), format!("{}", self.counter.borrow().value()));
+        fields
     }
 }
 
@@ -30,14 +33,16 @@ impl ProgressBar1Observable {
 }
 
 impl Observable<u8> for ProgressBar1Observable {
-    fn observe(&self) -> u8 {
+    fn observe(&self) -> HashMap<String, u8> {
+        let mut fields = HashMap::new();
         let value = self.counter.borrow().value();
         if value < 0 {
-            0
+            fields.insert("value".to_string(), 0);
         } else if value > 100 {
-            100
+            fields.insert("value".to_string(), 100);
         } else {
-            value as u8
+            fields.insert("value".to_string(), value as u8);
         }
+        fields
     }
 }

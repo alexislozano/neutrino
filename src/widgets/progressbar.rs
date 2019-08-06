@@ -51,7 +51,7 @@ impl ProgressBar {
         match &self.observable {
             None => (),
             Some(observable) => {
-                self.value = observable.observe();
+                self.value = observable.observe()["value"];
             }
         }
     }

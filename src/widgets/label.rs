@@ -51,7 +51,7 @@ impl Label {
         match &self.observable {
             None => (),
             Some(observable) => {
-                self.text = observable.observe();
+                self.text = observable.observe()["text"].to_string();
             }
         }
     }
