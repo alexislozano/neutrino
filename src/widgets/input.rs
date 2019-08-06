@@ -3,60 +3,45 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
 
-pub struct Button {
+pub struct Input {
     name: String,
-    text: String,
-    disabled: bool,
+    value: String,
     listener: Option<Box<Listener>>,
     observable: Option<Box<Observable<String>>>,
 }
 
-impl Button {
+impl Input {
     pub fn new(name: &str) -> Self {
-        Button { 
+        Input { 
             name: name.to_string(),
-            text: "".to_string(), 
-            disabled: false,
+            value: "".to_string(),
             listener: None,
             observable: None,
         }
     }
 
-    pub fn text(self, text: &str) -> Self {
-        Button { 
+    pub fn value(self, value: &str) -> Self {
+        Input { 
             name: self.name,
-            text: text.to_string(), 
-            disabled: self.disabled,
+            value: value.to_string(),
             listener: self.listener,
             observable: self.observable,
         }
     }
 
-    pub fn disabled(self, disabled: bool) -> Self {
-        Button { 
-            name: self.name,
-            text: self.text, 
-            disabled: disabled,
-            listener: self.listener,
-            observable: self.observable, 
-        }
-    }
-
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        Button { 
+        Input { 
             name: self.name,
-            text: self.text, 
-            disabled: self.disabled,
+            value: self.value,
             listener: Some(listener),
             observable: self.observable,
         }
     }
 
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        Button { 
+        Input { 
             name: self.name,
-            text: self.text, 
-            disabled: self.disabled,
+            value: self.value,
             listener: self.listener,
             observable: Some(observable),
         }
@@ -66,22 +51,17 @@ impl Button {
         match &self.observable {
             None => (),
             Some(observable) => {
-                self.text = observable.observe()["text"].to_string();
+                self.value = observable.observe()["value"].to_string();
             }
         }
     }
 }
 
-impl Widget for Button {
+impl Widget for Input {
     fn eval(&self) -> String {
-        let disabled = if self.disabled {
-            "disabled"
-        } else {
-            ""
-        };
         format!(
-            "<button onclick=\"(function(){{invoke({{event:'click', source:'{}', value:''}})}})()\" {}>{}</button>", 
-            self.name, disabled, self.text
+            "<div class=\"input\"><input value=\"{}\" onchange=\"(function(invut){{invoke({{event:'change', source:'{}', value: value}})}})()\" /></div>", 
+            self.value, self.name
         )
     }
 
@@ -92,8 +72,8 @@ impl Widget for Button {
             match &self.listener {
                 None => (),
                 Some(listener) => {
-                    if event.event == "click" {
-                        listener.on_click();
+                    if event.event == "change" {
+                        listener.on_change(&event.value);
                     }
                 }
             } 

@@ -78,7 +78,7 @@ impl App {
         .invoke_handler(|webview, arg| {
             let event: Event = serde_json::from_str(arg).unwrap();
             window.trigger(&event);
-            let update_event = Event::new("update", "app");
+            let update_event = Event::new("update", "app", "app");
             window.trigger(&update_event);
             window.render(webview)
         })

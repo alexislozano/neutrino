@@ -4,3 +4,4 @@ pub mod label;
 pub mod container;
 pub mod progressbar;
 pub mod custom;
+pub mod input;

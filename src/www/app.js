@@ -1,4 +1,4 @@
-const node = document.getElementById("app")
+const node = document.getElementById("app");
 
 function render(template) {
     node.innerHTML = template;
@@ -9,5 +9,5 @@ function invoke(arg) {
 }
 
 window.onload = function() {
-    invoke({ event: "init", source: "app" });
+    invoke({ event: "init", source: "app", value: "app" });
 }

@@ -60,7 +60,7 @@ impl Label {
 impl Widget for Label {
     fn eval(&self) -> String {
         format!(
-            "<div class=\"label\" onclick=\"(function(){{invoke({{event:'click', source:'{}'}})}})()\">{}</div>", 
+            "<div class=\"label\" onclick=\"(function(){{invoke({{event:'click', source:'{}', value: ''}})}})()\">{}</div>", 
             self.name, self.text
         )
     }

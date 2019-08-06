@@ -65,3 +65,15 @@ button:disabled {
 h1 {
     margin: 10px;
 }
+
+.input {
+    margin: 10px;
+    background-color: red;
+}
+
+input {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box
+}
