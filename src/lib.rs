@@ -103,7 +103,7 @@ impl Window {
     }
 
     fn render(&self, webview: &mut WebView<&str>) -> WVResult {
-        let tree = &format!("render(`{}`)", &self.eval());
+        let tree = &format!(r#"render("{}")"#, &self.eval().replace(r#"""#, r#"\""#));
         webview.eval(tree)
     }
 
