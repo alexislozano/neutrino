@@ -4,4 +4,7 @@ pub mod label;
 pub mod container;
 pub mod progressbar;
 pub mod custom;
-pub mod input;
+pub mod textinput;
+pub mod checkbox;
+pub mod radio;
+pub mod combo;

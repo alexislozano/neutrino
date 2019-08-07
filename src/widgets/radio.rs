@@ -3,60 +3,60 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
 
-pub struct Button {
+pub struct Radio {
     name: String,
-    text: String,
-    disabled: bool,
+    choices: Vec<String>,
+    selected: u32,
     listener: Option<Box<Listener>>,
     observable: Option<Box<Observable<String>>>,
 }
 
-impl Button {
+impl Radio {
     pub fn new(name: &str) -> Self {
-        Button { 
+        Radio { 
             name: name.to_string(),
-            text: "Button".to_string(), 
-            disabled: false,
+            choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
+            selected: 0, 
             listener: None,
             observable: None,
         }
     }
 
-    pub fn text(self, text: &str) -> Self {
-        Button { 
+    pub fn choices(self, choices: Vec<&str>) -> Self {
+        Radio { 
             name: self.name,
-            text: text.to_string(), 
-            disabled: self.disabled,
+            choices: choices.iter().map(|c| c.to_string()).collect::<Vec<String>>(),
+            selected: self.selected, 
             listener: self.listener,
             observable: self.observable,
         }
     }
 
-    pub fn disabled(self, disabled: bool) -> Self {
-        Button { 
+    pub fn selected(self, selected: u32) -> Self {
+        Radio { 
             name: self.name,
-            text: self.text, 
-            disabled: disabled,
+            choices: self.choices,
+            selected: selected, 
             listener: self.listener,
-            observable: self.observable, 
+            observable: self.observable,
         }
     }
 
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        Button { 
+        Radio { 
             name: self.name,
-            text: self.text, 
-            disabled: self.disabled,
+            choices: self.choices,
+            selected: self.selected, 
             listener: Some(listener),
             observable: self.observable,
         }
     }
 
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        Button { 
+        Radio { 
             name: self.name,
-            text: self.text, 
-            disabled: self.disabled,
+            choices: self.choices,
+            selected: self.selected, 
             listener: self.listener,
             observable: Some(observable),
         }
@@ -65,24 +65,29 @@ impl Button {
     pub fn on_update(&mut self) {
         match &self.observable {
             None => (),
-            Some(observable) => {
-                self.text = observable.observe()["text"].to_string();
+            Some(_observable) => {
             }
         }
     }
 }
 
-impl Widget for Button {
+impl Widget for Radio {
     fn eval(&self) -> String {
-        let disabled = if self.disabled {
-            "disabled"
-        } else {
-            ""
-        };
-        format!(
-            r#"<div onclick="{}" class="button {}">{}</div>"#, 
-            Event::js("click", &self.name, "''"), disabled, self.text
-        )
+        let mut s = "".to_string();
+        for (i, choice) in self.choices.iter().enumerate() {
+            let selected = if self.selected == i as u32 {
+                "selected"
+            } else {
+                ""
+            };
+            s.push_str(
+                &format!(
+                    r#"<div class="radio" onclick="{}"><div class="radio-outer {}"><div class="radio-inner {}"></div></div><label>{}</label></div>"#, 
+                    Event::js("click", &self.name, "''"), selected, selected, choice
+                )
+            );
+        }
+        s
     }
 
     fn trigger(&mut self, event: &Event) {

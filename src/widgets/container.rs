@@ -28,7 +28,10 @@ impl Container {
 
 impl Widget for Container {
     fn eval(&self) -> String {
-        let mut s = format!("<div class=\"container\" style=\"{}\">", self.style);
+        let mut s = format!(
+            r#"<div class="container" style="{}">"#, 
+            self.style
+        );
         for widget in self.children.iter() {
             s.push_str(&widget.eval());
         }

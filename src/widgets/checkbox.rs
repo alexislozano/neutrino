@@ -3,45 +3,60 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
 
-pub struct Input {
+pub struct CheckBox {
     name: String,
-    value: String,
+    checked: bool,
+    text: String,
     listener: Option<Box<Listener>>,
     observable: Option<Box<Observable<String>>>,
 }
 
-impl Input {
+impl CheckBox {
     pub fn new(name: &str) -> Self {
-        Input { 
+        CheckBox { 
             name: name.to_string(),
-            value: "".to_string(),
+            checked: false, 
+            text: "CheckBox".to_string(),
             listener: None,
             observable: None,
         }
     }
 
-    pub fn value(self, value: &str) -> Self {
-        Input { 
+    pub fn checked(self, checked: bool) -> Self {
+        CheckBox { 
             name: self.name,
-            value: value.to_string(),
+            checked: checked, 
+            text: self.text,
+            listener: self.listener,
+            observable: self.observable,
+        }
+    }
+
+    pub fn text(self, text: &str) -> Self {
+        CheckBox { 
+            name: self.name,
+            checked: self.checked, 
+            text: text.to_string(),
             listener: self.listener,
             observable: self.observable,
         }
     }
 
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        Input { 
+        CheckBox { 
             name: self.name,
-            value: self.value,
+            checked: self.checked,
+            text: self.text, 
             listener: Some(listener),
             observable: self.observable,
         }
     }
 
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        Input { 
+        CheckBox { 
             name: self.name,
-            value: self.value,
+            checked: self.checked,
+            text: self.text, 
             listener: self.listener,
             observable: Some(observable),
         }
@@ -51,17 +66,24 @@ impl Input {
         match &self.observable {
             None => (),
             Some(observable) => {
-                self.value = observable.observe()["value"].to_string();
+                let hash = observable.observe();
+                self.text = hash["text"].to_string();
+                self.checked = hash["checked"].parse().unwrap();
             }
         }
     }
 }
 
-impl Widget for Input {
+impl Widget for CheckBox {
     fn eval(&self) -> String {
+        let checked = if self.checked {
+            "checked"
+        } else {
+            ""
+        };
         format!(
-            r#"<div class="input"><input value="{}" onchange="{}" /></div>"#, 
-            self.value, Event::js("change", &self.name, "value")
+            r#"<div class="checkbox" onclick="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
+            Event::js("click", &self.name, "''"), checked, checked, self.text
         )
     }
 
@@ -72,8 +94,8 @@ impl Widget for Input {
             match &self.listener {
                 None => (),
                 Some(listener) => {
-                    if event.event == "change" {
-                        listener.on_change(&event.value);
+                    if event.event == "click" {
+                        listener.on_click();
                     }
                 }
             } 

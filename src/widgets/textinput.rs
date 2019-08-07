@@ -3,65 +3,65 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
 
-pub struct Label {
+pub struct TextInput {
     name: String,
-    text: String,
+    value: String,
     listener: Option<Box<Listener>>,
     observable: Option<Box<Observable<String>>>,
 }
 
-impl Label {
+impl TextInput {
     pub fn new(name: &str) -> Self {
-        Label { 
+        TextInput { 
             name: name.to_string(),
-            text: "Label".to_string(),
+            value: "TextInput".to_string(),
             listener: None,
             observable: None,
         }
     }
 
-    pub fn text(self, text: &str) -> Self {
-        Label { 
+    pub fn value(self, value: &str) -> Self {
+        TextInput { 
             name: self.name,
-            text: text.to_string(),
+            value: value.to_string(),
             listener: self.listener,
             observable: self.observable,
         }
     }
 
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        Label {
+        TextInput { 
             name: self.name,
-            text: self.text,
+            value: self.value,
             listener: Some(listener),
             observable: self.observable,
         }
     }
 
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        Label {
+        TextInput { 
             name: self.name,
-            text: self.text,
+            value: self.value,
             listener: self.listener,
             observable: Some(observable),
         }
     }
 
-    fn on_update(&mut self) {
+    pub fn on_update(&mut self) {
         match &self.observable {
             None => (),
             Some(observable) => {
-                self.text = observable.observe()["text"].to_string();
+                self.value = observable.observe()["value"].to_string();
             }
         }
     }
 }
 
-impl Widget for Label {
+impl Widget for TextInput {
     fn eval(&self) -> String {
         format!(
-            r#"<div class="label" onclick="{}">{}</div>"#, 
-            Event::js("click", &self.name, "''"), self.text
+            r#"<div class="textinput"><input value="{}" onchange="{}" /></div>"#, 
+            self.value, Event::js("change", &self.name, "value")
         )
     }
 
@@ -72,8 +72,8 @@ impl Widget for Label {
             match &self.listener {
                 None => (),
                 Some(listener) => {
-                    if event.event == "click" {
-                        listener.on_click();
+                    if event.event == "change" {
+                        listener.on_change(&event.value);
                     }
                 }
             } 
