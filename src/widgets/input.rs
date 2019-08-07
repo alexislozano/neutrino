@@ -60,8 +60,8 @@ impl Input {
 impl Widget for Input {
     fn eval(&self) -> String {
         format!(
-            "<div class=\"input\"><input value=\"{}\" onchange=\"(function(invut){{invoke({{event:'change', source:'{}', value: value}})}})()\" /></div>", 
-            self.value, self.name
+            r#"<div class="input"><input value="{}" onchange="{}" /></div>"#, 
+            self.value, Event::js("change", &self.name, "value")
         )
     }
 

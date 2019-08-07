@@ -80,8 +80,8 @@ impl Widget for Button {
             ""
         };
         format!(
-            "<button onclick=\"(function(){{invoke({{event:'click', source:'{}', value:''}})}})()\" {}>{}</button>", 
-            self.name, disabled, self.text
+            r#"<button onclick="{}" {}>{}</button>"#, 
+            Event::js("click", &self.name, "''"), disabled, self.text
         )
     }
 

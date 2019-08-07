@@ -15,4 +15,11 @@ impl Event {
             value: value.to_string(),
         }
     }
+
+    pub fn js(event: &str, source: &str, value: &str) -> String {
+        format!(
+            r#"(function(){{invoke({{event:'{}', source:'{}', value: {}}})}})()"#,
+            event, source, value
+        )
+    }
 }
