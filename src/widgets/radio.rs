@@ -83,7 +83,7 @@ impl Widget for Radio {
             s.push_str(
                 &format!(
                     r#"<div class="radio" onclick="{}"><div class="radio-outer {}"><div class="radio-inner {}"></div></div><label>{}</label></div>"#, 
-                    Event::js("click", &self.name, "''"), selected, selected, choice
+                    Event::js("click", &self.name, &format!("'{}'", i)), selected, selected, choice
                 )
             );
         }
@@ -94,10 +94,11 @@ impl Widget for Radio {
         if event.event == "update" {
             self.on_update();
         } else if event.source == self.name {
-            match &self.listener {
-                None => (),
-                Some(listener) => {
-                    if event.event == "click" {
+            if event.event == "click" {
+                self.selected = event.value.parse::<u32>().unwrap();
+                match &self.listener {
+                    None => (),
+                    Some(listener) => {
                         listener.on_click();
                     }
                 }

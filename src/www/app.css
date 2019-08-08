@@ -37,7 +37,6 @@ body {
     cursor: default;
     color: black;
     outline: 0;
-    transition: border-color 300ms, background-color 300ms, color 300ms;
 }
 
 .button.disabled {
@@ -153,4 +152,37 @@ h1 {
 
 .combo {
     margin: 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.combo-button {
+    padding: 6px;
+    border: 1px solid #b3b5b6;
+    border-radius: 2px;
+    background-color: #e8e9ea;
+    box-shadow: 1px 1px 1px lightgray;
+    font-size: inherit;
+    font-family: inherit;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: default;
+    color: black;
+    outline: 0;
+}
+
+.combo-choices {
+    border: 1px solid #b5b5b6;
+    border-top: 0;
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    top: 100%;
+    box-sizing: border-box;
+}
+
+.combo-choice {
+    background-color: white;
+    padding: 6px;
 }

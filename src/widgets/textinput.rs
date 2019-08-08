@@ -69,14 +69,15 @@ impl Widget for TextInput {
         if event.event == "update" {
             self.on_update();
         } else if event.source == self.name {
-            match &self.listener {
-                None => (),
-                Some(listener) => {
-                    if event.event == "change" {
+            if event.event == "change" {
+                self.value = event.value.to_string();
+                match &self.listener {
+                    None => (),
+                    Some(listener) => {
                         listener.on_change(&event.value);
                     }
-                }
-            } 
+                } 
+            }
         };
     }
 }

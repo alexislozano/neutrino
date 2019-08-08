@@ -32,8 +32,10 @@ fn main() {
 
     let combo1 = Combo::new("combo1")
         .choices(vec!["Combo 1", "Combo 2", "Combo 3"])
-        .selected(0)
-        .opened(true);
+        .selected(0);
+
+    let button2 = Button::new("button2")
+        .text("Bouton à pousser");
 
     let mut container = Container::vertical();
 
@@ -44,6 +46,7 @@ fn main() {
     container.add(Box::new(checkbox1));
     container.add(Box::new(radio1));
     container.add(Box::new(combo1));
+    container.add(Box::new(button2));
 
     let mut window = Window::new();
     window.add(Box::new(container));

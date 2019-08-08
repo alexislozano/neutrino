@@ -91,18 +91,20 @@ impl Combo {
 impl Widget for Combo {
     fn eval(&self) -> String {
         let mut s = format!(
-            r#"<div class="combo"><div class="button">{}</div>"#, 
-            self.choices[self.selected as usize]
+            r#"<div class="combo"><div onclick="{}" class="combo-button">{}</div>"#, 
+            Event::js("click", &self.name, "'-1'"), self.choices[self.selected as usize]
         );
         if self.opened {
-            for (_, choice) in self.choices.iter().enumerate() {
+            s.push_str(r#"<div class="combo-choices">"#);
+            for (i, choice) in self.choices.iter().enumerate() {
                 s.push_str(
                     &format!(
-                        r#"<div>{}</div>"#, 
-                        choice
+                        r#"<div class="combo-choice" onclick="{}">{}</div>"#, 
+                        Event::js("click", &self.name, &format!("'{}'", i)), choice
                     )
                 );
             }
+            s.push_str(r#"</div>"#);
         }
         s.push_str("</div>");
         s
@@ -112,10 +114,15 @@ impl Widget for Combo {
         if event.event == "update" {
             self.on_update();
         } else if event.source == self.name {
-            match &self.listener {
-                None => (),
-                Some(listener) => {
-                    if event.event == "click" {
+            if event.event == "click" {
+                self.opened = !self.opened;
+                let selected = event.value.parse::<i32>().unwrap();
+                if selected > -1 {
+                    self.selected = selected as u32;
+                }
+                match &self.listener {
+                    None => (),
+                    Some(listener) => {
                         listener.on_click();
                     }
                 }

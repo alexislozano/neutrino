@@ -91,14 +91,15 @@ impl Widget for CheckBox {
         if event.event == "update" {
             self.on_update();
         } else if event.source == self.name {
-            match &self.listener {
-                None => (),
-                Some(listener) => {
-                    if event.event == "click" {
+            if event.event == "click" {
+                self.checked = !self.checked;
+                match &self.listener {
+                    None => (),
+                    Some(listener) => {
                         listener.on_click();
                     }
-                }
-            } 
+                } 
+            }
         };
     }
 }
