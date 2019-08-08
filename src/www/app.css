@@ -11,21 +11,20 @@ body {
 
 .container {
     display: flex;
-    width: 100%;
-    height: 100%;
     font-size: inherit;
     font-family: inherit;
 }
 
 .label {
-    margin: 10px;
+    margin: 6px;
     font-size: inherit;
     font-family: inherit;
 }
 
 .button {
+    white-space: nowrap;
     padding: 6px;
-    margin: 10px;
+    margin: 6px;
     border: 1px solid #b3b5b6;
     border-radius: 2px;
     background-color: #e8e9ea;
@@ -48,7 +47,10 @@ body {
 
 .progressbar {
     width: calc(100% - 20px);
-    margin: 10px;
+    margin-top: 14px;
+    margin-bottom: 14px;
+    margin-left: 6px;
+    margin-right: 6px;
     height: 6px;
     background-color: #b5b5b6;
     border-radius: 3px;
@@ -61,11 +63,11 @@ body {
 }
 
 h1 {
-    margin: 10px;
+    margin: 6px;
 }
 
 .textinput {
-    margin: 10px;
+    margin: 6px;
 }
 
 .textinput input {
@@ -80,7 +82,7 @@ h1 {
 }
 
 .checkbox {
-    margin: 10px;
+    margin: 6px;
     display: flex;
     align-items: center;
 }
@@ -111,11 +113,12 @@ h1 {
 }
 
 .checkbox label {
+    white-space: nowrap;
     margin-left: 5px;
 }
 
 .radio {
-    margin: 10px;
+    margin: 6px;
     display: flex;
     align-items: center;
 }
@@ -147,11 +150,12 @@ h1 {
 }
 
 .radio label {
+    white-space: nowrap;
     margin-left: 5px;
 }
 
 .combo {
-    margin: 10px;
+    margin: 6px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -185,4 +189,68 @@ h1 {
 .combo-choice {
     background-color: white;
     padding: 6px;
+}
+
+.range {
+    margin: 6px;
+}
+  
+.inner-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background-color: #b5b5b6;
+    outline: none;
+    border-radius: 3px;
+}
+  
+.inner-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: white;
+    cursor: pointer;
+    border: 1px solid #757778;
+    border-radius: 50%;
+}
+  
+.inner-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: white;
+    cursor: pointer;
+    border: 1px solid #757778;
+    border-radius: 50%;
+}
+
+.tabs {
+    padding: 6px;
+}
+
+.tab-titles {
+    cursor: default;
+    margin-bottom: -1px;
+    display: flex;
+}
+
+.tab-title {
+    background-color: #d0d2d2;
+    padding: 4px;
+    padding-left: 13px;
+    padding-right: 13px;
+    border: 1px solid #d0d2d2;
+}
+
+.tab-title.selected {
+    background-color: white;
+    border-color: #bfc1c1;
+    border-bottom-color: white;
+}
+
+.tab {
+    border: 1px solid #bfc1c1;
+    border-radius: 2px;
+    border-top-left-radius: 0;
 }

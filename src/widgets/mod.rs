@@ -8,3 +8,5 @@ pub mod textinput;
 pub mod checkbox;
 pub mod radio;
 pub mod combo;
+pub mod range;
+pub mod tabs;
