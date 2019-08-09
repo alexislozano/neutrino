@@ -1,16 +1,21 @@
 use web_view::*;
 
+#[macro_use]
+extern crate load_file;
+
 pub mod utils;
 pub mod widgets;
 
 use widgets::widget::Widget;
 use utils::event::Event;
+use utils::theme::Theme;
 
 pub struct App {
     title: String,
     width: i32,
     height: i32,
     resizable: bool,
+    theme: Theme,
 }
 
 impl App {
@@ -20,6 +25,7 @@ impl App {
             width: 640, 
             height: 480, 
             resizable: true,
+            theme: Theme::Breeze,
         }
     }
 
@@ -28,7 +34,8 @@ impl App {
             title: title.to_string(), 
             width: self.width, 
             height: self.height, 
-            resizable: self.resizable, 
+            resizable: self.resizable,
+            theme: self.theme,
         }
     }
 
@@ -38,6 +45,7 @@ impl App {
             width: width, 
             height: height, 
             resizable: self.resizable,
+            theme: self.theme,
         }
     }
 
@@ -47,16 +55,29 @@ impl App {
             width: self.width, 
             height: self.height, 
             resizable: resizable,
+            theme: self.theme,
+        }
+    }
+
+    pub fn theme(self, theme: Theme) -> Self {
+        App {
+            title: self.title,
+            width: self.width,
+            height: self.height,
+            resizable: self.resizable,
+            theme: theme,
         }
     }
 
     pub fn run(&self, mut window: Window) {
+    let theme_path = match self.theme {
+        Theme::Breeze => "www/breeze/app.css",
+    };
     let html = format!(r#"
         <!doctype html>
         <html>
             <head>
                 <meta charset="UTF-8">
-                <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
                 {styles}
             </head>
             <body>
@@ -65,8 +86,8 @@ impl App {
             </body>
         </html>
         "#, 
-        styles = inline_style(include_str!("www/app.css")),
-        scripts = inline_script(include_str!("www/app.js")),
+        styles = inline_style(load_str!(theme_path)),
+        scripts = inline_script(load_str!("www/app.js")),
     );
     let webview = web_view::builder()
         .title(&self.title)
@@ -74,7 +95,7 @@ impl App {
         .size(self.width, self.height)
         .resizable(self.resizable)
         .user_data("")
-        .debug(true)
+        .debug(false)
         .invoke_handler(|webview, arg| {
             let event: Event = serde_json::from_str(arg).unwrap();
             window.trigger(&event);
