@@ -63,11 +63,7 @@ fn main() {
     container5.add(Box::new(progressbar1));
     container5.add(Box::new(label1));
 
-    let custom1 = Custom::new("custom1")
-        .template(r#"<h2 style="margin: 6px;">This is Tab 1</h2>"#);
-
     let mut container6 = Container::vertical();
-    container6.add(Box::new(custom1));
     container6.add(Box::new(container4));
     container6.add(Box::new(container5));
 
