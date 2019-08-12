@@ -3,8 +3,16 @@ use std::env;
 
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
-    println!("out : {}", out_dir);
 
-    Command::new("sass").args(&["src/www/test.scss", &format!("{}/test.css", out_dir)])
-        .status().unwrap();
+    // Thming commons
+    Command::new("sass").args(&[
+        "src/www/app.scss", 
+        &format!("{}/app.css", out_dir)
+    ]).status().unwrap();
+
+    // Breeze theme
+    Command::new("sass").args(&[
+        "src/www/breeze.scss", 
+        &format!("{}/breeze.css", out_dir)
+    ]).status().unwrap();
 }

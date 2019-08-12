@@ -75,19 +75,22 @@ impl App {
                     {styles}
                 </head>
                 <body>
-                    <div id="app"></div>
+                    <div id="app" class="{theme}"></div>
                     {scripts}
                 </body>
             </html>
             "#, 
-            styles = format!("{}\n{}\n",
-                inline_style(include_str!(concat!(env!("OUT_DIR"), "/test.css"))),
-                inline_style(include_str!("www/breeze.css"))
+            styles = format!(
+                "{}\n{}\n",
+                inline_style(include_str!(concat!(env!("OUT_DIR"), "/app.css"))),
+                inline_style(include_str!(concat!(env!("OUT_DIR"), "/breeze.css"))),
             ),
-            scripts = format!("{}\n{}\n",
+            scripts = format!(
+                "{}\n{}\n",
                 inline_script(include_str!("www/morphdom.min.js")),
                 inline_script(include_str!("www/app.js"))
-            )
+            ),
+            theme = self.theme.class(),
         );
         let webview = web_view::builder()
             .title(&self.title)
