@@ -1,8 +1,5 @@
 use web_view::*;
 
-#[macro_use]
-extern crate load_file;
-
 pub mod utils;
 pub mod widgets;
 
@@ -70,44 +67,44 @@ impl App {
     }
 
     pub fn run(&self, mut window: Window) {
-    let theme_path = match self.theme {
-        Theme::Breeze => "www/breeze/app.css",
-    };
-    let html = format!(r#"
-        <!doctype html>
-        <html>
-            <head>
-                <meta charset="UTF-8">
-                {styles}
-            </head>
-            <body>
-                <div id="app"></div>
-                {scripts}
-            </body>
-        </html>
-        "#, 
-        styles = inline_style(load_str!(theme_path)),
-        scripts = inline_script(load_str!("www/app.js")),
-    );
-    let webview = web_view::builder()
-        .title(&self.title)
-        .content(Content::Html(html))
-        .size(self.width, self.height)
-        .resizable(self.resizable)
-        .user_data("")
-        .debug(false)
-        .invoke_handler(|webview, arg| {
-            let event: Event = serde_json::from_str(arg).unwrap();
-            window.trigger(&event);
-            let update_event = Event::new("update", "app", "app");
-            window.trigger(&update_event);
-            window.render(webview)
-        })
-        .build()
-        .unwrap();
+        let html = format!(r#"
+            <!doctype html>
+            <html>
+                <head>
+                    <meta charset="UTF-8">
+                    {styles}
+                </head>
+                <body>
+                    <div id="app"></div>
+                    {scripts}
+                </body>
+            </html>
+            "#, 
+            styles = format!("{}\n{}\n",
+                inline_style(include_str!(concat!(env!("OUT_DIR"), "/test.css"))),
+                inline_style(include_str!("www/breeze.css"))
+            ),
+            scripts = inline_script(include_str!("www/app.js"))
+        );
+        let webview = web_view::builder()
+            .title(&self.title)
+            .content(Content::Html(html))
+            .size(self.width, self.height)
+            .resizable(self.resizable)
+            .user_data("")
+            .debug(true)
+            .invoke_handler(|webview, arg| {
+                let event: Event = serde_json::from_str(arg).unwrap();
+                window.trigger(&event);
+                let update_event = Event::new("update", "app", "app");
+                window.trigger(&update_event);
+                window.render(webview)
+            })
+            .build()
+            .unwrap();
 
-    webview.run().unwrap();
-}
+        webview.run().unwrap();
+    }
 }
 
 pub struct Window {

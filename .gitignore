@@ -2,3 +2,4 @@
 **/*.rs.bk
 Cargo.lock
 examples/breeze.png
+.sass-cache

@@ -3,10 +3,10 @@ name = "neutrino"
 version = "0.1.0"
 authors = ["Alexis Lozano <alexis.pascal.lozano@gmail.com>"]
 edition = "2018"
+build = "build.rs"
 
 [dependencies]
 web-view = "0.4.1"
 serde = { version = "1.0.98", features = ["derive"] }
 serde_json = "1.0.40"
 strfmt = "0.1.6"
-load_file = "1.0.0"
