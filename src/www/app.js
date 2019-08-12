@@ -1,7 +1,9 @@
 const node = document.getElementById("app");
+let child = document.createElement("div");
+node.appendChild(child);
 
 function render(template) {
-    node.innerHTML = template;
+    morphdom(child, template);
 }
 
 function invoke(arg) {

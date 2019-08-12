@@ -84,7 +84,10 @@ impl App {
                 inline_style(include_str!(concat!(env!("OUT_DIR"), "/test.css"))),
                 inline_style(include_str!("www/breeze.css"))
             ),
-            scripts = inline_script(include_str!("www/app.js"))
+            scripts = format!("{}\n{}\n",
+                inline_script(include_str!("www/morphdom.min.js")),
+                inline_script(include_str!("www/app.js"))
+            )
         );
         let webview = web_view::builder()
             .title(&self.title)

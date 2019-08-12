@@ -92,7 +92,7 @@ impl Range {
 impl Widget for Range {
     fn eval(&self) -> String {
         format!(
-            r#"<div class="range"><input onchange="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
+            r#"<div class="range"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
             Event::js("change", &self.name, "value"), self.min, self.max, self.value
         )
     }
