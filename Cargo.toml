@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["Alexis Lozano <alexis.pascal.lozano@gmail.com>"]
 edition = "2018"
 build = "build.rs"
+description = "A GUI frontend in Rust based on web-view"
+repository = "https://github.com/alexislozano/neutrino/"
+license = "MIT"
 
 [dependencies]
 web-view = "0.4.1"
