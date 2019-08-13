@@ -3,6 +3,28 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
 
+/// A clickable widget
+/// 
+/// # Fields
+/// ```
+/// pub struct Button {
+///    name: String,
+///    text: String,
+///    disabled: bool,
+///    listener: Option<Box<Listener>>,
+///    observable: Option<Box<Observable<String>>>,
+/// }
+/// ```
+/// 
+/// # Example
+/// 
+/// ```
+/// let my_button = Button::new("my_button")
+///     .text("Click me !")
+///     .disabled(true)
+///     .listener(Box::new(my_button_listener))
+///     .observable(Box::new(my_button_observable));
+/// ```
 pub struct Button {
     name: String,
     text: String,
@@ -12,6 +34,17 @@ pub struct Button {
 }
 
 impl Button {
+    /// Create a Button
+    /// 
+    /// # Default values
+    /// 
+    /// ```
+    /// name: name.to_string(),
+    /// text: "Button".to_string(), 
+    /// disabled: false,
+    /// listener: None,
+    /// observable: None,
+    /// ```
     pub fn new(name: &str) -> Self {
         Button { 
             name: name.to_string(),
@@ -22,6 +55,7 @@ impl Button {
         }
     }
 
+    /// Set the text of a Button
     pub fn text(self, text: &str) -> Self {
         Button { 
             name: self.name,
@@ -32,6 +66,7 @@ impl Button {
         }
     }
 
+    /// Set the disabled flag of a Button
     pub fn disabled(self, disabled: bool) -> Self {
         Button { 
             name: self.name,
@@ -42,6 +77,7 @@ impl Button {
         }
     }
 
+    /// Set the listener of a Button
     pub fn listener(self, listener: Box<Listener>) -> Self {
         Button { 
             name: self.name,
@@ -52,6 +88,7 @@ impl Button {
         }
     }
 
+    /// Set the observable of a Button
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
         Button { 
             name: self.name,
