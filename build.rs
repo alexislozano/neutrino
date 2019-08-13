@@ -5,17 +5,13 @@ fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
 
     // Theming commons
-    Command::new("cmd").args(&[
-        "/c",
-        "sass",
+    Command::new("sass").args(&[
         "src/www/app.scss", 
         &format!("{}/app.css", out_dir)
     ]).status().unwrap();
 
     // Breeze theme
-    Command::new("cmd").args(&[
-        "/c",
-        "sass",
+    Command::new("sass").args(&[
         "src/www/breeze.scss", 
         &format!("{}/breeze.css", out_dir)
     ]).status().unwrap();
