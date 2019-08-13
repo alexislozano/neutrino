@@ -1,7 +1,7 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 
 pub struct TextInput {
     name: String,
@@ -12,7 +12,7 @@ pub struct TextInput {
 
 impl TextInput {
     pub fn new(name: &str) -> Self {
-        TextInput { 
+        TextInput {
             name: name.to_string(),
             value: "TextInput".to_string(),
             listener: None,
@@ -21,7 +21,7 @@ impl TextInput {
     }
 
     pub fn value(self, value: &str) -> Self {
-        TextInput { 
+        TextInput {
             name: self.name,
             value: value.to_string(),
             listener: self.listener,
@@ -30,7 +30,7 @@ impl TextInput {
     }
 
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        TextInput { 
+        TextInput {
             name: self.name,
             value: self.value,
             listener: Some(listener),
@@ -39,7 +39,7 @@ impl TextInput {
     }
 
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        TextInput { 
+        TextInput {
             name: self.name,
             value: self.value,
             listener: self.listener,
@@ -60,8 +60,9 @@ impl TextInput {
 impl Widget for TextInput {
     fn eval(&self) -> String {
         format!(
-            r#"<div class="textinput"><input value="{}" onchange="{}" /></div>"#, 
-            self.value, Event::js("change", &self.name, "value")
+            r#"<div class="textinput"><input value="{}" onchange="{}" /></div>"#,
+            self.value,
+            Event::js("change", &self.name, "value")
         )
     }
 
@@ -76,7 +77,7 @@ impl Widget for TextInput {
                     Some(listener) => {
                         listener.on_change(&event.value);
                     }
-                } 
+                }
             }
         };
     }

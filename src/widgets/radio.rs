@@ -1,7 +1,7 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 
 pub struct Radio {
     name: String,
@@ -13,50 +13,53 @@ pub struct Radio {
 
 impl Radio {
     pub fn new(name: &str) -> Self {
-        Radio { 
+        Radio {
             name: name.to_string(),
             choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
-            selected: 0, 
+            selected: 0,
             listener: None,
             observable: None,
         }
     }
 
     pub fn choices(self, choices: Vec<&str>) -> Self {
-        Radio { 
+        Radio {
             name: self.name,
-            choices: choices.iter().map(|c| c.to_string()).collect::<Vec<String>>(),
-            selected: self.selected, 
+            choices: choices
+                .iter()
+                .map(|c| c.to_string())
+                .collect::<Vec<String>>(),
+            selected: self.selected,
             listener: self.listener,
             observable: self.observable,
         }
     }
 
     pub fn selected(self, selected: u32) -> Self {
-        Radio { 
+        Radio {
             name: self.name,
             choices: self.choices,
-            selected: selected, 
+            selected: selected,
             listener: self.listener,
             observable: self.observable,
         }
     }
 
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        Radio { 
+        Radio {
             name: self.name,
             choices: self.choices,
-            selected: self.selected, 
+            selected: self.selected,
             listener: Some(listener),
             observable: self.observable,
         }
     }
 
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        Radio { 
+        Radio {
             name: self.name,
             choices: self.choices,
-            selected: self.selected, 
+            selected: self.selected,
             listener: self.listener,
             observable: Some(observable),
         }
@@ -65,8 +68,7 @@ impl Radio {
     pub fn on_update(&mut self) {
         match &self.observable {
             None => (),
-            Some(_observable) => {
-            }
+            Some(_observable) => {}
         }
     }
 }
@@ -102,7 +104,7 @@ impl Widget for Radio {
                         listener.on_click();
                     }
                 }
-            } 
+            }
         };
     }
 }

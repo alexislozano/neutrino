@@ -1,7 +1,7 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
-use crate::utils::observable::Observable;
 use crate::utils::listener::Listener;
+use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 
 pub struct ProgressBar {
     name: String,
@@ -12,7 +12,7 @@ pub struct ProgressBar {
 
 impl ProgressBar {
     pub fn new(name: &str) -> Self {
-        ProgressBar { 
+        ProgressBar {
             name: name.to_string(),
             value: 0,
             observable: None,
@@ -21,7 +21,7 @@ impl ProgressBar {
     }
 
     pub fn value(self, value: u8) -> Self {
-        ProgressBar { 
+        ProgressBar {
             name: self.name,
             value: value,
             observable: self.observable,
@@ -76,7 +76,7 @@ impl Widget for ProgressBar {
                         listener.on_click();
                     }
                 }
-            } 
+            }
         };
     }
 }

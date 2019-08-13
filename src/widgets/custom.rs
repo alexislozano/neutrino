@@ -1,9 +1,9 @@
-use strfmt::strfmt;
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 use std::collections::HashMap;
+use strfmt::strfmt;
 
 pub struct Custom {
     name: String,
@@ -15,12 +15,12 @@ pub struct Custom {
 
 impl Custom {
     pub fn new(name: &str) -> Self {
-        Custom { 
+        Custom {
             name: name.to_string(),
             fields: HashMap::new(),
             template: "".to_string(),
             listener: None,
-            observable: None, 
+            observable: None,
         }
     }
 
@@ -82,7 +82,7 @@ impl Widget for Custom {
                         listener.on_click();
                     }
                 }
-            } 
+            }
         };
     }
 }

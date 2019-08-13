@@ -1,8 +1,8 @@
+use super::models::Counter;
 use neutrino::utils::observable::Observable;
 use std::cell::RefCell;
-use std::rc::Rc;
-use super::models::Counter;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 pub struct Label1Observable {
     counter: Rc<RefCell<Counter>>,
@@ -17,7 +17,10 @@ impl Label1Observable {
 impl Observable<String> for Label1Observable {
     fn observe(&self) -> HashMap<String, String> {
         let mut fields = HashMap::new();
-        fields.insert("text".to_string(), format!("{}", self.counter.borrow().value()));
+        fields.insert(
+            "text".to_string(),
+            format!("{}", self.counter.borrow().value()),
+        );
         fields
     }
 }

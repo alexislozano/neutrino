@@ -1,10 +1,10 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 
 /// Button
-/// 
+///
 /// # Fields
 /// ```
 /// pub struct Button {
@@ -15,9 +15,9 @@ use crate::utils::observable::Observable;
 ///    observable: Option<Box<Observable<String>>>,
 /// }
 /// ```
-/// 
+///
 /// # Example
-/// 
+///
 /// ```
 /// let my_button = Button::new("my_button")
 ///     .text("Click me !")
@@ -35,20 +35,20 @@ pub struct Button {
 
 impl Button {
     /// Create a Button
-    /// 
+    ///
     /// # Default values
-    /// 
+    ///
     /// ```
     /// name: name.to_string(),
-    /// text: "Button".to_string(), 
+    /// text: "Button".to_string(),
     /// disabled: false,
     /// listener: None,
     /// observable: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        Button { 
+        Button {
             name: name.to_string(),
-            text: "Button".to_string(), 
+            text: "Button".to_string(),
             disabled: false,
             listener: None,
             observable: None,
@@ -57,9 +57,9 @@ impl Button {
 
     /// Set the text of a Button
     pub fn text(self, text: &str) -> Self {
-        Button { 
+        Button {
             name: self.name,
-            text: text.to_string(), 
+            text: text.to_string(),
             disabled: self.disabled,
             listener: self.listener,
             observable: self.observable,
@@ -68,20 +68,20 @@ impl Button {
 
     /// Set the disabled flag of a Button
     pub fn disabled(self, disabled: bool) -> Self {
-        Button { 
+        Button {
             name: self.name,
-            text: self.text, 
+            text: self.text,
             disabled: disabled,
             listener: self.listener,
-            observable: self.observable, 
+            observable: self.observable,
         }
     }
 
     /// Set the listener of a Button
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        Button { 
+        Button {
             name: self.name,
-            text: self.text, 
+            text: self.text,
             disabled: self.disabled,
             listener: Some(listener),
             observable: self.observable,
@@ -90,9 +90,9 @@ impl Button {
 
     /// Set the observable of a Button
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        Button { 
+        Button {
             name: self.name,
-            text: self.text, 
+            text: self.text,
             disabled: self.disabled,
             listener: self.listener,
             observable: Some(observable),
@@ -102,35 +102,33 @@ impl Button {
 
 impl Widget for Button {
     /// Return the HTML representation of a Button
-    /// 
+    ///
     /// # Events
-    /// 
+    ///
     /// ```
     /// click -> ""
     /// ```
-    /// 
+    ///
     /// # Styling
-    /// 
+    ///
     /// ```
     /// class = button [disabled]
     /// ```
-    /// 
+    ///
     fn eval(&self) -> String {
-        let disabled = if self.disabled {
-            "disabled"
-        } else {
-            ""
-        };
+        let disabled = if self.disabled { "disabled" } else { "" };
         format!(
-            r#"<div onclick="{}" class="button {}">{}</div>"#, 
-            Event::js("click", &self.name, "''"), disabled, self.text
+            r#"<div onclick="{}" class="button {}">{}</div>"#,
+            Event::js("click", &self.name, "''"),
+            disabled,
+            self.text
         )
     }
 
     /// Trigger changes depending on the event
-    /// 
+    ///
     /// # Events
-    /// 
+    ///
     /// ```
     /// update -> self.on_update()
     /// click -> self.listener.on_click()
@@ -146,15 +144,15 @@ impl Widget for Button {
                         listener.on_click();
                     }
                 }
-            } 
+            }
         };
     }
 
-    /// Set the values of the widget using the fields of the HashMap 
+    /// Set the values of the widget using the fields of the HashMap
     /// defining the model
-    /// 
+    ///
     /// # Fields
-    /// 
+    ///
     /// ```
     /// text
     /// ```

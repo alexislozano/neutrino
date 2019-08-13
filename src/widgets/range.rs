@@ -1,7 +1,7 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
-use crate::utils::observable::Observable;
 use crate::utils::listener::Listener;
+use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 
 pub struct Range {
     name: String,
@@ -14,7 +14,7 @@ pub struct Range {
 
 impl Range {
     pub fn new(name: &str) -> Self {
-        Range { 
+        Range {
             name: name.to_string(),
             min: 0,
             max: 100,
@@ -25,7 +25,7 @@ impl Range {
     }
 
     pub fn min(self, min: i32) -> Self {
-        Range { 
+        Range {
             name: self.name,
             min: min,
             max: self.max,
@@ -36,7 +36,7 @@ impl Range {
     }
 
     pub fn max(self, max: i32) -> Self {
-        Range { 
+        Range {
             name: self.name,
             min: self.min,
             max: max,
@@ -47,7 +47,7 @@ impl Range {
     }
 
     pub fn value(self, value: i32) -> Self {
-        Range { 
+        Range {
             name: self.name,
             min: self.min,
             max: self.max,
@@ -58,7 +58,7 @@ impl Range {
     }
 
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        Range { 
+        Range {
             name: self.name,
             min: self.min,
             max: self.max,
@@ -69,7 +69,7 @@ impl Range {
     }
 
     pub fn observable(self, observable: Box<Observable<i32>>) -> Self {
-        Range { 
+        Range {
             name: self.name,
             min: self.min,
             max: self.max,
@@ -109,7 +109,7 @@ impl Widget for Range {
                         listener.on_change(&event.value);
                     }
                 }
-            } 
+            }
         };
     }
 }

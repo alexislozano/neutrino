@@ -9,8 +9,8 @@ pub struct Event {
 
 impl Event {
     pub fn new(event: &str, source: &str, value: &str) -> Event {
-        Event { 
-            event: event.to_string(), 
+        Event {
+            event: event.to_string(),
             source: source.to_string(),
             value: value.to_string(),
         }

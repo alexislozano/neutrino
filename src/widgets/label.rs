@@ -1,7 +1,7 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 
 pub struct Label {
     name: String,
@@ -12,7 +12,7 @@ pub struct Label {
 
 impl Label {
     pub fn new(name: &str) -> Self {
-        Label { 
+        Label {
             name: name.to_string(),
             text: "Label".to_string(),
             listener: None,
@@ -21,7 +21,7 @@ impl Label {
     }
 
     pub fn text(self, text: &str) -> Self {
-        Label { 
+        Label {
             name: self.name,
             text: text.to_string(),
             listener: self.listener,
@@ -60,8 +60,9 @@ impl Label {
 impl Widget for Label {
     fn eval(&self) -> String {
         format!(
-            r#"<div class="label" onclick="{}">{}</div>"#, 
-            Event::js("click", &self.name, "''"), self.text
+            r#"<div class="label" onclick="{}">{}</div>"#,
+            Event::js("click", &self.name, "''"),
+            self.text
         )
     }
 
@@ -76,7 +77,7 @@ impl Widget for Label {
                         listener.on_click();
                     }
                 }
-            } 
+            }
         };
     }
 }

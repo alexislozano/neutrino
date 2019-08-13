@@ -1,18 +1,18 @@
 //! # Neutrino
 //!
-//! Neutrino is GUI library built onto [web-view](https://docs.rs/web-view). As 
-//! such, it uses the native web component of the host system. Neutrino is 
-//! created with the idea of using the Model-View-Controller pattern used in 
-//! native GUI libraries. 
-//! 
+//! Neutrino is GUI library built onto [web-view](https://docs.rs/web-view). As
+//! such, it uses the native web component of the host system. Neutrino is
+//! created with the idea of using the Model-View-Controller pattern used in
+//! native GUI libraries.
+//!
 //! # Styling
-//! 
+//!
 //! In order to accomodate the taste of the user, Neutrino is themable in CSS.
 //! Basic widgets are already available and the Custom widget can be used with
 //! a custom HTML template.
-//! 
+//!
 //! # Examples
-//! 
+//!
 //! TODO
 
 use web_view::*;
@@ -20,9 +20,9 @@ use web_view::*;
 pub mod utils;
 pub mod widgets;
 
-use widgets::widget::Widget;
 use utils::event::Event;
 use utils::theme::Theme;
+use widgets::widget::Widget;
 
 pub struct App {
     title: String,
@@ -34,40 +34,40 @@ pub struct App {
 
 impl App {
     pub fn new() -> Self {
-        App { 
-            title: "Untitled".to_string(), 
-            width: 640, 
-            height: 480, 
+        App {
+            title: "Untitled".to_string(),
+            width: 640,
+            height: 480,
             resizable: true,
             theme: Theme::Breeze,
         }
     }
 
     pub fn title(self, title: &str) -> Self {
-        App { 
-            title: title.to_string(), 
-            width: self.width, 
-            height: self.height, 
+        App {
+            title: title.to_string(),
+            width: self.width,
+            height: self.height,
             resizable: self.resizable,
             theme: self.theme,
         }
     }
 
     pub fn size(self, width: i32, height: i32) -> Self {
-        App { 
-            title: self.title, 
-            width: width, 
-            height: height, 
+        App {
+            title: self.title,
+            width: width,
+            height: height,
             resizable: self.resizable,
             theme: self.theme,
         }
     }
 
     pub fn resizable(self, resizable: bool) -> Self {
-        App { 
-            title: self.title, 
-            width: self.width, 
-            height: self.height, 
+        App {
+            title: self.title,
+            width: self.width,
+            height: self.height,
             resizable: resizable,
             theme: self.theme,
         }
@@ -84,7 +84,8 @@ impl App {
     }
 
     pub fn run(&self, mut window: Window) {
-        let html = format!(r#"
+        let html = format!(
+            r#"
             <!doctype html>
             <html>
                 <head>
@@ -96,7 +97,7 @@ impl App {
                     {scripts}
                 </body>
             </html>
-            "#, 
+            "#,
             styles = format!(
                 "{}\n{}\n",
                 inline_style(include_str!(concat!(env!("OUT_DIR"), "/app.css"))),
@@ -131,7 +132,7 @@ impl App {
 }
 
 pub struct Window {
-    child: Option<Box<Widget>>
+    child: Option<Box<Widget>>,
 }
 
 impl Window {
@@ -171,7 +172,6 @@ fn inline_script(s: &str) -> String {
     format!(r#"<script type="text/javascript">{}</script>"#, s)
 }
 
-
 #[cfg(test)]
 mod tests {
     #[test]
@@ -179,4 +179,3 @@ mod tests {
         assert_eq!(2 + 2, 4);
     }
 }
-

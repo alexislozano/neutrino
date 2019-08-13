@@ -1,7 +1,7 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 
 pub struct Tabs {
     name: String,
@@ -13,9 +13,9 @@ pub struct Tabs {
 
 impl Tabs {
     pub fn new(name: &str) -> Self {
-        Tabs { 
+        Tabs {
             name: name.to_string(),
-            children: vec![], 
+            children: vec![],
             selected: 0,
             listener: None,
             observable: None,
@@ -23,9 +23,9 @@ impl Tabs {
     }
 
     pub fn selected(self, selected: u32) -> Self {
-        Tabs { 
+        Tabs {
             name: self.name,
-            children: self.children, 
+            children: self.children,
             selected: selected,
             listener: self.listener,
             observable: self.observable,
@@ -33,9 +33,9 @@ impl Tabs {
     }
 
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        Tabs { 
+        Tabs {
             name: self.name,
-            children: self.children, 
+            children: self.children,
             selected: self.selected,
             listener: Some(listener),
             observable: self.observable,
@@ -43,9 +43,9 @@ impl Tabs {
     }
 
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        Tabs { 
+        Tabs {
             name: self.name,
-            children: self.children, 
+            children: self.children,
             selected: self.selected,
             listener: self.listener,
             observable: Some(observable),
@@ -75,7 +75,9 @@ impl Widget for Tabs {
             };
             s.push_str(&format!(
                 r#"<div class="tab-title {}" onclick="{}">{}</div>"#,
-                selected, Event::js("click", &self.name, &format!("'{}'", i)), child.0
+                selected,
+                Event::js("click", &self.name, &format!("'{}'", i)),
+                child.0
             ));
         }
         s.push_str(&format!(
@@ -101,7 +103,7 @@ impl Widget for Tabs {
                         listener.on_click();
                     }
                 }
-            } 
+            }
         } else {
             self.children[self.selected as usize].1.trigger(event);
         };

@@ -1,7 +1,7 @@
+use super::models::Person;
 use neutrino::utils::listener::Listener;
 use std::cell::RefCell;
 use std::rc::Rc;
-use super::models::Person;
 
 pub struct ButtonListener {
     person: Rc<RefCell<Person>>,
@@ -11,10 +11,10 @@ pub struct ButtonListener {
 
 impl ButtonListener {
     pub fn new(person: Rc<RefCell<Person>>, firstname: &str, lastname: &str) -> Self {
-        ButtonListener { 
+        ButtonListener {
             person: person,
             firstname: firstname.to_string(),
-            lastname: lastname.to_string(), 
+            lastname: lastname.to_string(),
         }
     }
 }

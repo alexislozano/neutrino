@@ -1,7 +1,7 @@
+use super::models::Counter;
 use neutrino::utils::listener::Listener;
 use std::cell::RefCell;
 use std::rc::Rc;
-use super::models::Counter;
 
 pub struct Button1Listener {
     counter: Rc<RefCell<Counter>>,

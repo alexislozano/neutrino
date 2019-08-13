@@ -1,10 +1,10 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
+use crate::widgets::widget::Widget;
 
 /// Checkbox
-/// 
+///
 /// # Fields
 /// ```
 /// pub struct CheckBox {
@@ -15,9 +15,9 @@ use crate::utils::observable::Observable;
 ///    observable: Option<Box<Observable<String>>>,
 /// }
 /// ```
-/// 
+///
 /// # Example
-/// 
+///
 /// ```
 /// let my_checkbox = CheckBox::new("my_checkbox")
 ///     .text("Toggle me !")
@@ -35,20 +35,20 @@ pub struct CheckBox {
 
 impl CheckBox {
     /// Create a CheckBox
-    /// 
+    ///
     /// # Default values
-    /// 
+    ///
     /// ```
     /// name: name.to_string(),
     /// checked: false,
-    /// text: "CheckBox".to_string(), 
+    /// text: "CheckBox".to_string(),
     /// listener: None,
     /// observable: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        CheckBox { 
+        CheckBox {
             name: name.to_string(),
-            checked: false, 
+            checked: false,
             text: "CheckBox".to_string(),
             listener: None,
             observable: None,
@@ -57,9 +57,9 @@ impl CheckBox {
 
     /// Set the checked flag of a CheckBox
     pub fn checked(self, checked: bool) -> Self {
-        CheckBox { 
+        CheckBox {
             name: self.name,
-            checked: checked, 
+            checked: checked,
             text: self.text,
             listener: self.listener,
             observable: self.observable,
@@ -68,9 +68,9 @@ impl CheckBox {
 
     /// Set the label of a CheckBox
     pub fn text(self, text: &str) -> Self {
-        CheckBox { 
+        CheckBox {
             name: self.name,
-            checked: self.checked, 
+            checked: self.checked,
             text: text.to_string(),
             listener: self.listener,
             observable: self.observable,
@@ -79,10 +79,10 @@ impl CheckBox {
 
     /// Set the listener of a CheckBox
     pub fn listener(self, listener: Box<Listener>) -> Self {
-        CheckBox { 
+        CheckBox {
             name: self.name,
             checked: self.checked,
-            text: self.text, 
+            text: self.text,
             listener: Some(listener),
             observable: self.observable,
         }
@@ -90,10 +90,10 @@ impl CheckBox {
 
     /// Set the observable of a CheckBox
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
-        CheckBox { 
+        CheckBox {
             name: self.name,
             checked: self.checked,
-            text: self.text, 
+            text: self.text,
             listener: self.listener,
             observable: Some(observable),
         }
@@ -102,27 +102,23 @@ impl CheckBox {
 
 impl Widget for CheckBox {
     /// Return the HTML representation of a CheckBox
-    /// 
+    ///
     /// # Events
-    /// 
+    ///
     /// ```
     /// click -> ""
     /// ```
-    /// 
+    ///
     /// # Styling
-    /// 
+    ///
     /// ```
     /// class = checkbox
     /// class = checkbox-outer [checked]
     /// class = checkbox-inner [checked]
     /// ```
-    /// 
+    ///
     fn eval(&self) -> String {
-        let checked = if self.checked {
-            "checked"
-        } else {
-            ""
-        };
+        let checked = if self.checked { "checked" } else { "" };
         format!(
             r#"<div class="checkbox" onclick="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
             Event::js("click", &self.name, "''"), checked, checked, self.text
@@ -130,9 +126,9 @@ impl Widget for CheckBox {
     }
 
     /// Trigger changes depending on the event
-    /// 
+    ///
     /// # Events
-    /// 
+    ///
     /// ```
     /// update -> self.on_update()
     /// click -> self.checked = != self.checked
@@ -149,16 +145,16 @@ impl Widget for CheckBox {
                     Some(listener) => {
                         listener.on_click();
                     }
-                } 
+                }
             }
         };
     }
 
-    /// Set the values of the widget using the fields of the HashMap 
+    /// Set the values of the widget using the fields of the HashMap
     /// defining the model
-    /// 
+    ///
     /// # Fields
-    /// 
+    ///
     /// ```
     /// text
     /// checked

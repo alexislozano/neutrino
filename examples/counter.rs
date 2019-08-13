@@ -1,16 +1,16 @@
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
-use neutrino::{App, Window};
 use neutrino::widgets::button::Button;
 use neutrino::widgets::container::Container;
 use neutrino::widgets::label::Label;
 use neutrino::widgets::progressbar::ProgressBar;
+use neutrino::{App, Window};
 
 mod counter_mod;
 
-use counter_mod::models::Counter;
 use counter_mod::listeners::{Button1Listener, Button2Listener, Label1Listener};
+use counter_mod::models::Counter;
 use counter_mod::observables::{Label1Observable, ProgressBar1Observable};
 
 fn main() {
@@ -23,7 +23,7 @@ fn main() {
     let button1 = Button::new("button1")
         .text("Decrement")
         .listener(Box::new(button1listener));
-        
+
     let button2listener = Button2Listener::new(Rc::clone(&rcounter));
 
     let button2 = Button::new("button2")
@@ -40,8 +40,8 @@ fn main() {
 
     let progressbar1observable = ProgressBar1Observable::new(Rc::clone(&rcounter));
 
-    let progressbar1 = ProgressBar::new("progressbar1")
-        .observable(Box::new(progressbar1observable));
+    let progressbar1 =
+        ProgressBar::new("progressbar1").observable(Box::new(progressbar1observable));
 
     let mut container = Container::vertical();
 
@@ -53,10 +53,7 @@ fn main() {
     let mut window = Window::new();
     window.add(Box::new(container));
 
-    let app = App::new()
-        .title("Counter")
-        .size(320, 240)
-        .resizable(true);
+    let app = App::new().title("Counter").size(320, 240).resizable(true);
 
     app.run(window);
 }

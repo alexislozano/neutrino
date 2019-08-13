@@ -1,8 +1,8 @@
+use super::models::Person;
 use neutrino::utils::observable::Observable;
 use std::cell::RefCell;
-use std::rc::Rc;
-use super::models::Person;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 pub struct Custom1Observable {
     person: Rc<RefCell<Person>>,

@@ -1,16 +1,16 @@
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
-use neutrino::{App, Window};
-use neutrino::widgets::custom::Custom;
-use neutrino::widgets::container::Container;
 use neutrino::widgets::button::Button;
+use neutrino::widgets::container::Container;
+use neutrino::widgets::custom::Custom;
+use neutrino::{App, Window};
 
 mod custom_mod;
 
+use custom_mod::listeners::ButtonListener;
 use custom_mod::models::Person;
 use custom_mod::observables::Custom1Observable;
-use custom_mod::listeners::ButtonListener;
 
 fn main() {
     let mut person = Person::new();
@@ -42,7 +42,6 @@ fn main() {
         .text("Sigmund Freud")
         .listener(Box::new(button3listener));
 
-
     let mut container1 = Container::horizontal();
     container1.add(Box::new(button1));
     container1.add(Box::new(button2));
@@ -55,10 +54,7 @@ fn main() {
     let mut window = Window::new();
     window.add(Box::new(container2));
 
-    let app = App::new()
-        .title("Custom")
-        .size(320, 240)
-        .resizable(true);
+    let app = App::new().title("Custom").size(320, 240).resizable(true);
 
     app.run(window);
 }
