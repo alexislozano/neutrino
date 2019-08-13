@@ -6,13 +6,21 @@ fn main() {
 
     // Theming commons
     Command::new("sass")
-        .args(&["src/www/app.scss", &format!("{}/app.css", out_dir)])
+        .args(&[
+            "--no-cache",
+            "src/www/app.scss",
+            &format!("{}/app.css", out_dir),
+        ])
         .status()
         .unwrap();
 
     // Breeze theme
     Command::new("sass")
-        .args(&["src/www/breeze.scss", &format!("{}/breeze.css", out_dir)])
+        .args(&[
+            "--no-cache",
+            "src/www/breeze.scss",
+            &format!("{}/breeze.css", out_dir),
+        ])
         .status()
         .unwrap();
 }
