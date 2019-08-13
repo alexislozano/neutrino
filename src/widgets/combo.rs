@@ -78,14 +78,6 @@ impl Combo {
             observable: Some(observable),
         }
     }
-
-    pub fn on_update(&mut self) {
-        match &self.observable {
-            None => (),
-            Some(_observable) => {
-            }
-        }
-    }
 }
 
 impl Widget for Combo {
@@ -128,5 +120,13 @@ impl Widget for Combo {
                 }
             } 
         };
+    }
+
+    fn on_update(&mut self) {
+        match &self.observable {
+            None => (),
+            Some(_observable) => {
+            }
+        }
     }
 }

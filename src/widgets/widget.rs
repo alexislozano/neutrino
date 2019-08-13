@@ -8,4 +8,8 @@ pub trait Widget {
     
     /// Trigger changes depending on the event
     fn trigger(&mut self, event: &Event);
+    
+    /// Set the values of the widget using the fields of the HashMap 
+    /// defining the model
+    fn on_update(&mut self) {}
 }

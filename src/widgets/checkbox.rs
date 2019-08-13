@@ -3,6 +3,28 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
 
+/// Checkbox
+/// 
+/// # Fields
+/// ```
+/// pub struct CheckBox {
+///    name: String,
+///    checked: bool,
+///    text: String,
+///    listener: Option<Box<Listener>>,
+///    observable: Option<Box<Observable<String>>>,
+/// }
+/// ```
+/// 
+/// # Example
+/// 
+/// ```
+/// let my_checkbox = CheckBox::new("my_checkbox")
+///     .text("Toggle me !")
+///     .checked(true)
+///     .listener(Box::new(my_checkbox_listener))
+///     .observable(Box::new(my_checkbox_observable));
+/// ```
 pub struct CheckBox {
     name: String,
     checked: bool,
@@ -12,6 +34,17 @@ pub struct CheckBox {
 }
 
 impl CheckBox {
+    /// Create a CheckBox
+    /// 
+    /// # Default values
+    /// 
+    /// ```
+    /// name: name.to_string(),
+    /// checked: false,
+    /// text: "CheckBox".to_string(), 
+    /// listener: None,
+    /// observable: None,
+    /// ```
     pub fn new(name: &str) -> Self {
         CheckBox { 
             name: name.to_string(),
@@ -22,6 +55,7 @@ impl CheckBox {
         }
     }
 
+    /// Set the checked flag of a CheckBox
     pub fn checked(self, checked: bool) -> Self {
         CheckBox { 
             name: self.name,
@@ -32,6 +66,7 @@ impl CheckBox {
         }
     }
 
+    /// Set the label of a CheckBox
     pub fn text(self, text: &str) -> Self {
         CheckBox { 
             name: self.name,
@@ -42,6 +77,7 @@ impl CheckBox {
         }
     }
 
+    /// Set the listener of a CheckBox
     pub fn listener(self, listener: Box<Listener>) -> Self {
         CheckBox { 
             name: self.name,
@@ -52,6 +88,7 @@ impl CheckBox {
         }
     }
 
+    /// Set the observable of a CheckBox
     pub fn observable(self, observable: Box<Observable<String>>) -> Self {
         CheckBox { 
             name: self.name,
@@ -61,20 +98,25 @@ impl CheckBox {
             observable: Some(observable),
         }
     }
-
-    pub fn on_update(&mut self) {
-        match &self.observable {
-            None => (),
-            Some(observable) => {
-                let hash = observable.observe();
-                self.text = hash["text"].to_string();
-                self.checked = hash["checked"].parse().unwrap();
-            }
-        }
-    }
 }
 
 impl Widget for CheckBox {
+    /// Return the HTML representation of a CheckBox
+    /// 
+    /// # Events
+    /// 
+    /// ```
+    /// click -> ""
+    /// ```
+    /// 
+    /// # Styling
+    /// 
+    /// ```
+    /// class = checkbox
+    /// class = checkbox-outer [checked]
+    /// class = checkbox-inner [checked]
+    /// ```
+    /// 
     fn eval(&self) -> String {
         let checked = if self.checked {
             "checked"
@@ -87,6 +129,15 @@ impl Widget for CheckBox {
         )
     }
 
+    /// Trigger changes depending on the event
+    /// 
+    /// # Events
+    /// 
+    /// ```
+    /// update -> self.on_update()
+    /// click -> self.checked = != self.checked
+    ///          self.listener.on_click()
+    /// ```
     fn trigger(&mut self, event: &Event) {
         if event.event == "update" {
             self.on_update();
@@ -101,5 +152,25 @@ impl Widget for CheckBox {
                 } 
             }
         };
+    }
+
+    /// Set the values of the widget using the fields of the HashMap 
+    /// defining the model
+    /// 
+    /// # Fields
+    /// 
+    /// ```
+    /// text
+    /// checked
+    /// ```
+    fn on_update(&mut self) {
+        match &self.observable {
+            None => (),
+            Some(observable) => {
+                let hash = observable.observe();
+                self.text = hash["text"].to_string();
+                self.checked = hash["checked"].parse().unwrap();
+            }
+        }
     }
 }

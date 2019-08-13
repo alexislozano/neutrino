@@ -3,7 +3,7 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observable::Observable;
 
-/// A clickable widget
+/// Button
 /// 
 /// # Fields
 /// ```
@@ -98,18 +98,23 @@ impl Button {
             observable: Some(observable),
         }
     }
-
-    pub fn on_update(&mut self) {
-        match &self.observable {
-            None => (),
-            Some(observable) => {
-                self.text = observable.observe()["text"].to_string();
-            }
-        }
-    }
 }
 
 impl Widget for Button {
+    /// Return the HTML representation of a Button
+    /// 
+    /// # Events
+    /// 
+    /// ```
+    /// click -> ""
+    /// ```
+    /// 
+    /// # Styling
+    /// 
+    /// ```
+    /// class = button [disabled]
+    /// ```
+    /// 
     fn eval(&self) -> String {
         let disabled = if self.disabled {
             "disabled"
@@ -122,6 +127,14 @@ impl Widget for Button {
         )
     }
 
+    /// Trigger changes depending on the event
+    /// 
+    /// # Events
+    /// 
+    /// ```
+    /// update -> self.on_update()
+    /// click -> self.listener.on_click()
+    /// ```
     fn trigger(&mut self, event: &Event) {
         if event.event == "update" {
             self.on_update();
@@ -135,5 +148,22 @@ impl Widget for Button {
                 }
             } 
         };
+    }
+
+    /// Set the values of the widget using the fields of the HashMap 
+    /// defining the model
+    /// 
+    /// # Fields
+    /// 
+    /// ```
+    /// text
+    /// ```
+    fn on_update(&mut self) {
+        match &self.observable {
+            None => (),
+            Some(observable) => {
+                self.text = observable.observe()["text"].to_string();
+            }
+        }
     }
 }

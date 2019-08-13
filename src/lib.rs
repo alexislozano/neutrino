@@ -1,3 +1,20 @@
+//! # Neutrino
+//!
+//! Neutrino is GUI library built onto [web-view](https://docs.rs/web-view). As 
+//! such, it uses the native web component of the host system. Neutrino is 
+//! created with the idea of using the Model-View-Controller pattern used in 
+//! native GUI libraries. 
+//! 
+//! # Styling
+//! 
+//! In order to accomodate the taste of the user, Neutrino is themable in CSS.
+//! Basic widgets are already available and the Custom widget can be used with
+//! a custom HTML template.
+//! 
+//! # Examples
+//! 
+//! TODO
+
 use web_view::*;
 
 pub mod utils;
