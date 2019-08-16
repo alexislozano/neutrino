@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
-use crate::utils::observable::Observable;
+use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
 pub struct Range {
@@ -9,7 +9,7 @@ pub struct Range {
     max: i32,
     value: i32,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable>>,
+    observer: Option<Box<Observer>>,
 }
 
 impl Range {
@@ -19,7 +19,7 @@ impl Range {
             min: 0,
             max: 100,
             value: 0,
-            observable: None,
+            observer: None,
             listener: None,
         }
     }
@@ -31,7 +31,7 @@ impl Range {
             max: self.max,
             value: self.value,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -42,7 +42,7 @@ impl Range {
             max: max,
             value: self.value,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -53,7 +53,7 @@ impl Range {
             max: self.max,
             value: value,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -64,26 +64,26 @@ impl Range {
             max: self.max,
             value: self.value,
             listener: Some(listener),
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    pub fn observer(self, observer: Box<Observer>) -> Self {
         Range {
             name: self.name,
             min: self.min,
             max: self.max,
             value: self.value,
             listener: self.listener,
-            observable: Some(observable),
+            observer: Some(observer),
         }
     }
 
     fn on_update(&mut self) {
-        match &self.observable {
+        match &self.observer {
             None => (),
-            Some(observable) => {
-                self.value = observable.observe()["value"].parse::<i32>().unwrap();
+            Some(observer) => {
+                self.value = observer.observe()["value"].parse::<i32>().unwrap();
             }
         }
     }

@@ -10,7 +10,7 @@ mod custom_mod;
 
 use custom_mod::listeners::ButtonListener;
 use custom_mod::models::Person;
-use custom_mod::observables::Custom1Observable;
+use custom_mod::observers::Custom1Observer;
 
 fn main() {
     let mut person = Person::new();
@@ -18,11 +18,11 @@ fn main() {
     person.set_lastname("Lovelace");
     let rperson = Rc::new(RefCell::new(person));
 
-    let custom1observable = Custom1Observable::new(Rc::clone(&rperson));
+    let custom1observer = Custom1Observer::new(Rc::clone(&rperson));
 
     let custom1 = Custom::new("custom1")
         .template("<h1>My name is {firstname} {lastname}.</h1>")
-        .observable(Box::new(custom1observable));
+        .observer(Box::new(custom1observer));
 
     let button1listener = ButtonListener::new(Rc::clone(&rperson), "Ada", "Lovelace");
 

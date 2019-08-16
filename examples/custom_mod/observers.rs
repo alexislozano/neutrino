@@ -1,20 +1,20 @@
 use super::models::Person;
-use neutrino::utils::observable::Observable;
+use neutrino::utils::observer::Observer;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-pub struct Custom1Observable {
+pub struct Custom1Observer {
     person: Rc<RefCell<Person>>,
 }
 
-impl Custom1Observable {
+impl Custom1Observer {
     pub fn new(person: Rc<RefCell<Person>>) -> Self {
-        Custom1Observable { person: person }
+        Custom1Observer { person: person }
     }
 }
 
-impl Observable for Custom1Observable {
+impl Observer for Custom1Observer {
     fn observe(&self) -> HashMap<String, String> {
         let mut fields = HashMap::new();
         fields.insert("firstname".to_string(), self.person.borrow().firstname());

@@ -11,7 +11,7 @@ mod counter_mod;
 
 use counter_mod::listeners::{Button1Listener, Button2Listener, Label1Listener};
 use counter_mod::models::Counter;
-use counter_mod::observables::{Label1Observable, ProgressBar1Observable};
+use counter_mod::observers::{Label1Observer, ProgressBar1Observer};
 
 fn main() {
     let mut counter = Counter::new();
@@ -32,16 +32,16 @@ fn main() {
         .listener(Box::new(button2listener));
 
     let label1listener = Label1Listener::new(Rc::clone(&rcounter));
-    let label1observable = Label1Observable::new(Rc::clone(&rcounter));
+    let label1observer = Label1Observer::new(Rc::clone(&rcounter));
 
     let label1 = Label::new("label1")
         .listener(Box::new(label1listener))
-        .observable(Box::new(label1observable));
+        .observer(Box::new(label1observer));
 
-    let progressbar1observable = ProgressBar1Observable::new(Rc::clone(&rcounter));
+    let progressbar1observer = ProgressBar1Observer::new(Rc::clone(&rcounter));
 
     let progressbar1 =
-        ProgressBar::new("progressbar1").observable(Box::new(progressbar1observable));
+        ProgressBar::new("progressbar1").observer(Box::new(progressbar1observer));
 
     let mut container = Container::vertical();
 

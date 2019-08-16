@@ -1,13 +1,13 @@
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
-use crate::utils::observable::Observable;
+use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
 pub struct Label {
     name: String,
     text: String,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable>>,
+    observer: Option<Box<Observer>>,
 }
 
 impl Label {
@@ -16,7 +16,7 @@ impl Label {
             name: name.to_string(),
             text: "Label".to_string(),
             listener: None,
-            observable: None,
+            observer: None,
         }
     }
 
@@ -25,7 +25,7 @@ impl Label {
             name: self.name,
             text: text.to_string(),
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -34,24 +34,24 @@ impl Label {
             name: self.name,
             text: self.text,
             listener: Some(listener),
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    pub fn observer(self, observer: Box<Observer>) -> Self {
         Label {
             name: self.name,
             text: self.text,
             listener: self.listener,
-            observable: Some(observable),
+            observer: Some(observer),
         }
     }
 
     fn on_update(&mut self) {
-        match &self.observable {
+        match &self.observer {
             None => (),
-            Some(observable) => {
-                self.text = observable.observe()["text"].to_string();
+            Some(observer) => {
+                self.text = observer.observe()["text"].to_string();
             }
         }
     }

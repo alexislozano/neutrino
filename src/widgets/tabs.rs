@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
-use crate::utils::observable::Observable;
+use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
 pub struct Tabs {
@@ -8,7 +8,7 @@ pub struct Tabs {
     children: Vec<(String, Box<Widget>)>,
     selected: u32,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable>>,
+    observer: Option<Box<Observer>>,
 }
 
 impl Tabs {
@@ -18,7 +18,7 @@ impl Tabs {
             children: vec![],
             selected: 0,
             listener: None,
-            observable: None,
+            observer: None,
         }
     }
 
@@ -28,7 +28,7 @@ impl Tabs {
             children: self.children,
             selected: selected,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -38,17 +38,17 @@ impl Tabs {
             children: self.children,
             selected: self.selected,
             listener: Some(listener),
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    pub fn observer(self, observer: Box<Observer>) -> Self {
         Tabs {
             name: self.name,
             children: self.children,
             selected: self.selected,
             listener: self.listener,
-            observable: Some(observable),
+            observer: Some(observer),
         }
     }
 
@@ -57,9 +57,9 @@ impl Tabs {
     }
 
     fn on_update(&mut self) {
-        match &self.observable {
+        match &self.observer {
             None => (),
-            Some(_observable) => {}
+            Some(_observer) => {}
         }
     }
 }

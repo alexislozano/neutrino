@@ -1,20 +1,20 @@
 use super::models::Counter;
-use neutrino::utils::observable::Observable;
+use neutrino::utils::observer::Observer;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-pub struct Label1Observable {
+pub struct Label1Observer {
     counter: Rc<RefCell<Counter>>,
 }
 
-impl Label1Observable {
+impl Label1Observer {
     pub fn new(counter: Rc<RefCell<Counter>>) -> Self {
-        Label1Observable { counter: counter }
+        Label1Observer { counter: counter }
     }
 }
 
-impl Observable for Label1Observable {
+impl Observer for Label1Observer {
     fn observe(&self) -> HashMap<String, String> {
         let mut fields = HashMap::new();
         fields.insert(
@@ -25,17 +25,17 @@ impl Observable for Label1Observable {
     }
 }
 
-pub struct ProgressBar1Observable {
+pub struct ProgressBar1Observer {
     counter: Rc<RefCell<Counter>>,
 }
 
-impl ProgressBar1Observable {
+impl ProgressBar1Observer {
     pub fn new(counter: Rc<RefCell<Counter>>) -> Self {
-        ProgressBar1Observable { counter: counter }
+        ProgressBar1Observer { counter: counter }
     }
 }
 
-impl Observable for ProgressBar1Observable {
+impl Observer for ProgressBar1Observer {
     fn observe(&self) -> HashMap<String, String> {
         let mut fields = HashMap::new();
         let value = self.counter.borrow().value();

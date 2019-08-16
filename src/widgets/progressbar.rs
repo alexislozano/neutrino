@@ -1,12 +1,12 @@
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
-use crate::utils::observable::Observable;
+use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
 pub struct ProgressBar {
     name: String,
     value: u8,
-    observable: Option<Box<Observable>>,
+    observer: Option<Box<Observer>>,
     listener: Option<Box<Listener>>,
 }
 
@@ -15,7 +15,7 @@ impl ProgressBar {
         ProgressBar {
             name: name.to_string(),
             value: 0,
-            observable: None,
+            observer: None,
             listener: None,
         }
     }
@@ -24,7 +24,7 @@ impl ProgressBar {
         ProgressBar {
             name: self.name,
             value: value,
-            observable: self.observable,
+            observer: self.observer,
             listener: self.listener,
         }
     }
@@ -33,25 +33,25 @@ impl ProgressBar {
         ProgressBar {
             name: self.name,
             value: self.value,
-            observable: self.observable,
+            observer: self.observer,
             listener: Some(listener),
         }
     }
 
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    pub fn observer(self, observer: Box<Observer>) -> Self {
         ProgressBar {
             name: self.name,
             value: self.value,
-            observable: Some(observable),
+            observer: Some(observer),
             listener: self.listener,
         }
     }
 
     fn on_update(&mut self) {
-        match &self.observable {
+        match &self.observer {
             None => (),
-            Some(observable) => {
-                self.value = observable.observe()["value"].parse::<u8>().unwrap();
+            Some(observer) => {
+                self.value = observer.observe()["value"].parse::<u8>().unwrap();
             }
         }
     }

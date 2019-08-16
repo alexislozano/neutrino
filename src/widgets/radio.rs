@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
-use crate::utils::observable::Observable;
+use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
 pub struct Radio {
@@ -8,7 +8,7 @@ pub struct Radio {
     choices: Vec<String>,
     selected: u32,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable>>,
+    observer: Option<Box<Observer>>,
 }
 
 impl Radio {
@@ -18,7 +18,7 @@ impl Radio {
             choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
             selected: 0,
             listener: None,
-            observable: None,
+            observer: None,
         }
     }
 
@@ -31,7 +31,7 @@ impl Radio {
                 .collect::<Vec<String>>(),
             selected: self.selected,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -41,7 +41,7 @@ impl Radio {
             choices: self.choices,
             selected: selected,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -51,24 +51,24 @@ impl Radio {
             choices: self.choices,
             selected: self.selected,
             listener: Some(listener),
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    pub fn observer(self, observer: Box<Observer>) -> Self {
         Radio {
             name: self.name,
             choices: self.choices,
             selected: self.selected,
             listener: self.listener,
-            observable: Some(observable),
+            observer: Some(observer),
         }
     }
 
     pub fn on_update(&mut self) {
-        match &self.observable {
+        match &self.observer {
             None => (),
-            Some(_observable) => {}
+            Some(_observer) => {}
         }
     }
 }

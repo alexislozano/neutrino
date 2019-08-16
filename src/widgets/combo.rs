@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
-use crate::utils::observable::Observable;
+use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
 pub struct Combo {
@@ -9,7 +9,7 @@ pub struct Combo {
     selected: u32,
     opened: bool,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable>>,
+    observer: Option<Box<Observer>>,
 }
 
 impl Combo {
@@ -20,7 +20,7 @@ impl Combo {
             selected: 0,
             opened: false,
             listener: None,
-            observable: None,
+            observer: None,
         }
     }
 
@@ -34,7 +34,7 @@ impl Combo {
             selected: self.selected,
             opened: self.opened,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -45,7 +45,7 @@ impl Combo {
             selected: selected,
             opened: self.opened,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -56,7 +56,7 @@ impl Combo {
             selected: self.selected,
             opened: opened,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -67,18 +67,18 @@ impl Combo {
             selected: self.selected,
             opened: self.opened,
             listener: Some(listener),
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    pub fn observer(self, observer: Box<Observer>) -> Self {
         Combo {
             name: self.name,
             choices: self.choices,
             selected: self.selected,
             opened: self.opened,
             listener: self.listener,
-            observable: Some(observable),
+            observer: Some(observer),
         }
     }
 }
@@ -126,9 +126,9 @@ impl Widget for Combo {
     }
 
     fn on_update(&mut self) {
-        match &self.observable {
+        match &self.observer {
             None => (),
-            Some(_observable) => {}
+            Some(_observer) => {}
         }
     }
 }

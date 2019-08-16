@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
-use crate::utils::observable::Observable;
+use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
 /// Button
@@ -12,7 +12,7 @@ use crate::widgets::widget::Widget;
 ///    text: String,
 ///    disabled: bool,
 ///    listener: Option<Box<Listener>>,
-///    observable: Option<Box<Observable>>,
+///    observer: Option<Box<Observer>>,
 /// }
 /// ```
 ///
@@ -23,14 +23,14 @@ use crate::widgets::widget::Widget;
 ///     .text("Click me !")
 ///     .disabled(true)
 ///     .listener(Box::new(my_button_listener))
-///     .observable(Box::new(my_button_observable));
+///     .observer(Box::new(my_button_observer));
 /// ```
 pub struct Button {
     name: String,
     text: String,
     disabled: bool,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable>>,
+    observer: Option<Box<Observer>>,
 }
 
 impl Button {
@@ -43,7 +43,7 @@ impl Button {
     /// text: "Button".to_string(),
     /// disabled: false,
     /// listener: None,
-    /// observable: None,
+    /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
         Button {
@@ -51,7 +51,7 @@ impl Button {
             text: "Button".to_string(),
             disabled: false,
             listener: None,
-            observable: None,
+            observer: None,
         }
     }
 
@@ -62,7 +62,7 @@ impl Button {
             text: text.to_string(),
             disabled: self.disabled,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -73,7 +73,7 @@ impl Button {
             text: self.text,
             disabled: disabled,
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -84,18 +84,18 @@ impl Button {
             text: self.text,
             disabled: self.disabled,
             listener: Some(listener),
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
-    /// Set the observable of a Button
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    /// Set the observer of a Button
+    pub fn observer(self, observer: Box<Observer>) -> Self {
         Button {
             name: self.name,
             text: self.text,
             disabled: self.disabled,
             listener: self.listener,
-            observable: Some(observable),
+            observer: Some(observer),
         }
     }
 }
@@ -149,7 +149,7 @@ impl Widget for Button {
     }
 
     /// Set the values of the widget using the fields of the HashMap
-    /// defining the model
+    /// gotten form the observer
     ///
     /// # Fields
     ///
@@ -157,10 +157,10 @@ impl Widget for Button {
     /// text
     /// ```
     fn on_update(&mut self) {
-        match &self.observable {
+        match &self.observer {
             None => (),
-            Some(observable) => {
-                self.text = observable.observe()["text"].to_string();
+            Some(observer) => {
+                self.text = observer.observe()["text"].to_string();
             }
         }
     }

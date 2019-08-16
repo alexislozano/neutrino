@@ -1,13 +1,13 @@
 use crate::utils::event::Event;
 use crate::utils::listener::Listener;
-use crate::utils::observable::Observable;
+use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
 pub struct TextInput {
     name: String,
     value: String,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable>>,
+    observer: Option<Box<Observer>>,
 }
 
 impl TextInput {
@@ -16,7 +16,7 @@ impl TextInput {
             name: name.to_string(),
             value: "TextInput".to_string(),
             listener: None,
-            observable: None,
+            observer: None,
         }
     }
 
@@ -25,7 +25,7 @@ impl TextInput {
             name: self.name,
             value: value.to_string(),
             listener: self.listener,
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
@@ -34,24 +34,24 @@ impl TextInput {
             name: self.name,
             value: self.value,
             listener: Some(listener),
-            observable: self.observable,
+            observer: self.observer,
         }
     }
 
-    pub fn observable(self, observable: Box<Observable>) -> Self {
+    pub fn observer(self, observer: Box<Observer>) -> Self {
         TextInput {
             name: self.name,
             value: self.value,
             listener: self.listener,
-            observable: Some(observable),
+            observer: Some(observer),
         }
     }
 
     pub fn on_update(&mut self) {
-        match &self.observable {
+        match &self.observer {
             None => (),
-            Some(observable) => {
-                self.value = observable.observe()["value"].to_string();
+            Some(observer) => {
+                self.value = observer.observe()["value"].to_string();
             }
         }
     }
