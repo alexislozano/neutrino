@@ -14,7 +14,7 @@ impl Label1Observable {
     }
 }
 
-impl Observable<String> for Label1Observable {
+impl Observable for Label1Observable {
     fn observe(&self) -> HashMap<String, String> {
         let mut fields = HashMap::new();
         fields.insert(
@@ -35,16 +35,16 @@ impl ProgressBar1Observable {
     }
 }
 
-impl Observable<u8> for ProgressBar1Observable {
-    fn observe(&self) -> HashMap<String, u8> {
+impl Observable for ProgressBar1Observable {
+    fn observe(&self) -> HashMap<String, String> {
         let mut fields = HashMap::new();
         let value = self.counter.borrow().value();
         if value < 0 {
-            fields.insert("value".to_string(), 0);
+            fields.insert("value".to_string(), 0.to_string());
         } else if value > 100 {
-            fields.insert("value".to_string(), 100);
+            fields.insert("value".to_string(), 100.to_string());
         } else {
-            fields.insert("value".to_string(), value as u8);
+            fields.insert("value".to_string(), value.to_string());
         }
         fields
     }

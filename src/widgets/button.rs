@@ -12,7 +12,7 @@ use crate::widgets::widget::Widget;
 ///    text: String,
 ///    disabled: bool,
 ///    listener: Option<Box<Listener>>,
-///    observable: Option<Box<Observable<String>>>,
+///    observable: Option<Box<Observable>>,
 /// }
 /// ```
 ///
@@ -30,7 +30,7 @@ pub struct Button {
     text: String,
     disabled: bool,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable<String>>>,
+    observable: Option<Box<Observable>>,
 }
 
 impl Button {
@@ -89,7 +89,7 @@ impl Button {
     }
 
     /// Set the observable of a Button
-    pub fn observable(self, observable: Box<Observable<String>>) -> Self {
+    pub fn observable(self, observable: Box<Observable>) -> Self {
         Button {
             name: self.name,
             text: self.text,

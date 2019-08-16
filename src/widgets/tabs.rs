@@ -8,7 +8,7 @@ pub struct Tabs {
     children: Vec<(String, Box<Widget>)>,
     selected: u32,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable<String>>>,
+    observable: Option<Box<Observable>>,
 }
 
 impl Tabs {
@@ -42,7 +42,7 @@ impl Tabs {
         }
     }
 
-    pub fn observable(self, observable: Box<Observable<String>>) -> Self {
+    pub fn observable(self, observable: Box<Observable>) -> Self {
         Tabs {
             name: self.name,
             children: self.children,

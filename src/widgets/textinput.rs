@@ -7,7 +7,7 @@ pub struct TextInput {
     name: String,
     value: String,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable<String>>>,
+    observable: Option<Box<Observable>>,
 }
 
 impl TextInput {
@@ -38,7 +38,7 @@ impl TextInput {
         }
     }
 
-    pub fn observable(self, observable: Box<Observable<String>>) -> Self {
+    pub fn observable(self, observable: Box<Observable>) -> Self {
         TextInput {
             name: self.name,
             value: self.value,

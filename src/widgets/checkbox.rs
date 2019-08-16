@@ -12,7 +12,7 @@ use crate::widgets::widget::Widget;
 ///    checked: bool,
 ///    text: String,
 ///    listener: Option<Box<Listener>>,
-///    observable: Option<Box<Observable<String>>>,
+///    observable: Option<Box<Observable>>,
 /// }
 /// ```
 ///
@@ -30,7 +30,7 @@ pub struct CheckBox {
     checked: bool,
     text: String,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable<String>>>,
+    observable: Option<Box<Observable>>,
 }
 
 impl CheckBox {
@@ -89,7 +89,7 @@ impl CheckBox {
     }
 
     /// Set the observable of a CheckBox
-    pub fn observable(self, observable: Box<Observable<String>>) -> Self {
+    pub fn observable(self, observable: Box<Observable>) -> Self {
         CheckBox {
             name: self.name,
             checked: self.checked,

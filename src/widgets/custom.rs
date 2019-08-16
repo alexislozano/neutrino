@@ -10,7 +10,7 @@ pub struct Custom {
     fields: HashMap<String, String>,
     template: String,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable<String>>>,
+    observable: Option<Box<Observable>>,
 }
 
 impl Custom {
@@ -44,7 +44,7 @@ impl Custom {
         }
     }
 
-    pub fn observable(self, observable: Box<Observable<String>>) -> Custom {
+    pub fn observable(self, observable: Box<Observable>) -> Custom {
         Custom {
             name: self.name,
             fields: self.fields,

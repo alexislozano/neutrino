@@ -9,7 +9,7 @@ pub struct Combo {
     selected: u32,
     opened: bool,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable<String>>>,
+    observable: Option<Box<Observable>>,
 }
 
 impl Combo {
@@ -71,7 +71,7 @@ impl Combo {
         }
     }
 
-    pub fn observable(self, observable: Box<Observable<String>>) -> Self {
+    pub fn observable(self, observable: Box<Observable>) -> Self {
         Combo {
             name: self.name,
             choices: self.choices,

@@ -6,7 +6,7 @@ use crate::widgets::widget::Widget;
 pub struct ProgressBar {
     name: String,
     value: u8,
-    observable: Option<Box<Observable<u8>>>,
+    observable: Option<Box<Observable>>,
     listener: Option<Box<Listener>>,
 }
 
@@ -38,7 +38,7 @@ impl ProgressBar {
         }
     }
 
-    pub fn observable(self, observable: Box<Observable<u8>>) -> Self {
+    pub fn observable(self, observable: Box<Observable>) -> Self {
         ProgressBar {
             name: self.name,
             value: self.value,
@@ -51,7 +51,7 @@ impl ProgressBar {
         match &self.observable {
             None => (),
             Some(observable) => {
-                self.value = observable.observe()["value"];
+                self.value = observable.observe()["value"].parse::<u8>().unwrap();
             }
         }
     }

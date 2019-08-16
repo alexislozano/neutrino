@@ -1,5 +1,5 @@
 use std::collections::HashMap;
 
-pub trait Observable<T> {
-    fn observe(&self) -> HashMap<String, T>;
+pub trait Observable {
+    fn observe(&self) -> HashMap<String, String>;
 }

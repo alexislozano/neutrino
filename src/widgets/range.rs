@@ -9,7 +9,7 @@ pub struct Range {
     max: i32,
     value: i32,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable<i32>>>,
+    observable: Option<Box<Observable>>,
 }
 
 impl Range {
@@ -68,7 +68,7 @@ impl Range {
         }
     }
 
-    pub fn observable(self, observable: Box<Observable<i32>>) -> Self {
+    pub fn observable(self, observable: Box<Observable>) -> Self {
         Range {
             name: self.name,
             min: self.min,
@@ -83,7 +83,7 @@ impl Range {
         match &self.observable {
             None => (),
             Some(observable) => {
-                self.value = observable.observe()["value"];
+                self.value = observable.observe()["value"].parse::<i32>().unwrap();
             }
         }
     }

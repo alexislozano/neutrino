@@ -7,7 +7,7 @@ pub struct Label {
     name: String,
     text: String,
     listener: Option<Box<Listener>>,
-    observable: Option<Box<Observable<String>>>,
+    observable: Option<Box<Observable>>,
 }
 
 impl Label {
@@ -38,7 +38,7 @@ impl Label {
         }
     }
 
-    pub fn observable(self, observable: Box<Observable<String>>) -> Self {
+    pub fn observable(self, observable: Box<Observable>) -> Self {
         Label {
             name: self.name,
             text: self.text,
