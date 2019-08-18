@@ -3,6 +3,32 @@ use crate::utils::listener::Listener;
 use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
+/// # ComboBox
+///
+/// A collapsible list of strings.
+///
+/// ## Fields
+/// ```
+/// pub struct Combo {
+///     name: String,
+///     choices: Vec<String>,
+///     selected: u32,
+///     opened: bool,
+///     listener: Option<Box<Listener>>,
+///     observer: Option<Box<Observer>>,
+/// }
+/// ```
+///
+/// ## Example
+///
+/// ```
+/// let my_combo = Combo::new("my_combo")
+///     .choices(vec!["Cake", "Pie"])
+///     .selected(0)
+///     .opened(false)
+///     .listener(Box::new(my_listener))
+///     .observer(Box::new(my_observer));
+/// ```
 pub struct Combo {
     name: String,
     choices: Vec<String>,
@@ -13,6 +39,18 @@ pub struct Combo {
 }
 
 impl Combo {
+    /// Create a Combo
+    ///
+    /// # Default values
+    ///
+    /// ```
+    /// name: name.to_string(),
+    /// choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
+    /// selected: 0,
+    /// opened: false,
+    /// listener: None,
+    /// observer: None,
+    /// ```
     pub fn new(name: &str) -> Self {
         Combo {
             name: name.to_string(),
@@ -24,6 +62,7 @@ impl Combo {
         }
     }
 
+    /// Set the choices
     pub fn choices(self, choices: Vec<&str>) -> Self {
         Combo {
             name: self.name,
@@ -38,6 +77,7 @@ impl Combo {
         }
     }
 
+    /// Set the index of the selected choice
     pub fn selected(self, selected: u32) -> Self {
         Combo {
             name: self.name,
@@ -49,6 +89,7 @@ impl Combo {
         }
     }
 
+    /// Set the opened flag
     pub fn opened(self, opened: bool) -> Self {
         Combo {
             name: self.name,
@@ -60,6 +101,7 @@ impl Combo {
         }
     }
 
+    /// Set the listener
     pub fn listener(self, listener: Box<Listener>) -> Self {
         Combo {
             name: self.name,
@@ -71,6 +113,7 @@ impl Combo {
         }
     }
 
+    /// Set the observer
     pub fn observer(self, observer: Box<Observer>) -> Self {
         Combo {
             name: self.name,
@@ -84,6 +127,22 @@ impl Combo {
 }
 
 impl Widget for Combo {
+    /// Return the HTML representation
+    ///
+    /// # Events
+    ///
+    /// ```
+    /// click -> index
+    /// ```
+    ///
+    /// # Styling
+    ///
+    /// ```
+    /// class = combo
+    /// class = combo-button
+    /// class = combo-choices
+    /// class = combo-choice
+    /// ```
     fn eval(&self) -> String {
         let mut s = format!(
             r#"<div class="combo"><div onclick="{}" class="combo-button">{}</div>"#,
@@ -105,6 +164,15 @@ impl Widget for Combo {
         s
     }
 
+    /// Trigger changes depending on the event
+    ///
+    /// # Events
+    ///
+    /// ```
+    /// update -> self.on_update()
+    /// click -> self.selected = selected choice index
+    ///          self.listener.on_click()
+    /// ```
     fn trigger(&mut self, event: &Event) {
         if event.event == "update" {
             self.on_update();
@@ -125,6 +193,13 @@ impl Widget for Combo {
         };
     }
 
+    /// Set the values of the widget using the fields of the HashMap
+    /// returned by the observer
+    ///
+    /// # Fields
+    ///
+    /// ```
+    /// ```
     fn on_update(&mut self) {
         match &self.observer {
             None => (),

@@ -3,27 +3,29 @@ use crate::utils::listener::Listener;
 use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
-/// Checkbox
+/// # Checkbox
 ///
-/// # Fields
+/// A togglable checkbox with a label.
+///
+/// ## Fields
 /// ```
 /// pub struct CheckBox {
-///    name: String,
-///    checked: bool,
-///    text: String,
-///    listener: Option<Box<Listener>>,
-///    observer: Option<Box<Observer>>,
+///     name: String,
+///     checked: bool,
+///     text: String,
+///     listener: Option<Box<Listener>>,
+///     observer: Option<Box<Observer>>,
 /// }
 /// ```
 ///
-/// # Example
+/// ## Example
 ///
 /// ```
 /// let my_checkbox = CheckBox::new("my_checkbox")
 ///     .text("Toggle me !")
 ///     .checked(true)
-///     .listener(Box::new(my_checkbox_listener))
-///     .observer(Box::new(my_checkbox_observer));
+///     .listener(Box::new(my_listener))
+///     .observer(Box::new(my_observer));
 /// ```
 pub struct CheckBox {
     name: String,
@@ -55,7 +57,7 @@ impl CheckBox {
         }
     }
 
-    /// Set the checked flag of a CheckBox
+    /// Set the checked flag
     pub fn checked(self, checked: bool) -> Self {
         CheckBox {
             name: self.name,
@@ -66,7 +68,7 @@ impl CheckBox {
         }
     }
 
-    /// Set the label of a CheckBox
+    /// Set the label
     pub fn text(self, text: &str) -> Self {
         CheckBox {
             name: self.name,
@@ -77,7 +79,7 @@ impl CheckBox {
         }
     }
 
-    /// Set the listener of a CheckBox
+    /// Set the listener
     pub fn listener(self, listener: Box<Listener>) -> Self {
         CheckBox {
             name: self.name,
@@ -88,7 +90,7 @@ impl CheckBox {
         }
     }
 
-    /// Set the observer of a CheckBox
+    /// Set the observer
     pub fn observer(self, observer: Box<Observer>) -> Self {
         CheckBox {
             name: self.name,
@@ -101,7 +103,7 @@ impl CheckBox {
 }
 
 impl Widget for CheckBox {
-    /// Return the HTML representation of a CheckBox
+    /// Return the HTML representation
     ///
     /// # Events
     ///
@@ -116,7 +118,6 @@ impl Widget for CheckBox {
     /// class = checkbox-outer [checked]
     /// class = checkbox-inner [checked]
     /// ```
-    ///
     fn eval(&self) -> String {
         let checked = if self.checked { "checked" } else { "" };
         format!(
@@ -151,7 +152,7 @@ impl Widget for CheckBox {
     }
 
     /// Set the values of the widget using the fields of the HashMap
-    /// defining the model
+    /// returned by the observer
     ///
     /// # Fields
     ///

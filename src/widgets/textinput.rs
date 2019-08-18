@@ -3,6 +3,28 @@ use crate::utils::listener::Listener;
 use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
+/// # TextInput
+///
+/// A zone where text can be written.
+///
+/// ## Fields
+/// ```
+/// pub struct TextInput {
+///     name: String,
+///     value: String,
+///     listener: Option<Box<Listener>>,
+///     observer: Option<Box<Observer>>,
+/// }
+/// ```
+///
+/// ## Example
+///
+/// ```
+/// let my_textinput = TextInput::new("my_textinput")
+///     .value("Hey")
+///     .listener(Box::new(my_listener))
+///     .observer(Box::new(my_observer));
+/// ```
 pub struct TextInput {
     name: String,
     value: String,
@@ -11,6 +33,16 @@ pub struct TextInput {
 }
 
 impl TextInput {
+    /// Create a TextInput
+    ///
+    /// # Default values
+    ///
+    /// ```
+    /// name: name.to_string(),
+    /// value: "TextInput".to_string(),
+    /// listener: None,
+    /// observer: None,
+    /// ```
     pub fn new(name: &str) -> Self {
         TextInput {
             name: name.to_string(),
@@ -20,6 +52,7 @@ impl TextInput {
         }
     }
 
+    /// Set the value
     pub fn value(self, value: &str) -> Self {
         TextInput {
             name: self.name,
@@ -29,6 +62,7 @@ impl TextInput {
         }
     }
 
+    /// Set the listener
     pub fn listener(self, listener: Box<Listener>) -> Self {
         TextInput {
             name: self.name,
@@ -38,6 +72,7 @@ impl TextInput {
         }
     }
 
+    /// Set the observer
     pub fn observer(self, observer: Box<Observer>) -> Self {
         TextInput {
             name: self.name,
@@ -46,18 +81,22 @@ impl TextInput {
             observer: Some(observer),
         }
     }
-
-    pub fn on_update(&mut self) {
-        match &self.observer {
-            None => (),
-            Some(observer) => {
-                self.value = observer.observe()["value"].to_string();
-            }
-        }
-    }
 }
 
 impl Widget for TextInput {
+    /// Return the HTML representation
+    ///
+    /// # Events
+    ///
+    /// ```
+    /// change -> value
+    /// ```
+    ///
+    /// # Styling
+    ///
+    /// ```
+    /// class = textinput
+    /// ```
     fn eval(&self) -> String {
         format!(
             r#"<div class="textinput"><input value="{}" onchange="{}" /></div>"#,
@@ -66,6 +105,15 @@ impl Widget for TextInput {
         )
     }
 
+    /// Trigger changes depending on the event
+    ///
+    /// # Events
+    ///
+    /// ```
+    /// update -> self.on_update()
+    /// click -> self.value = value
+    ///          self.listener.on_click(value)
+    /// ```
     fn trigger(&mut self, event: &Event) {
         if event.event == "update" {
             self.on_update();
@@ -80,5 +128,22 @@ impl Widget for TextInput {
                 }
             }
         };
+    }
+
+    /// Set the values of the widget using the fields of the HashMap
+    /// returned by the observer
+    ///
+    /// # Fields
+    ///
+    /// ```
+    /// value
+    /// ```
+    fn on_update(&mut self) {
+        match &self.observer {
+            None => (),
+            Some(observer) => {
+                self.value = observer.observe()["value"].to_string();
+            }
+        }
     }
 }

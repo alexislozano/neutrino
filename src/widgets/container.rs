@@ -1,12 +1,30 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
+/// # Container
+///
+/// A container for other widgets.
+///
+/// ## Fields
+/// ```
+/// pub struct Container {
+///     children: Vec<Box<Widget>>,
+///     style: String,
+/// }
+/// ```
+///
+/// ## Example
+///
+/// ```
+/// let my_container = Container::horizontal();
+/// ```
 pub struct Container {
     children: Vec<Box<Widget>>,
     style: String,
 }
 
 impl Container {
+    /// Create an empty vertical Container
     pub fn vertical() -> Self {
         Container {
             children: vec![],
@@ -14,6 +32,7 @@ impl Container {
         }
     }
 
+    /// Create an empty horizontal Container
     pub fn horizontal() -> Self {
         Container {
             children: vec![],
@@ -21,12 +40,21 @@ impl Container {
         }
     }
 
+    /// Add a widget
     pub fn add(&mut self, widget: Box<Widget>) {
         self.children.push(widget);
     }
 }
 
 impl Widget for Container {
+    /// Return the HTML representation of the Container and of the children of 
+    /// the Container
+    ///
+    /// # Styling
+    ///
+    /// ```
+    /// class = container
+    /// ```
     fn eval(&self) -> String {
         let mut s = format!(r#"<div class="container" style="{}">"#, self.style);
         for widget in self.children.iter() {
@@ -36,6 +64,7 @@ impl Widget for Container {
         s
     }
 
+    /// Trigger the trigger function of the children of the Container
     fn trigger(&mut self, event: &Event) {
         for widget in self.children.iter_mut() {
             widget.trigger(event);

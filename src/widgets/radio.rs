@@ -3,6 +3,30 @@ use crate::utils::listener::Listener;
 use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
+/// # Radio
+///
+/// A list of radio buttons. Only one can be selected at a time.
+///
+/// ## Fields
+/// ```
+/// pub struct Radio {
+///     name: String,
+///     choices: Vec<String>,
+///     selected: u32,
+///     listener: Option<Box<Listener>>,
+///     observer: Option<Box<Observer>>,
+/// }
+/// ```
+///
+/// ## Example
+///
+/// ```
+/// let my_radio = Radio::new("my_radio")
+///     .choices("Cake", "Pie")
+///     .selected(0)
+///     .listener(Box::new(my_listener))
+///     .observer(Box::new(my_observer));
+/// ```
 pub struct Radio {
     name: String,
     choices: Vec<String>,
@@ -12,6 +36,17 @@ pub struct Radio {
 }
 
 impl Radio {
+    /// Create a Radio
+    ///
+    /// # Default values
+    ///
+    /// ```
+    /// name: name.to_string(),
+    /// choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
+    /// selected: 0,
+    /// listener: None,
+    /// observer: None,
+    /// ```
     pub fn new(name: &str) -> Self {
         Radio {
             name: name.to_string(),
@@ -22,6 +57,7 @@ impl Radio {
         }
     }
 
+    /// Set the choices
     pub fn choices(self, choices: Vec<&str>) -> Self {
         Radio {
             name: self.name,
@@ -35,6 +71,7 @@ impl Radio {
         }
     }
 
+    /// Set the index of the selected choice
     pub fn selected(self, selected: u32) -> Self {
         Radio {
             name: self.name,
@@ -45,6 +82,7 @@ impl Radio {
         }
     }
 
+    /// Set the listener
     pub fn listener(self, listener: Box<Listener>) -> Self {
         Radio {
             name: self.name,
@@ -55,6 +93,7 @@ impl Radio {
         }
     }
 
+    /// Set the observer
     pub fn observer(self, observer: Box<Observer>) -> Self {
         Radio {
             name: self.name,
@@ -64,16 +103,24 @@ impl Radio {
             observer: Some(observer),
         }
     }
-
-    pub fn on_update(&mut self) {
-        match &self.observer {
-            None => (),
-            Some(_observer) => {}
-        }
-    }
 }
 
 impl Widget for Radio {
+    /// Return the HTML representation
+    ///
+    /// # Events
+    ///
+    /// ```
+    /// click -> index
+    /// ```
+    ///
+    /// # Styling
+    ///
+    /// ```
+    /// class = radio
+    /// class = radio-outer [checked]
+    /// class = radio-inner [checked]
+    /// ```
     fn eval(&self) -> String {
         let mut s = "".to_string();
         for (i, choice) in self.choices.iter().enumerate() {
@@ -92,6 +139,15 @@ impl Widget for Radio {
         s
     }
 
+    /// Trigger changes depending on the event
+    ///
+    /// # Events
+    ///
+    /// ```
+    /// update -> self.on_update()
+    /// click -> self.selected = selected choice index
+    ///          self.listener.on_click()
+    /// ```
     fn trigger(&mut self, event: &Event) {
         if event.event == "update" {
             self.on_update();
@@ -106,5 +162,19 @@ impl Widget for Radio {
                 }
             }
         };
+    }
+
+    /// Set the values of the widget using the fields of the HashMap
+    /// returned by the observer
+    ///
+    /// # Fields
+    ///
+    /// ```
+    /// ```
+    fn on_update(&mut self) {
+        match &self.observer {
+            None => (),
+            Some(_observer) => {}
+        }
     }
 }

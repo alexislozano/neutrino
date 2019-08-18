@@ -1,7 +1,7 @@
 //! # Neutrino
 //!
-//! Neutrino is GUI library built onto [web-view](https://docs.rs/web-view). As
-//! such, it uses the native web component of the host system. Neutrino is
+//! Neutrino is a GUI library built onto [web-view](https://docs.rs/web-view). 
+//! As such, it uses the native web component of the host system. Neutrino is
 //! created with the idea of using the Model-View-Controller pattern used in
 //! native GUI libraries.
 //!
@@ -24,66 +24,20 @@ use utils::event::Event;
 use utils::theme::Theme;
 use widgets::widget::Widget;
 
-pub struct App {
-    title: String,
-    width: i32,
-    height: i32,
-    resizable: bool,
-    theme: Theme,
-}
+/// # App
+///
+/// An abstract application.
+///
+/// ## Example
+///
+/// ```
+/// App::run(my_window);
+/// ```
+pub struct App;
 
 impl App {
-    pub fn new() -> Self {
-        App {
-            title: "Untitled".to_string(),
-            width: 640,
-            height: 480,
-            resizable: true,
-            theme: Theme::Breeze,
-        }
-    }
-
-    pub fn title(self, title: &str) -> Self {
-        App {
-            title: title.to_string(),
-            width: self.width,
-            height: self.height,
-            resizable: self.resizable,
-            theme: self.theme,
-        }
-    }
-
-    pub fn size(self, width: i32, height: i32) -> Self {
-        App {
-            title: self.title,
-            width: width,
-            height: height,
-            resizable: self.resizable,
-            theme: self.theme,
-        }
-    }
-
-    pub fn resizable(self, resizable: bool) -> Self {
-        App {
-            title: self.title,
-            width: self.width,
-            height: self.height,
-            resizable: resizable,
-            theme: self.theme,
-        }
-    }
-
-    pub fn theme(self, theme: Theme) -> Self {
-        App {
-            title: self.title,
-            width: self.width,
-            height: self.height,
-            resizable: self.resizable,
-            theme: theme,
-        }
-    }
-
-    pub fn run(&self, mut window: Window) {
+    /// Run the application
+    pub fn run(mut window: Window) {
         let html = format!(
             r#"
             <!doctype html>
@@ -108,13 +62,19 @@ impl App {
                 inline_script(include_str!("www/morphdom.min.js")),
                 inline_script(include_str!("www/app.js"))
             ),
-            theme = self.theme.class(),
+            theme = window.theme.class(),
         );
+
+        let title = &window.title.to_owned();
+        let width = window.width;
+        let height = window.height;
+        let resizable = window.resizable;
+
         let webview = web_view::builder()
-            .title(&self.title)
+            .title(title)
             .content(Content::Html(html))
-            .size(self.width, self.height)
-            .resizable(self.resizable)
+            .size(width, height)
+            .resizable(resizable)
             .user_data("")
             .debug(true)
             .invoke_handler(|webview, arg| {
@@ -131,24 +91,118 @@ impl App {
     }
 }
 
+/// # Window
+///
+/// A window containing the widgets.
+///
+/// ## Fields
+/// ```
+/// pub struct Window {
+///     title: String,
+///     width: i32,
+///     height: i32,
+///     resizable: bool,
+///     theme: Theme,
+///     child: Option<Box<Widget>>,
+/// }
+/// ```
+///
+/// ## Example
+///
+/// ```
+/// let my_window = Window::new(my_widget)
+///     .title("Title")
+///     .size(800, 600)
+///     .resizable(true);
+/// ```
 pub struct Window {
+    title: String,
+    width: i32,
+    height: i32,
+    resizable: bool,
+    theme: Theme,
     child: Option<Box<Widget>>,
 }
 
 impl Window {
-    pub fn new() -> Self {
-        Window { child: None }
+    /// Create a Window
+    ///
+    /// # Default values
+    ///
+    /// ```
+    /// title: "Untitled".to_string(),
+    /// width: 640,
+    /// height: 480,
+    /// resizable: true,
+    /// theme: Theme::Breeze,
+    /// child: Some(widget),
+    /// ```
+    pub fn new(widget: Box<Widget>) -> Self {
+        Window {
+            title: "Untitled".to_string(),
+            width: 640,
+            height: 480,
+            resizable: true,
+            theme: Theme::Breeze,
+            child: Some(widget),
+        }
     }
 
-    pub fn add(&mut self, widget: Box<Widget>) {
-        self.child = Some(widget);
+    /// Set the title
+    pub fn title(self, title: &str) -> Self {
+        Window {
+            title: title.to_string(),
+            width: self.width,
+            height: self.height,
+            resizable: self.resizable,
+            theme: self.theme,
+            child: self.child,
+        }
     }
 
+    /// Set the size
+    pub fn size(self, width: i32, height: i32) -> Self {
+        Window {
+            title: self.title,
+            width: width,
+            height: height,
+            resizable: self.resizable,
+            theme: self.theme,
+            child: self.child,
+        }
+    }
+
+    /// Set the resizable flag
+    pub fn resizable(self, resizable: bool) -> Self {
+        Window {
+            title: self.title,
+            width: self.width,
+            height: self.height,
+            resizable: resizable,
+            theme: self.theme,
+            child: self.child,
+        }
+    }
+
+    /// Set the theme
+    pub fn theme(self, theme: Theme) -> Self {
+        Window {
+            title: self.title,
+            width: self.width,
+            height: self.height,
+            resizable: self.resizable,
+            theme: theme,
+            child: self.child,
+        }
+    }
+
+    /// Render the widget tree
     fn render(&self, webview: &mut WebView<&str>) -> WVResult {
         let tree = &format!(r#"render("{}")"#, &self.eval().replace(r#"""#, r#"\""#));
         webview.eval(tree)
     }
 
+    /// Return the HTML representation of the widget tree
     fn eval(&self) -> String {
         match &self.child {
             Some(child) => format!("{}", child.eval()),
@@ -156,6 +210,7 @@ impl Window {
         }
     }
 
+    /// Trigger the events in the widget tree
     fn trigger(&mut self, event: &Event) {
         match &mut self.child {
             Some(child) => child.trigger(event),
@@ -164,18 +219,12 @@ impl Window {
     }
 }
 
+/// Return the HTML style tag
 fn inline_style(s: &str) -> String {
     format!(r#"<style type="text/css">{}</style>"#, s)
 }
 
+/// Return the HTML script tag
 fn inline_script(s: &str) -> String {
     format!(r#"<script type="text/javascript">{}</script>"#, s)
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
 }

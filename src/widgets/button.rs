@@ -3,27 +3,29 @@ use crate::utils::listener::Listener;
 use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
-/// Button
+/// # Button
 ///
-/// # Fields
+/// A clickable button with a label.
+///
+/// ## Fields
 /// ```
 /// pub struct Button {
-///    name: String,
-///    text: String,
-///    disabled: bool,
-///    listener: Option<Box<Listener>>,
-///    observer: Option<Box<Observer>>,
+///     name: String,
+///     text: String,
+///     disabled: bool,
+///     listener: Option<Box<Listener>>,
+///     observer: Option<Box<Observer>>,
 /// }
 /// ```
 ///
-/// # Example
+/// ## Example
 ///
 /// ```
 /// let my_button = Button::new("my_button")
 ///     .text("Click me !")
 ///     .disabled(true)
-///     .listener(Box::new(my_button_listener))
-///     .observer(Box::new(my_button_observer));
+///     .listener(Box::new(my_listener))
+///     .observer(Box::new(my_observer));
 /// ```
 pub struct Button {
     name: String,
@@ -55,7 +57,7 @@ impl Button {
         }
     }
 
-    /// Set the text of a Button
+    /// Set the text
     pub fn text(self, text: &str) -> Self {
         Button {
             name: self.name,
@@ -66,7 +68,7 @@ impl Button {
         }
     }
 
-    /// Set the disabled flag of a Button
+    /// Set the disabled flag
     pub fn disabled(self, disabled: bool) -> Self {
         Button {
             name: self.name,
@@ -77,7 +79,7 @@ impl Button {
         }
     }
 
-    /// Set the listener of a Button
+    /// Set the listener
     pub fn listener(self, listener: Box<Listener>) -> Self {
         Button {
             name: self.name,
@@ -88,7 +90,7 @@ impl Button {
         }
     }
 
-    /// Set the observer of a Button
+    /// Set the observer
     pub fn observer(self, observer: Box<Observer>) -> Self {
         Button {
             name: self.name,
@@ -101,7 +103,7 @@ impl Button {
 }
 
 impl Widget for Button {
-    /// Return the HTML representation of a Button
+    /// Return the HTML representation
     ///
     /// # Events
     ///
@@ -114,7 +116,6 @@ impl Widget for Button {
     /// ```
     /// class = button [disabled]
     /// ```
-    ///
     fn eval(&self) -> String {
         let disabled = if self.disabled { "disabled" } else { "" };
         format!(
@@ -149,7 +150,7 @@ impl Widget for Button {
     }
 
     /// Set the values of the widget using the fields of the HashMap
-    /// gotten form the observer
+    /// returned by the observer
     ///
     /// # Fields
     ///

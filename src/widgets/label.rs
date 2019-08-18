@@ -3,6 +3,28 @@ use crate::utils::listener::Listener;
 use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 
+/// # Label
+///
+/// A label.
+///
+/// ## Fields
+/// ```
+/// pub struct Label {
+///     name: String,
+///     text: String,
+///     listener: Option<Box<Listener>>,
+///     observer: Option<Box<Observer>>,
+/// }
+/// ```
+///
+/// ## Example
+///
+/// ```
+/// let my_label = Label::new("my_label")
+///     .text("Text")
+///     .listener(Box::new(my_listener))
+///     .observer(Box::new(my_observer));
+/// ```
 pub struct Label {
     name: String,
     text: String,
@@ -11,6 +33,16 @@ pub struct Label {
 }
 
 impl Label {
+    /// Create a Label
+    ///
+    /// # Default values
+    ///
+    /// ```
+    /// name: name.to_string(),
+    /// text: "Label".to_string(),
+    /// listener: None,
+    /// observer: None,
+    /// ```
     pub fn new(name: &str) -> Self {
         Label {
             name: name.to_string(),
@@ -20,6 +52,7 @@ impl Label {
         }
     }
 
+    /// Set the text
     pub fn text(self, text: &str) -> Self {
         Label {
             name: self.name,
@@ -29,6 +62,7 @@ impl Label {
         }
     }
 
+    /// Set the listener
     pub fn listener(self, listener: Box<Listener>) -> Self {
         Label {
             name: self.name,
@@ -38,6 +72,7 @@ impl Label {
         }
     }
 
+    /// Set the observer
     pub fn observer(self, observer: Box<Observer>) -> Self {
         Label {
             name: self.name,
@@ -46,18 +81,22 @@ impl Label {
             observer: Some(observer),
         }
     }
-
-    fn on_update(&mut self) {
-        match &self.observer {
-            None => (),
-            Some(observer) => {
-                self.text = observer.observe()["text"].to_string();
-            }
-        }
-    }
 }
 
 impl Widget for Label {
+    /// Return the HTML representation
+    ///
+    /// # Events
+    ///
+    /// ```
+    /// click -> ""
+    /// ```
+    ///
+    /// # Styling
+    ///
+    /// ```
+    /// class = label
+    /// ```
     fn eval(&self) -> String {
         format!(
             r#"<div class="label" onclick="{}">{}</div>"#,
@@ -66,6 +105,14 @@ impl Widget for Label {
         )
     }
 
+    /// Trigger changes depending on the event
+    ///
+    /// # Events
+    ///
+    /// ```
+    /// update -> self.on_update()
+    /// click -> self.listener.on_click()
+    /// ```
     fn trigger(&mut self, event: &Event) {
         if event.event == "update" {
             self.on_update();
@@ -79,5 +126,22 @@ impl Widget for Label {
                 }
             }
         };
+    }
+
+    /// Set the values of the widget using the fields of the HashMap
+    /// returned by the observer
+    ///
+    /// # Fields
+    ///
+    /// ```
+    /// text
+    /// ```
+    fn on_update(&mut self) {
+        match &self.observer {
+            None => (),
+            Some(observer) => {
+                self.text = observer.observe()["text"].to_string();
+            }
+        }
     }
 }

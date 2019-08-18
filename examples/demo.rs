@@ -65,10 +65,10 @@ fn main() {
     tabs1.add(("Onglet 1", Box::new(container6)));
     tabs1.add(("Onglet 2", Box::new(custom2)));
 
-    let mut window = Window::new();
-    window.add(Box::new(tabs1));
+    let window = Window::new(Box::new(tabs1))
+        .title("Demo")
+        .size(440, 260)
+        .resizable(true);
 
-    let app = App::new().title("Demo").size(440, 260).resizable(true);
-
-    app.run(window);
+    App::run(window);
 }
