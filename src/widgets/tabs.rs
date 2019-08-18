@@ -8,7 +8,8 @@ use crate::widgets::widget::Widget;
 /// A list of tabs.
 ///
 /// ## Fields
-/// ```
+///
+/// ```text
 /// pub struct Tabs {
 ///     name: String,
 ///     children: Vec<(String, Box<Widget>)>,
@@ -20,7 +21,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_tabs = Tabs::new("my_tabs")
 ///     .children(vec![("Cake", cake_tab), ("Pie", pie_tab)])
 ///     .selected(0)
@@ -40,7 +41,7 @@ impl Tabs {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// children: vec![],
     /// selected: 0,
@@ -101,13 +102,13 @@ impl Widget for Tabs {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// click -> index
     /// ```
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = tabs
     /// class = tab-titles
     /// class = tab-title [selected]
@@ -140,7 +141,7 @@ impl Widget for Tabs {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// click -> self.selected = index of the selected tab
     ///          self.listener.on_click()
@@ -171,7 +172,7 @@ impl Widget for Tabs {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// ```
     fn on_update(&mut self) {
         match &self.observer {

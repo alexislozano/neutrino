@@ -8,7 +8,8 @@ use crate::widgets::widget::Widget;
 /// A collapsible list of strings.
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct Combo {
 ///     name: String,
 ///     choices: Vec<String>,
@@ -21,7 +22,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_combo = Combo::new("my_combo")
 ///     .choices(vec!["Cake", "Pie"])
 ///     .selected(0)
@@ -43,7 +44,7 @@ impl Combo {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
     /// selected: 0,
@@ -131,13 +132,13 @@ impl Widget for Combo {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// click -> index
     /// ```
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = combo
     /// class = combo-button
     /// class = combo-choices
@@ -168,7 +169,7 @@ impl Widget for Combo {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// click -> self.selected = selected choice index
     ///          self.listener.on_click()
@@ -198,7 +199,7 @@ impl Widget for Combo {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// ```
     fn on_update(&mut self) {
         match &self.observer {

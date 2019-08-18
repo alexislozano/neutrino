@@ -9,7 +9,8 @@ use crate::widgets::widget::Widget;
 /// 100.
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct Range {
 ///     name: String,
 ///     min: i32,
@@ -22,7 +23,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_range = Range::new("my_range")
 ///     .min(-50)
 ///     .max(50)
@@ -44,7 +45,7 @@ impl Range {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// min: 0,
     /// max : 100,
@@ -129,13 +130,13 @@ impl Widget for Range {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// change -> value
     /// ```
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = range
     /// class = inner-range
     /// ```
@@ -150,7 +151,7 @@ impl Widget for Range {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// change -> self.value = value
     ///           self.listener.on_change(value)
@@ -176,7 +177,7 @@ impl Widget for Range {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// value
     /// ```
     fn on_update(&mut self) {

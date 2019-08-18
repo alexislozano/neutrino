@@ -8,7 +8,8 @@ use crate::widgets::widget::Widget;
 /// A zone where text can be written.
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct TextInput {
 ///     name: String,
 ///     value: String,
@@ -19,7 +20,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_textinput = TextInput::new("my_textinput")
 ///     .value("Hey")
 ///     .listener(Box::new(my_listener))
@@ -37,7 +38,7 @@ impl TextInput {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// value: "TextInput".to_string(),
     /// listener: None,
@@ -88,13 +89,13 @@ impl Widget for TextInput {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// change -> value
     /// ```
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = textinput
     /// ```
     fn eval(&self) -> String {
@@ -109,7 +110,7 @@ impl Widget for TextInput {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// click -> self.value = value
     ///          self.listener.on_click(value)
@@ -135,7 +136,7 @@ impl Widget for TextInput {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// value
     /// ```
     fn on_update(&mut self) {

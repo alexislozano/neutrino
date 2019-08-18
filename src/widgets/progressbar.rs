@@ -8,7 +8,8 @@ use crate::widgets::widget::Widget;
 /// A progress bar able to display numbers from 0 to 100.
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct ProgressBar {
 ///     name: String,
 ///     value: u8,
@@ -19,7 +20,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_progressbar = ProgressBar::new("my_progressbar")
 ///     .value(55)
 ///     .listener(Box::new(my_listener))
@@ -37,7 +38,7 @@ impl ProgressBar {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// value: 0,
     /// listener: None,
@@ -88,7 +89,7 @@ impl Widget for ProgressBar {
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = progressbar
     /// class = inner-progressbar
     /// ```
@@ -103,7 +104,7 @@ impl Widget for ProgressBar {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// ```
     fn trigger(&mut self, event: &Event) {
@@ -117,7 +118,7 @@ impl Widget for ProgressBar {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// value
     /// ```
     fn on_update(&mut self) {

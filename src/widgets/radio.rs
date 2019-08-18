@@ -8,7 +8,8 @@ use crate::widgets::widget::Widget;
 /// A list of radio buttons. Only one can be selected at a time.
 ///
 /// ## Fields
-/// ```
+///
+/// ```text
 /// pub struct Radio {
 ///     name: String,
 ///     choices: Vec<String>,
@@ -20,7 +21,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_radio = Radio::new("my_radio")
 ///     .choices("Cake", "Pie")
 ///     .selected(0)
@@ -40,7 +41,7 @@ impl Radio {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
     /// selected: 0,
@@ -110,13 +111,13 @@ impl Widget for Radio {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// click -> index
     /// ```
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = radio
     /// class = radio-outer [checked]
     /// class = radio-inner [checked]
@@ -143,7 +144,7 @@ impl Widget for Radio {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// click -> self.selected = selected choice index
     ///          self.listener.on_click()
@@ -169,7 +170,7 @@ impl Widget for Radio {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// ```
     fn on_update(&mut self) {
         match &self.observer {

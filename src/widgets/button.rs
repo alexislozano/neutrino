@@ -8,7 +8,8 @@ use crate::widgets::widget::Widget;
 /// A clickable button with a label.
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct Button {
 ///     name: String,
 ///     text: String,
@@ -20,7 +21,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_button = Button::new("my_button")
 ///     .text("Click me !")
 ///     .disabled(true)
@@ -40,7 +41,7 @@ impl Button {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// text: "Button".to_string(),
     /// disabled: false,
@@ -107,13 +108,13 @@ impl Widget for Button {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// click -> ""
     /// ```
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = button [disabled]
     /// ```
     fn eval(&self) -> String {
@@ -130,7 +131,7 @@ impl Widget for Button {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// click -> self.listener.on_click()
     /// ```
@@ -154,7 +155,7 @@ impl Widget for Button {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// text
     /// ```
     fn on_update(&mut self) {
@@ -164,5 +165,34 @@ impl Widget for Button {
                 self.text = observer.observe()["text"].to_string();
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn eval_disabled() {
+        let button = Button::new("button").text("Hello").disabled(true);
+        assert_eq!(
+            button.eval(), 
+            format!(
+                r#"<div onclick="{}" class="button disabled">Hello</div>"#,
+                Event::js("click", "button", "''"),
+            )
+        );
+    }
+
+    #[test]
+    fn eval_enabled() {
+        let button = Button::new("button").text("Hello").disabled(false);
+        assert_eq!(
+            button.eval(), 
+            format!(
+                r#"<div onclick="{}" class="button ">Hello</div>"#,
+                Event::js("click", "button", "''"),
+            )
+        );
     }
 }

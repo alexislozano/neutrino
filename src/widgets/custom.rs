@@ -10,7 +10,8 @@ use strfmt::strfmt;
 /// An HTML templated widget. 
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct Custom {
 ///     name: String,
 ///     fields: HashMap<String, String>
@@ -22,7 +23,7 @@ use strfmt::strfmt;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_custom = Custom("my_custom")
 ///     .template("<h1>My name is {firstname} {lastname}</h1>")
 ///     .listener(Box::new(my_listener))
@@ -41,7 +42,7 @@ impl Custom {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// fields: HashMap::new(),
     /// template: "".to_string(),
@@ -102,7 +103,7 @@ impl Widget for Custom {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// click -> self.listener.on_click()
     /// ```

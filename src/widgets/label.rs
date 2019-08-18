@@ -8,7 +8,8 @@ use crate::widgets::widget::Widget;
 /// A label.
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct Label {
 ///     name: String,
 ///     text: String,
@@ -19,7 +20,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_label = Label::new("my_label")
 ///     .text("Text")
 ///     .listener(Box::new(my_listener))
@@ -37,7 +38,7 @@ impl Label {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// text: "Label".to_string(),
     /// listener: None,
@@ -88,13 +89,13 @@ impl Widget for Label {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// click -> ""
     /// ```
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = label
     /// ```
     fn eval(&self) -> String {
@@ -109,7 +110,7 @@ impl Widget for Label {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// click -> self.listener.on_click()
     /// ```
@@ -133,7 +134,7 @@ impl Widget for Label {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// text
     /// ```
     fn on_update(&mut self) {

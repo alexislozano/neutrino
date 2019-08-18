@@ -6,7 +6,8 @@ use crate::widgets::widget::Widget;
 /// A container for other widgets.
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct Container {
 ///     children: Vec<Box<Widget>>,
 ///     style: String,
@@ -15,7 +16,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_container = Container::horizontal();
 /// ```
 pub struct Container {
@@ -52,7 +53,7 @@ impl Widget for Container {
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = container
     /// ```
     fn eval(&self) -> String {

@@ -6,7 +6,8 @@ use serde::Deserialize;
 /// source of the event and the value sent by the event if needed.
 ///
 /// ## Fields
-/// ```
+/// 
+/// ```text
 /// pub struct Event {
 ///     event: String,
 ///     source: String,
@@ -16,7 +17,7 @@ use serde::Deserialize;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_event = Event::new("click", "my_button", "");
 /// ```
 #[derive(Deserialize)]
@@ -31,7 +32,7 @@ impl Event {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// event: event.to_string(),
     /// source: source.to_string(),
     /// value: value.to_string(),
@@ -48,7 +49,7 @@ impl Event {
     ///
     /// # Example
     /// 
-    /// ```
+    /// ```text
     /// Event::js("click", "my_button", "");
     /// ```
     pub fn js(event: &str, source: &str, value: &str) -> String {

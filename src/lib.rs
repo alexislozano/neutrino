@@ -30,7 +30,7 @@ use widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// App::run(my_window);
 /// ```
 pub struct App;
@@ -96,7 +96,8 @@ impl App {
 /// A window containing the widgets.
 ///
 /// ## Fields
-/// ```
+///
+/// ```text
 /// pub struct Window {
 ///     title: String,
 ///     width: i32,
@@ -109,7 +110,7 @@ impl App {
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_window = Window::new(my_widget)
 ///     .title("Title")
 ///     .size(800, 600)
@@ -129,7 +130,7 @@ impl Window {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// title: "Untitled".to_string(),
     /// width: 640,
     /// height: 480,

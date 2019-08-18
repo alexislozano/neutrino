@@ -8,7 +8,8 @@ use crate::widgets::widget::Widget;
 /// A togglable checkbox with a label.
 ///
 /// ## Fields
-/// ```
+///
+/// ```text
 /// pub struct CheckBox {
 ///     name: String,
 ///     checked: bool,
@@ -20,7 +21,7 @@ use crate::widgets::widget::Widget;
 ///
 /// ## Example
 ///
-/// ```
+/// ```text
 /// let my_checkbox = CheckBox::new("my_checkbox")
 ///     .text("Toggle me !")
 ///     .checked(true)
@@ -40,7 +41,7 @@ impl CheckBox {
     ///
     /// # Default values
     ///
-    /// ```
+    /// ```text
     /// name: name.to_string(),
     /// checked: false,
     /// text: "CheckBox".to_string(),
@@ -107,13 +108,13 @@ impl Widget for CheckBox {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// click -> ""
     /// ```
     ///
     /// # Styling
     ///
-    /// ```
+    /// ```text
     /// class = checkbox
     /// class = checkbox-outer [checked]
     /// class = checkbox-inner [checked]
@@ -130,7 +131,7 @@ impl Widget for CheckBox {
     ///
     /// # Events
     ///
-    /// ```
+    /// ```text
     /// update -> self.on_update()
     /// click -> self.checked = != self.checked
     ///          self.listener.on_click()
@@ -156,7 +157,7 @@ impl Widget for CheckBox {
     ///
     /// # Fields
     ///
-    /// ```
+    /// ```text
     /// text
     /// checked
     /// ```
