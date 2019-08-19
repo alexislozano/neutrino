@@ -143,7 +143,7 @@ impl Widget for Range {
     fn eval(&self) -> String {
         format!(
             r#"<div class="range"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
-            Event::js("change", &self.name, "value"), self.min, self.max, self.value
+            Event::change_js(&self.name, "value"), self.min, self.max, self.value
         )
     }
 
@@ -157,19 +157,21 @@ impl Widget for Range {
     ///           self.listener.on_change(value)
     /// ```
     fn trigger(&mut self, event: &Event) {
-        if event.event == "update" {
-            self.on_update();
-        } else if event.source == self.name {
-            if event.event == "change" {
-                self.value = event.value.parse::<i32>().unwrap();
-                match &self.listener {
-                    None => (),
-                    Some(listener) => {
-                        listener.on_change(&event.value);
+        match event {
+            Event::Key { key: _ } => (),
+            Event::Update => self.on_update(),
+            Event::Change { source, value } => {
+                if source == &self.name {
+                    self.value = value.parse::<i32>().unwrap();
+                    match &self.listener {
+                        None => (),
+                        Some(listener) => {
+                            listener.on_change(value);
+                        }
                     }
                 }
-            }
-        };
+            },
+        }
     }
 
     /// Set the values of the widget using the fields of the HashMap

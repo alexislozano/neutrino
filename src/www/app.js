@@ -9,5 +9,5 @@ function invoke(arg) {
 }
 
 window.onload = function() {
-    invoke({ event: "init", source: "app", value: "app" });
+    invoke({ type: "Update" });
 }

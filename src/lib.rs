@@ -20,10 +20,11 @@ use web_view::*;
 pub mod utils;
 pub mod widgets;
 
-use utils::event::Event;
+use utils::event::{Event, Key};
 use utils::theme::Theme;
 use widgets::widget::Widget;
 use widgets::menubar::MenuBar;
+use utils::listener::Listener;
 
 /// # App
 ///
@@ -47,7 +48,7 @@ impl App {
                     <meta charset="UTF-8">
                     {styles}
                 </head>
-                <body>
+                <body onkeydown="{key}">
                     <div id="app" class="{theme}"></div>
                     {scripts}
                 </body>
@@ -64,6 +65,7 @@ impl App {
                 inline_script(include_str!("www/app.js"))
             ),
             theme = window.theme.class(),
+            key = Event::key_js(),
         );
 
         let title = &window.title.to_owned();
@@ -81,8 +83,7 @@ impl App {
             .invoke_handler(|webview, arg| {
                 let event: Event = serde_json::from_str(arg).unwrap();
                 window.trigger(&event);
-                let update_event = Event::new("update", "app", "app");
-                window.trigger(&update_event);
+                window.trigger(&Event::Update);
                 window.render(webview)
             })
             .build()
@@ -125,6 +126,7 @@ pub struct Window {
     theme: Theme,
     child: Option<Box<Widget>>,
     menubar: Option<MenuBar>,
+    listener: Option<Box<Listener>>,
 }
 
 impl Window {
@@ -149,6 +151,7 @@ impl Window {
             theme: Theme::Breeze,
             child: None,
             menubar: None,
+            listener: None,
         }
     }
 
@@ -161,6 +164,7 @@ impl Window {
             theme: self.theme,
             child: Some(widget),
             menubar: self.menubar,
+            listener: self.listener,
         }
     }
 
@@ -173,6 +177,7 @@ impl Window {
             theme: self.theme,
             child: self.child,
             menubar: Some(menubar),
+            listener: self.listener,
         }
     }
 
@@ -186,6 +191,7 @@ impl Window {
             theme: self.theme,
             child: self.child,
             menubar: self.menubar,
+            listener: self.listener,
         }
     }
 
@@ -199,6 +205,7 @@ impl Window {
             theme: self.theme,
             child: self.child,
             menubar: self.menubar,
+            listener: self.listener,
         }
     }
 
@@ -212,6 +219,7 @@ impl Window {
             theme: self.theme,
             child: self.child,
             menubar: self.menubar,
+            listener: self.listener,
         }
     }
 
@@ -225,17 +233,32 @@ impl Window {
             theme: theme,
             child: self.child,
             menubar: self.menubar,
+            listener: self.listener,
+        }
+    }
+
+    /// Set the listener
+    pub fn listener(self, listener: Box<Listener>) -> Self {
+        Window {
+            title: self.title,
+            width: self.width,
+            height: self.height,
+            resizable: self.resizable,
+            theme: self.theme,
+            child: self.child,
+            menubar: self.menubar,
+            listener: Some(listener),
         }
     }
 
     /// Render the menubar and widget tree
     fn render(&self, webview: &mut WebView<&str>) -> WVResult {
-        let js = format!(
+        let rendered = format!(
             r#"render("<div id=\"app\" class=\"{}\">{}</div>")"#,
             self.theme.class(),
             self.eval().replace(r#"""#, r#"\""#)
         );
-        webview.eval(&js)
+        webview.eval(&rendered)
     }
 
     /// Return the HTML representation of the menubar and the widget tree
@@ -250,15 +273,32 @@ impl Window {
 
     /// Trigger the events in the widget tree
     fn trigger(&mut self, event: &Event) {
-        match (&mut self.menubar, &mut self.child) {
-            (Some(menubar), Some(child)) => {
-                menubar.trigger(event);
-                child.trigger(event);
+        match event {
+            Event::Change { source: _, value: _ } | Event::Update => {
+                match (&mut self.menubar, &mut self.child) {
+                    (Some(menubar), Some(child)) => {
+                        menubar.trigger(event);
+                        child.trigger(event);
+                    },
+                    (None, Some(child)) => child.trigger(event),
+                    (Some(menubar), None) => menubar.trigger(event),
+                    (None, None) => (),
+                };
             },
-            (None, Some(child)) => child.trigger(event),
-            (Some(menubar), None) => menubar.trigger(event),
-            (None, None) => (),
-        };
+            Event::Key { key } => {
+                match &self.listener {
+                    None => (),
+                    Some(listener) => {
+                        match key {
+                            Key::Undefined => (),
+                            _ => {
+                                listener.on_key(*key);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

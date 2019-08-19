@@ -34,13 +34,15 @@ impl Widget for MenuBar {
     }
 
     fn trigger(&mut self, event: &Event) {
-        if event.event == "update" {
-            self.on_update();
-        } else if event.source == "menubar" {
-            self.selected = Some(event.value.parse::<u32>().unwrap());
-        } else {
-            self.selected = None;
-        };
+        match event {
+            Event::Key { key: _ } => (),
+            Event::Update => self.on_update(),
+            Event::Change { source, value } => {
+                if source == "menubar" {
+                    self.selected = Some(value.parse::<u32>().unwrap());
+                }
+            },
+        }
     }
 }
 
@@ -69,7 +71,7 @@ impl MenuItem {
         };
         let mut s = format!(
             r#"<div class="menuitem"><div class="menuitem-title {}" onclick="{}">{}</div>"#,
-            selected_str, Event::js("click", "menubar", &format!("'{}'", index)), self.name
+            selected_str, Event::change_js("menubar", &format!("'{}'", index)), self.name
         );
         if selected {
             s.push_str(r#"<div class="menufunctions">"#);

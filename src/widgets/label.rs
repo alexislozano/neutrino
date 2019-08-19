@@ -101,7 +101,7 @@ impl Widget for Label {
     fn eval(&self) -> String {
         format!(
             r#"<div class="label" onclick="{}">{}</div>"#,
-            Event::js("click", &self.name, "''"),
+            Event::change_js(&self.name, "''"),
             self.text
         )
     }
@@ -115,18 +115,20 @@ impl Widget for Label {
     /// click -> self.listener.on_click()
     /// ```
     fn trigger(&mut self, event: &Event) {
-        if event.event == "update" {
-            self.on_update();
-        } else if event.source == self.name {
-            match &self.listener {
-                None => (),
-                Some(listener) => {
-                    if event.event == "click" {
-                        listener.on_click();
+        match event {
+            Event::Key { key: _ } => (),
+            Event::Update => self.on_update(),
+            Event::Change { source, value } => {
+                if source == &self.name {
+                    match &self.listener {
+                        None => (),
+                        Some(listener) => {
+                            listener.on_change(value);
+                        }
                     }
                 }
-            }
-        };
+            },
+        }
     }
 
     /// Set the values of the widget using the fields of the HashMap
