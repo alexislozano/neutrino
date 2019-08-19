@@ -12,7 +12,19 @@ use neutrino::widgets::textinput::TextInput;
 use neutrino::widgets::menubar::{MenuBar, MenuItem, MenuFunction};
 use neutrino::{App, Window};
 
+mod demo_mod;
+
+use demo_mod::listeners::{AppListener, TabsListener};
+use demo_mod::observers::TabsObserver;
+use demo_mod::models::Panes;
+
+use std::cell::RefCell;
+use std::rc::Rc;
+
 fn main() {
+    let panes = Panes::new();
+    let rpanes = Rc::new(RefCell::new(panes));
+
     let textinput1 = TextInput::new("input1").value("0");
 
     let button1 = Button::new("button1").text("Bouton à pousser");
@@ -62,7 +74,13 @@ fn main() {
 
     let custom2 = Custom::new("custom2").template(r#"<h2 style="margin: 6px;">This is Tab 2</h2>"#);
 
-    let mut tabs1 = Tabs::new("tabs1").selected(0);
+    let tabs_observer = TabsObserver::new(Rc::clone(&rpanes));
+    let tabs_listener = TabsListener::new(Rc::clone(&rpanes));
+
+    let mut tabs1 = Tabs::new("tabs1")
+        .selected(0)
+        .observer(Box::new(tabs_observer))
+        .listener(Box::new(tabs_listener));
     tabs1.add(("Onglet 1", Box::new(container6)));
     tabs1.add(("Onglet 2", Box::new(custom2)));
 
@@ -77,12 +95,15 @@ fn main() {
     menu_bar.add(fichier);
     menu_bar.add(aide);
 
+    let app_listener = AppListener::new(Rc::clone(&rpanes));
+
     let window = Window::new()
         .title("Demo")
         .size(440, 260)
         .resizable(true)
         .child(Box::new(tabs1))
-        .menubar(menu_bar);
+        .menubar(menu_bar)
+        .listener(Box::new(app_listener));
 
     App::run(window);
 }

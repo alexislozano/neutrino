@@ -179,7 +179,9 @@ impl Widget for Tabs {
     fn on_update(&mut self) {
         match &self.observer {
             None => (),
-            Some(_observer) => {}
+            Some(observer) => {
+                self.selected = observer.observe()["selected"].parse::<u32>().unwrap();
+            }
         }
     }
 }
