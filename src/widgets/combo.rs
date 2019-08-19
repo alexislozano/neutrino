@@ -147,7 +147,7 @@ impl Widget for Combo {
     fn eval(&self) -> String {
         let mut s = format!(
             r#"<div class="combo"><div onclick="{}" class="combo-button">{}</div>"#,
-            Event::js("click", &self.name, "'-1'"),
+            Event::change_js(&self.name, "'-1'"),
             self.choices[self.selected as usize]
         );
         if self.opened {
@@ -155,7 +155,7 @@ impl Widget for Combo {
             for (i, choice) in self.choices.iter().enumerate() {
                 s.push_str(&format!(
                     r#"<div class="combo-choice" onclick="{}">{}</div>"#,
-                    Event::js("click", &self.name, &format!("'{}'", i)),
+                    Event::change_js(&self.name, &format!("'{}'", i)),
                     choice
                 ));
             }
@@ -175,23 +175,25 @@ impl Widget for Combo {
     ///          self.listener.on_click()
     /// ```
     fn trigger(&mut self, event: &Event) {
-        if event.event == "update" {
-            self.on_update();
-        } else if event.source == self.name {
-            if event.event == "click" {
-                self.opened = !self.opened;
-                let selected = event.value.parse::<i32>().unwrap();
-                if selected > -1 {
-                    self.selected = selected as u32;
-                }
-                match &self.listener {
-                    None => (),
-                    Some(listener) => {
-                        listener.on_click();
+        match event {
+            Event::Key { key: _ } => (),
+            Event::Update => self.on_update(),
+            Event::Change { source, value } => {
+                if source == &self.name {
+                    self.opened = !self.opened;
+                    let selected = value.parse::<i32>().unwrap();
+                    if selected > -1 {
+                        self.selected = selected as u32;
+                    }
+                    match &self.listener {
+                        None => (),
+                        Some(listener) => {
+                            listener.on_change(value);
+                        }
                     }
                 }
-            }
-        };
+            },
+        }
     }
 
     /// Set the values of the widget using the fields of the HashMap

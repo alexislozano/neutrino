@@ -2,60 +2,58 @@ use serde::Deserialize;
 
 /// # Event
 /// 
-/// Rust equivalent of Javascript events. It contains the type of event, the
-/// source of the event and the value sent by the event if needed.
-///
-/// ## Fields
-/// 
-/// ```text
-/// pub struct Event {
-///     event: String,
-///     source: String,
-///     value: String,
-/// }
-/// ```
-///
-/// ## Example
-///
-/// ```text
-/// let my_event = Event::new("click", "my_button", "");
-/// ```
-#[derive(Deserialize)]
-pub struct Event {
-    pub event: String,
-    pub source: String,
-    pub value: String,
+/// Rust equivalent of Javascript events.
+#[derive(Debug, Deserialize)]
+#[serde(tag = "type")]
+pub enum Event {
+    Update,
+    Change { source: String, value: String },
+    Key { key: Key },
 }
 
 impl Event {
-    /// Create an Event
-    ///
-    /// # Default values
-    ///
-    /// ```text
-    /// event: event.to_string(),
-    /// source: source.to_string(),
-    /// value: value.to_string(),
-    /// ```
-    pub fn new(event: &str, source: &str, value: &str) -> Event {
-        Event {
-            event: event.to_string(),
-            source: source.to_string(),
-            value: value.to_string(),
-        }
-    }
-
-    /// Return a string containing a Javascript function that triggers an event
-    ///
-    /// # Example
-    /// 
-    /// ```text
-    /// Event::js("click", "my_button", "");
-    /// ```
-    pub fn js(event: &str, source: &str, value: &str) -> String {
+    pub fn change_js(source: &str, value: &str) -> String {
         format!(
-            r#"(function(){{invoke({{event:'{}', source:'{}', value: {}}})}})()"#,
-            event, source, value
+            r#"(function(){{ invoke( {{ type: 'Change', source: '{}', value: {} }} ) }})()"#,
+            source, value
         )
     }
+
+    pub fn key_js() -> String {
+        r#"(function() { if (event.ctrlKey && event.key !== 'Control') { invoke( { type: 'Key', key: event.code } ) } } )()"#.to_string()
+    }
+}
+
+/// # Key
+/// 
+/// An enum holding a keyboard key.
+#[derive(Debug, Deserialize, Clone, Copy)]
+pub enum Key {
+    KeyA,
+    KeyB,
+    KeyC,
+    KeyD,
+    KeyE,
+    KeyF,
+    KeyG,
+    KeyH,
+    KeyI,
+    KeyJ,
+    KeyK,
+    KeyL,
+    KeyM,
+    KeyN,
+    KeyO,
+    KeyP,
+    KeyQ,
+    KeyR,
+    KeyS,
+    KeyT,
+    KeyU,
+    KeyV,
+    KeyW,
+    KeyX,
+    KeyY,
+    KeyZ,
+    Undefined,
 }

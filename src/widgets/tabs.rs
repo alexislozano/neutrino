@@ -125,7 +125,7 @@ impl Widget for Tabs {
             s.push_str(&format!(
                 r#"<div class="tab-title {}" onclick="{}">{}</div>"#,
                 selected,
-                Event::js("click", &self.name, &format!("'{}'", i)),
+                Event::change_js(&self.name, &format!("'{}'", i)),
                 child.0
             ));
         }
@@ -147,24 +147,26 @@ impl Widget for Tabs {
     ///          self.listener.on_click()
     /// ```
     fn trigger(&mut self, event: &Event) {
-        if event.event == "update" {
-            self.on_update();
-        } else if event.source == self.name {
-            if event.event == "click" {
-                let selected = event.value.parse::<i32>().unwrap();
-                if selected > -1 {
-                    self.selected = selected as u32;
-                }
-                match &self.listener {
-                    None => (),
-                    Some(listener) => {
-                        listener.on_click();
+        match event {
+            Event::Key { key: _ } => (),
+            Event::Update => self.on_update(),
+            Event::Change { source, value } => {
+                if source == &self.name {
+                    let selected = value.parse::<i32>().unwrap();
+                    if selected > -1 {
+                        self.selected = selected as u32;
                     }
-                }
-            }
-        } else {
-            self.children[self.selected as usize].1.trigger(event);
-        };
+                    match &self.listener {
+                        None => (),
+                        Some(listener) => {
+                            listener.on_change(value);
+                        }
+                    }
+                } else {
+                    self.children[self.selected as usize].1.trigger(event);
+                };
+            },
+        }
     }
 
     /// Set the values of the widget using the fields of the HashMap

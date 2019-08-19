@@ -121,7 +121,7 @@ impl Widget for Button {
         let disabled = if self.disabled { "disabled" } else { "" };
         format!(
             r#"<div onclick="{}" class="button {}">{}</div>"#,
-            Event::js("click", &self.name, "''"),
+            Event::change_js(&self.name, "''"),
             disabled,
             self.text
         )
@@ -136,18 +136,20 @@ impl Widget for Button {
     /// click -> self.listener.on_click()
     /// ```
     fn trigger(&mut self, event: &Event) {
-        if event.event == "update" {
-            self.on_update();
-        } else if event.source == self.name {
-            match &self.listener {
-                None => (),
-                Some(listener) => {
-                    if event.event == "click" {
-                        listener.on_click();
+        match event {
+            Event::Key { key: _ } => (),
+            Event::Update => self.on_update(),
+            Event::Change { source, value } => {
+                if source == &self.name {
+                    match &self.listener {
+                        None => (),
+                        Some(listener) => {
+                            listener.on_change(value);
+                        }
                     }
                 }
-            }
-        };
+            },
+        }
     }
 
     /// Set the values of the widget using the fields of the HashMap
@@ -179,7 +181,7 @@ mod tests {
             button.eval(), 
             format!(
                 r#"<div onclick="{}" class="button disabled">Hello</div>"#,
-                Event::js("click", "button", "''"),
+                Event::change_js("button", "''"),
             )
         );
     }
@@ -191,7 +193,7 @@ mod tests {
             button.eval(), 
             format!(
                 r#"<div onclick="{}" class="button ">Hello</div>"#,
-                Event::js("click", "button", "''"),
+                Event::change_js("button", "''"),
             )
         );
     }

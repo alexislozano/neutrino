@@ -14,7 +14,7 @@ impl Button1Listener {
 }
 
 impl Listener for Button1Listener {
-    fn on_click(&self) {
+    fn on_change(&self, _value: &str) {
         let new_value = self.counter.borrow().value() - 1;
         self.counter.borrow_mut().set_value(new_value);
     }
@@ -31,7 +31,7 @@ impl Button2Listener {
 }
 
 impl Listener for Button2Listener {
-    fn on_click(&self) {
+    fn on_change(&self, _value: &str) {
         let new_value = self.counter.borrow().value() + 1;
         self.counter.borrow_mut().set_value(new_value);
     }
@@ -48,7 +48,7 @@ impl Label1Listener {
 }
 
 impl Listener for Label1Listener {
-    fn on_click(&self) {
+    fn on_change(&self, _value: &str) {
         self.counter.borrow_mut().set_value(0);
     }
 }

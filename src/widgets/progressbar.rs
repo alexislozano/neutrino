@@ -108,8 +108,10 @@ impl Widget for ProgressBar {
     /// update -> self.on_update()
     /// ```
     fn trigger(&mut self, event: &Event) {
-        if event.event == "update" {
-            self.on_update();
+        match event {
+            Event::Update => self.on_update(),
+            Event::Key { key: _ } => (),
+            Event::Change { source: _, value: _ } => (),
         }
     }
 

@@ -133,7 +133,7 @@ impl Widget for Radio {
             s.push_str(
                 &format!(
                     r#"<div class="radio" onclick="{}"><div class="radio-outer {}"><div class="radio-inner {}"></div></div><label>{}</label></div>"#, 
-                    Event::js("click", &self.name, &format!("'{}'", i)), selected, selected, choice
+                    Event::change_js(&self.name, &format!("'{}'", i)), selected, selected, choice
                 )
             );
         }
@@ -150,19 +150,21 @@ impl Widget for Radio {
     ///          self.listener.on_click()
     /// ```
     fn trigger(&mut self, event: &Event) {
-        if event.event == "update" {
-            self.on_update();
-        } else if event.source == self.name {
-            if event.event == "click" {
-                self.selected = event.value.parse::<u32>().unwrap();
-                match &self.listener {
-                    None => (),
-                    Some(listener) => {
-                        listener.on_click();
+        match event {
+            Event::Key { key: _ } => (),
+            Event::Update => self.on_update(),
+            Event::Change { source, value } => {
+                if source == &self.name {
+                    self.selected = value.parse::<u32>().unwrap();
+                    match &self.listener {
+                        None => (),
+                        Some(listener) => {
+                            listener.on_change(value);
+                        }
                     }
                 }
-            }
-        };
+            },
+        }
     }
 
     /// Set the values of the widget using the fields of the HashMap

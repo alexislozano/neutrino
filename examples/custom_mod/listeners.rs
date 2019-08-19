@@ -20,7 +20,7 @@ impl ButtonListener {
 }
 
 impl Listener for ButtonListener {
-    fn on_click(&self) {
+    fn on_change(&self, _value: &str) {
         self.person.borrow_mut().set_firstname(&self.firstname);
         self.person.borrow_mut().set_lastname(&self.lastname);
     }
