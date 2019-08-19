@@ -23,6 +23,7 @@ pub mod widgets;
 use utils::event::Event;
 use utils::theme::Theme;
 use widgets::widget::Widget;
+use widgets::menubar::MenuBar;
 
 /// # App
 ///
@@ -123,6 +124,7 @@ pub struct Window {
     resizable: bool,
     theme: Theme,
     child: Option<Box<Widget>>,
+    menubar: Option<MenuBar>,
 }
 
 impl Window {
@@ -138,14 +140,39 @@ impl Window {
     /// theme: Theme::Breeze,
     /// child: Some(widget),
     /// ```
-    pub fn new(widget: Box<Widget>) -> Self {
+    pub fn new() -> Self {
         Window {
             title: "Untitled".to_string(),
             width: 640,
             height: 480,
             resizable: true,
             theme: Theme::Breeze,
+            child: None,
+            menubar: None,
+        }
+    }
+
+    pub fn child(self, widget: Box<Widget>) -> Self {
+        Window {
+            title: self.title,
+            width: self.width,
+            height: self.height,
+            resizable: self.resizable,
+            theme: self.theme,
             child: Some(widget),
+            menubar: self.menubar,
+        }
+    }
+
+    pub fn menubar(self, menubar: MenuBar) -> Self {
+        Window {
+            title: self.title,
+            width: self.width,
+            height: self.height,
+            resizable: self.resizable,
+            theme: self.theme,
+            child: self.child,
+            menubar: Some(menubar),
         }
     }
 
@@ -158,6 +185,7 @@ impl Window {
             resizable: self.resizable,
             theme: self.theme,
             child: self.child,
+            menubar: self.menubar,
         }
     }
 
@@ -170,6 +198,7 @@ impl Window {
             resizable: self.resizable,
             theme: self.theme,
             child: self.child,
+            menubar: self.menubar,
         }
     }
 
@@ -182,6 +211,7 @@ impl Window {
             resizable: resizable,
             theme: self.theme,
             child: self.child,
+            menubar: self.menubar,
         }
     }
 
@@ -194,28 +224,40 @@ impl Window {
             resizable: self.resizable,
             theme: theme,
             child: self.child,
+            menubar: self.menubar,
         }
     }
 
-    /// Render the widget tree
+    /// Render the menubar and widget tree
     fn render(&self, webview: &mut WebView<&str>) -> WVResult {
-        let tree = &format!(r#"render("{}")"#, &self.eval().replace(r#"""#, r#"\""#));
-        webview.eval(tree)
+        let js = format!(
+            r#"render("<div id=\"app\" class=\"{}\">{}</div>")"#,
+            self.theme.class(),
+            self.eval().replace(r#"""#, r#"\""#)
+        );
+        webview.eval(&js)
     }
 
-    /// Return the HTML representation of the widget tree
+    /// Return the HTML representation of the menubar and the widget tree
     fn eval(&self) -> String {
-        match &self.child {
-            Some(child) => format!("{}", child.eval()),
-            None => "{{}}".to_string(),
+        match (&self.menubar, &self.child) {
+            (Some(menubar), Some(child)) => format!("{}{}", menubar.eval(), child.eval()),
+            (None, Some(child)) => format!("{}", child.eval()),
+            (Some(menubar), None) => format!("{}", menubar.eval()),
+            (None, None) => "<div></div>".to_string(),
         }
     }
 
     /// Trigger the events in the widget tree
     fn trigger(&mut self, event: &Event) {
-        match &mut self.child {
-            Some(child) => child.trigger(event),
-            None => (),
+        match (&mut self.menubar, &mut self.child) {
+            (Some(menubar), Some(child)) => {
+                menubar.trigger(event);
+                child.trigger(event);
+            },
+            (None, Some(child)) => child.trigger(event),
+            (Some(menubar), None) => menubar.trigger(event),
+            (None, None) => (),
         };
     }
 }

@@ -51,10 +51,11 @@ fn main() {
     container2.add(Box::new(custom1));
     container2.add(Box::new(container1));
 
-    let window = Window::new(Box::new(container2))
+    let window = Window::new()
         .title("Custom")
         .size(320, 240)
-        .resizable(true);
+        .resizable(true)
+        .child(Box::new(container2));
 
     App::run(window);
 }

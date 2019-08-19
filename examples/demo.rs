@@ -9,6 +9,7 @@ use neutrino::widgets::radio::Radio;
 use neutrino::widgets::range::Range;
 use neutrino::widgets::tabs::Tabs;
 use neutrino::widgets::textinput::TextInput;
+use neutrino::widgets::menubar::{MenuBar, MenuItem, MenuFunction};
 use neutrino::{App, Window};
 
 fn main() {
@@ -65,10 +66,23 @@ fn main() {
     tabs1.add(("Onglet 1", Box::new(container6)));
     tabs1.add(("Onglet 2", Box::new(custom2)));
 
-    let window = Window::new(Box::new(tabs1))
+    let mut fichier = MenuItem::new("Fichier");
+    fichier.add(MenuFunction::new("Nouveau"));
+    fichier.add(MenuFunction::new("Quitter"));
+
+    let mut aide = MenuItem::new("Aide");
+    aide.add(MenuFunction::new("À propos"));
+
+    let mut menu_bar = MenuBar::new();
+    menu_bar.add(fichier);
+    menu_bar.add(aide);
+
+    let window = Window::new()
         .title("Demo")
         .size(440, 260)
-        .resizable(true);
+        .resizable(true)
+        .child(Box::new(tabs1))
+        .menubar(menu_bar);
 
     App::run(window);
 }

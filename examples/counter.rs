@@ -50,10 +50,11 @@ fn main() {
     container.add(Box::new(progressbar1));
     container.add(Box::new(button2));
 
-    let window = Window::new(Box::new(container))
+    let window = Window::new()
         .title("Counter")
         .size(320, 240)
-        .resizable(true);
+        .resizable(true)
+        .child(Box::new(container));
 
     App::run(window);
 }

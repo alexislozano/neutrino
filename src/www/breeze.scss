@@ -245,5 +245,43 @@
             border-top-left-radius: 0;
             display: flex;
         }
-    }   
+    }
+    
+    .menubar {
+        display: flex;
+        position: relative;
+
+        .menuitem {
+            background-color: white;
+            
+            .menuitem-title {
+                padding-top: 6px;
+                padding-bottom: 6px;
+                padding-left: 11px;
+                padding-right: 11px;
+
+                &.selected {
+                    color: white;
+                    background-color: #3daee9;
+                }
+            }
+
+            .menufunctions {
+                background-color: white;
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                z-index: 100;
+                box-shadow: 0 0 2px gray;
+    
+                .menufunction {
+                    padding-top: 6px;
+                    padding-bottom: 6px;
+                    padding-left: 11px;
+                    padding-right: 11px;
+                }
+            }
+        }
+    }
 }
