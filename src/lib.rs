@@ -81,7 +81,10 @@ impl App {
             .user_data("")
             .debug(true)
             .invoke_handler(|webview, arg| {
-                let event: Event = serde_json::from_str(arg).unwrap();
+                let event: Event = match serde_json::from_str(arg) {
+                    Ok(event) => event,
+                    Err(_) => Event::Key { key: Key::Undefined }
+                };
                 window.trigger(&event);
                 window.trigger(&Event::Update);
                 window.render(webview)
