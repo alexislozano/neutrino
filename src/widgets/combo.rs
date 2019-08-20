@@ -176,7 +176,6 @@ impl Widget for Combo {
     /// ```
     fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Key { key: _ } => (),
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == &self.name {
@@ -191,8 +190,11 @@ impl Widget for Combo {
                             listener.on_change(value);
                         }
                     }
+                } else {
+                    self.opened = false;
                 }
             },
+            _ => self.opened = false,
         }
     }
 

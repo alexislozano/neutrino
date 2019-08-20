@@ -86,7 +86,7 @@ fn main() {
 
     let mut fichier = MenuItem::new("Fichier");
     fichier.add(MenuFunction::new("Nouveau"));
-    fichier.add(MenuFunction::new("Quitter"));
+    fichier.add(MenuFunction::new("Quitter").shortcut("Ctrl-Q"));
 
     let mut aide = MenuItem::new("Aide");
     aide.add(MenuFunction::new("À propos"));

@@ -148,7 +148,6 @@ impl Widget for Tabs {
     /// ```
     fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Key { key: _ } => (),
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == &self.name {
@@ -166,6 +165,7 @@ impl Widget for Tabs {
                     self.children[self.selected as usize].1.trigger(event);
                 };
             },
+            _ => self.children[self.selected as usize].1.trigger(event),
         }
     }
 

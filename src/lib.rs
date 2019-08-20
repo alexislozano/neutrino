@@ -26,6 +26,8 @@ use widgets::widget::Widget;
 use widgets::menubar::MenuBar;
 use utils::listener::Listener;
 
+use serde_json::Value;
+
 /// # App
 ///
 /// An abstract application.
@@ -81,9 +83,20 @@ impl App {
             .user_data("")
             .debug(true)
             .invoke_handler(|webview, arg| {
-                let event: Event = match serde_json::from_str(arg) {
-                    Ok(event) => event,
-                    Err(_) => Event::Key { key: Key::Undefined }
+                let event: Event = match serde_json::from_str::<Value>(arg) {
+                    Ok(value) => match value["type"].as_str().unwrap() {
+                        "Update" => Event::Update,
+                        "Key" => match Key::new(value["key"].as_str().unwrap()) {
+                            Some(key) => Event::Key { key: key },
+                            None => Event::Undefined,
+                        },
+                        "Change" => Event::Change { 
+                            source: value["source"].as_str().unwrap().to_string(), 
+                            value: value["value"].as_str().unwrap().to_string(), 
+                        },
+                        _ => Event::Undefined,
+                    },
+                    Err(_) => Event::Undefined,
                 };
                 window.trigger(&event);
                 window.trigger(&Event::Update);
@@ -292,15 +305,20 @@ impl Window {
                 match &self.listener {
                     None => (),
                     Some(listener) => {
-                        match key {
-                            Key::Undefined => (),
-                            _ => {
-                                listener.on_key(*key);
-                            }
-                        }
+                        listener.on_key(*key);
                     }
-                }
-            }
+                };
+                match (&mut self.menubar, &mut self.child) {
+                    (Some(menubar), Some(child)) => {
+                        menubar.trigger(event);
+                        child.trigger(event);
+                    },
+                    (None, Some(child)) => child.trigger(event),
+                    (Some(menubar), None) => menubar.trigger(event),
+                    (None, None) => (),
+                };
+            },
+            Event::Undefined => (),
         }
     }
 }

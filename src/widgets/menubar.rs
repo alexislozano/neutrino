@@ -35,13 +35,15 @@ impl Widget for MenuBar {
 
     fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Key { key: _ } => (),
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == "menubar" {
                     self.selected = Some(value.parse::<u32>().unwrap());
+                } else {
+                    self.selected = None;
                 }
             },
+            _ => self.selected = None,
         }
     }
 }
@@ -87,19 +89,31 @@ impl MenuItem {
 
 pub struct MenuFunction {
     name: String,
+    shortcut: Option<String>,
 }
 
 impl MenuFunction {
     pub fn new(name: &str) -> Self {
         MenuFunction {
             name: name.to_string(),
+            shortcut: None,
+        }
+    }
+
+    pub fn shortcut(self, shortcut: &str) -> Self {
+        MenuFunction {
+            name: self.name,
+            shortcut: Some(shortcut.to_string()),
         }
     }
 
     fn eval(&self) -> String {
         format!(
-            r#"<div class="menufunction">{}</div>"#,
-            self.name
+            r#"<div class="menufunction"><span class="title">{}</span><span class="shortcut">{}</span></div>"#,
+            self.name, match &self.shortcut {
+                None => "",
+                Some(shortcut) => shortcut,
+            },
         )
     }
 }

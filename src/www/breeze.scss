@@ -280,6 +280,13 @@
                     padding-bottom: 6px;
                     padding-left: 11px;
                     padding-right: 11px;
+                    width: 140px;
+                    display: flex;
+                    justify-content: space-between;
+
+                    .shortcut {
+                        color: #757778;
+                    }
                 }
             }
         }

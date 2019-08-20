@@ -19,8 +19,9 @@ impl AppListener {
 impl Listener for AppListener {
     fn on_key(&self, key: Key) {
         match key {
-            Key::Digit1 => self.panes.borrow_mut().set_value(0),
-            Key::Digit2 => self.panes.borrow_mut().set_value(1),
+            Key::Num1 => self.panes.borrow_mut().set_value(0),
+            Key::Num2 => self.panes.borrow_mut().set_value(1),
+            Key::Q => std::process::exit(0),
             _ => (),
         }
     }
