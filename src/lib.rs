@@ -82,7 +82,7 @@ impl App {
             .size(width, height)
             .resizable(resizable)
             .user_data("")
-            .debug(true)
+            .debug(false)
             .invoke_handler(|webview, arg| {
                 let event: Event = match serde_json::from_str::<Value>(arg) {
                     Ok(value) => match value["type"].as_str().unwrap() {

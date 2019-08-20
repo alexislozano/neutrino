@@ -53,7 +53,7 @@ fn main() {
 
     let window = Window::new()
         .title("Custom")
-        .size(320, 240)
+        .size(340, 240)
         .resizable(true)
         .child(Box::new(container2));
 

@@ -49,11 +49,18 @@ impl Widget for MenuBar {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == "menuitem" {
-                    let selected = Some(value.parse::<u32>().unwrap());
-                    self.selected = if self.selected == selected {
-                        None
-                    } else {
-                        selected
+                    let values = value.split(";").collect::<Vec<&str>>();
+                    let e = values[0];
+                    let index = values[1].parse::<u32>().unwrap();
+                    self.selected = match self.selected {
+                        Some(_) => match e {
+                            "click" => None,
+                            _ => Some(index),
+                        },
+                        None => match e {
+                            "click" => Some(index),
+                            _ => None,
+                        }
                     }
                 } else if source == "menufunction" {
                     let selected = value.parse::<u32>().unwrap();
@@ -100,8 +107,9 @@ impl MenuItem {
             ""
         };
         let mut s = format!(
-            r#"<div class="menuitem"><div class="menuitem-title {}" onclick="{}">{}</div>"#,
-            selected_str, Event::change_js("menuitem", &format!("'{}'", index)), self.name
+            r#"<div class="menuitem"><div class="menuitem-title {}" onclick="{}" onmouseover="{}">{}</div>"#,
+            selected_str, Event::change_js("menuitem", &format!("'click;{}'", index)), 
+            Event::change_js("menuitem", &format!("'over;{}'", index)), self.name
         );
         if selected {
             s.push_str(r#"<div class="menufunctions">"#);
