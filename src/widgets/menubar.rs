@@ -1,9 +1,11 @@
 use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
+use crate::utils::listener::Listener;
 
 pub struct MenuBar {
     items: Vec<MenuItem>,
     selected: Option<u32>,
+    listener: Option<Box<Listener>>,
 }
 
 impl MenuBar {
@@ -11,6 +13,15 @@ impl MenuBar {
         MenuBar {
             items: vec![],
             selected: None,
+            listener: None,
+        }
+    }
+
+    pub fn listener(self, listener: Box::<Listener>) -> Self {
+        MenuBar {
+            items: self.items,
+            selected: self.selected,
+            listener: Some(listener),
         }
     }
 
@@ -37,8 +48,25 @@ impl Widget for MenuBar {
         match event {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
-                if source == "menubar" {
-                    self.selected = Some(value.parse::<u32>().unwrap());
+                if source == "menuitem" {
+                    let selected = Some(value.parse::<u32>().unwrap());
+                    self.selected = if self.selected == selected {
+                        None
+                    } else {
+                        selected
+                    }
+                } else if source == "menufunction" {
+                    let selected = value.parse::<u32>().unwrap();
+                    match &self.listener {
+                        None => (),
+                        Some(listener) => {
+                            listener.on_change(&format!(
+                                "{};{}",
+                                self.selected.unwrap(), selected
+                            ));
+                        }
+                    };
+                    self.selected = None;
                 } else {
                     self.selected = None;
                 }
@@ -73,12 +101,12 @@ impl MenuItem {
         };
         let mut s = format!(
             r#"<div class="menuitem"><div class="menuitem-title {}" onclick="{}">{}</div>"#,
-            selected_str, Event::change_js("menubar", &format!("'{}'", index)), self.name
+            selected_str, Event::change_js("menuitem", &format!("'{}'", index)), self.name
         );
         if selected {
             s.push_str(r#"<div class="menufunctions">"#);
-            for (_i, function) in self.functions.iter().enumerate() {
-                s.push_str(&function.eval());
+            for (i, function) in self.functions.iter().enumerate() {
+                s.push_str(&function.eval(i));
             }
             s.push_str(r#"</div>"#);   
         }
@@ -107,9 +135,10 @@ impl MenuFunction {
         }
     }
 
-    fn eval(&self) -> String {
+    fn eval(&self, index: usize) -> String {
         format!(
-            r#"<div class="menufunction"><span class="title">{}</span><span class="shortcut">{}</span></div>"#,
+            r#"<div class="menufunction" onclick="{}"><span class="title">{}</span><span class="shortcut">{}</span></div>"#,
+            Event::change_js("menufunction", &format!("'{}'", index)),
             self.name, match &self.shortcut {
                 None => "",
                 Some(shortcut) => shortcut,

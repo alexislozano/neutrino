@@ -14,7 +14,7 @@ use neutrino::{App, Window};
 
 mod demo_mod;
 
-use demo_mod::listeners::{AppListener, TabsListener};
+use demo_mod::listeners::{AppListener, TabsListener, MenuBarListener};
 use demo_mod::observers::TabsObserver;
 use demo_mod::models::Panes;
 
@@ -85,15 +85,18 @@ fn main() {
     tabs1.add(("Onglet 2", Box::new(custom2)));
 
     let mut fichier = MenuItem::new("Fichier");
-    fichier.add(MenuFunction::new("Nouveau"));
     fichier.add(MenuFunction::new("Quitter").shortcut("Ctrl-Q"));
 
-    let mut aide = MenuItem::new("Aide");
-    aide.add(MenuFunction::new("À propos"));
+    let mut onglets = MenuItem::new("Onglets");
+    onglets.add(MenuFunction::new("Onglet 1").shortcut("Ctrl-1"));
+    onglets.add(MenuFunction::new("Onglet 2").shortcut("Ctrl-2"));
 
-    let mut menu_bar = MenuBar::new();
+    let menubar_listener = MenuBarListener::new(Rc::clone(&rpanes));
+
+    let mut menu_bar = MenuBar::new()
+        .listener(Box::new(menubar_listener));
     menu_bar.add(fichier);
-    menu_bar.add(aide);
+    menu_bar.add(onglets);
 
     let app_listener = AppListener::new(Rc::clone(&rpanes));
 

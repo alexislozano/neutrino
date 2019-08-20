@@ -12,13 +12,17 @@ pub enum Event {
 impl Event {
     pub fn change_js(source: &str, value: &str) -> String {
         format!(
-            r#"(function(){{ invoke( {{ type: 'Change', source: '{}', value: {} }} ) }})()"#,
+            r#"(function(){{ invoke( {{ type: 'Change', source: '{}', value: {} }} ); event.stopPropagation(); }})()"#,
             source, value
         )
     }
 
     pub fn key_js() -> String {
-        r#"(function() { if (event.ctrlKey && event.key !== 'Control') { invoke( { type: 'Key', key: event.key } ) } } )()"#.to_string()
+        r#"(function() { if (event.ctrlKey && event.key !== 'Control') { invoke( { type: 'Key', key: event.key } ); } event.stopPropagation(); } )()"#.to_string()
+    }
+
+    pub fn undefined_js() -> String {
+        r#"(function() { invoke( { type: 'Undefined' } ); event.stopPropagation(); } )()"#.to_string()
     }
 }
 

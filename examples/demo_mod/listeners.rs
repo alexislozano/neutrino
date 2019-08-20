@@ -44,3 +44,28 @@ impl Listener for TabsListener {
         self.panes.borrow_mut().set_value(value.parse::<u8>().unwrap());
     }
 }
+
+pub struct MenuBarListener {
+    panes: Rc<RefCell<Panes>>,
+}
+
+impl MenuBarListener {
+    pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
+        MenuBarListener {
+            panes: panes,
+        }
+    }
+}
+
+impl Listener for MenuBarListener {
+    fn on_change(&self, value: &str) {
+        let values = value.split(";").map(|v| {
+            v.parse::<u8>().unwrap()
+        }).collect::<Vec<u8>>();
+        if values[0] == 0 {
+            std::process::exit(0);
+        } else if values[0] == 1 {
+            self.panes.borrow_mut().set_value(values[1]);
+        }
+    }
+}

@@ -50,7 +50,7 @@ impl App {
                     <meta charset="UTF-8">
                     {styles}
                 </head>
-                <body onkeydown="{key}">
+                <body onkeydown="{key}" onclick="{click}">
                     <div id="app" class="{theme}"></div>
                     {scripts}
                 </body>
@@ -68,6 +68,7 @@ impl App {
             ),
             theme = window.theme.class(),
             key = Event::key_js(),
+            click = Event::undefined_js(),
         );
 
         let title = &window.title.to_owned();
@@ -99,7 +100,10 @@ impl App {
                     Err(_) => Event::Undefined,
                 };
                 window.trigger(&event);
-                window.trigger(&Event::Update);
+                match event {
+                    Event::Undefined => (),
+                    _ => window.trigger(&Event::Update)
+                };
                 window.render(webview)
             })
             .build()
@@ -290,7 +294,7 @@ impl Window {
     /// Trigger the events in the widget tree
     fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Change { source: _, value: _ } | Event::Update => {
+            Event::Change { source: _, value: _ } | Event::Update | Event::Undefined => {
                 match (&mut self.menubar, &mut self.child) {
                     (Some(menubar), Some(child)) => {
                         menubar.trigger(event);
@@ -318,7 +322,6 @@ impl Window {
                     (None, None) => (),
                 };
             },
-            Event::Undefined => (),
         }
     }
 }
