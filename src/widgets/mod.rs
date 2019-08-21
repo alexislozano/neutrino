@@ -11,3 +11,4 @@ pub mod tabs;
 pub mod textinput;
 pub mod widget;
 pub mod menubar;
+pub mod image;
