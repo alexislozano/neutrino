@@ -2,6 +2,7 @@ use super::models::Person;
 use neutrino::utils::listener::Listener;
 use std::cell::RefCell;
 use std::rc::Rc;
+use neutrino::utils::event::Key;
 
 pub struct ButtonListener {
     person: Rc<RefCell<Person>>,
@@ -24,4 +25,6 @@ impl Listener for ButtonListener {
         self.person.borrow_mut().set_firstname(&self.firstname);
         self.person.borrow_mut().set_lastname(&self.lastname);
     }
+
+    fn on_key(&self, _key: Key) {}
 }

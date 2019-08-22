@@ -81,6 +81,15 @@ impl Widget for MenuBar {
             _ => self.selected = None,
         }
     }
+
+    /// Set the values of the widget using the fields of the HashMap
+    /// returned by the observer
+    ///
+    /// # Fields
+    ///
+    /// ```text
+    /// ```
+    fn on_update(&mut self) {}
 }
 
 pub struct MenuItem {

@@ -25,6 +25,8 @@ impl Listener for AppListener {
             _ => (),
         }
     }
+
+    fn on_change(&self, _value: &str) {}
 }
 
 pub struct TabsListener {
@@ -43,6 +45,8 @@ impl Listener for TabsListener {
     fn on_change(&self, value: &str) {
         self.panes.borrow_mut().set_value(value.parse::<u8>().unwrap());
     }
+
+    fn on_key(&self, _key: Key) {}
 }
 
 pub struct MenuBarListener {
@@ -68,4 +72,6 @@ impl Listener for MenuBarListener {
             self.panes.borrow_mut().set_value(values[1]);
         }
     }
+
+    fn on_key(&self, _key: Key) {}
 }

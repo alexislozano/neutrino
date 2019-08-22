@@ -1,6 +1,7 @@
 use std::fs;
 use base64::encode;
 use crate::widgets::widget::Widget;
+use crate::utils::event::Event;
 
 pub struct Image {
     data: String,
@@ -49,4 +50,16 @@ impl Widget for Image {
             self.background_color, ratio, self.data,
         )
     }
+
+    /// Set the values of the widget using the fields of the HashMap
+    /// returned by the observer
+    ///
+    /// # Fields
+    ///
+    /// ```text
+    /// ```
+    fn on_update(&mut self) {}
+
+    /// Trigger changes depending on the event
+    fn trigger(&mut self, _event: &Event) {}
 }
