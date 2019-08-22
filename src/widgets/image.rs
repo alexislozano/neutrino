@@ -2,15 +2,18 @@ use std::fs;
 use base64::encode;
 use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
+use std::path::Path;
 
 pub struct Image {
     data: String,
     keep_ratio_aspect: bool,
     background_color: String,
+    extension: String,
 }
 
 impl Image {
     pub fn from_path(path: &str) -> Self {
+        let extension = Path::new(path).extension().unwrap().to_str().unwrap().to_string();
         Image { 
             data: match fs::read(path) {
                 Ok(file) => encode(&file),
@@ -18,6 +21,7 @@ impl Image {
             },
             keep_ratio_aspect: false,
             background_color: "black".to_string(),
+            extension: extension,
         } 
     }
 
@@ -26,6 +30,7 @@ impl Image {
             data: self.data,
             keep_ratio_aspect: keep_ratio_aspect,
             background_color: self.background_color,
+            extension: self.extension,
         } 
     }
 
@@ -34,20 +39,24 @@ impl Image {
             data: self.data,
             keep_ratio_aspect: self.keep_ratio_aspect,
             background_color: background_color.to_string(),
+            extension: self.extension,
         } 
     }
 }
 
 impl Widget for Image {
     fn eval(&self) -> String {
-        let ratio = if self.keep_ratio_aspect {
-            ""
-        } else {
-            r#"width="100%" height="100%""#
+        let ratio = match self.keep_ratio_aspect {
+            true => "",
+            false => r#"width="100%" height="100%""#
+        };
+        let extension = match self.extension.as_ref() {
+            "svg" => "svg+xml",
+            ext => ext,
         };
         format!(
-            r#"<div class="image" style="background-color:{};"><img {} src="data:image;base64, {}" /></div>"#, 
-            self.background_color, ratio, self.data,
+            r#"<div class="image" style="background-color:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
+            self.background_color, ratio, extension, self.data,
         )
     }
 

@@ -17,3 +17,4 @@ base64 = "0.10.1"
 
 [build-dependencies]
 rsass = "0.11.0"
+base64 = "0.10.1"
