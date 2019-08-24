@@ -162,6 +162,13 @@
             -webkit-user-select: none;
             color: black;
             outline: 0;
+            display: flex;
+
+            div {
+                margin-left: 10px;
+                height: 18px;
+                width: 18px;
+            }
         }
 
         .combo-choices {
@@ -172,6 +179,7 @@
             top: 100%;
             box-sizing: border-box;
             white-space: nowrap;
+            min-width: 100%;
 
             .combo-choice {
                 background-color: white;

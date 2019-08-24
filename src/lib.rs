@@ -1,20 +1,3 @@
-//! # Neutrino
-//!
-//! Neutrino is a GUI library built onto [web-view](https://docs.rs/web-view). 
-//! As such, it uses the native web component of the host system. Neutrino is
-//! created with the idea of using the Model-View-Controller pattern used in
-//! native GUI libraries.
-//!
-//! # Styling
-//!
-//! In order to accomodate the taste of the user, Neutrino is themable in CSS.
-//! Basic widgets are already available and the Custom widget can be used with
-//! a custom HTML template.
-//!
-//! # Examples
-//!
-//! TODO
-
 use web_view::*;
 
 pub mod utils;
@@ -42,6 +25,10 @@ pub struct App;
 impl App {
     /// Run the application
     pub fn run(mut window: Window) {
+        let class = match &window.theme {
+            Some(theme) => theme.class(),
+            None => ""
+        };
         let html = format!(
             r#"
             <!doctype html>
@@ -66,7 +53,7 @@ impl App {
                 inline_script(include_str!("www/app/morphdom.min.js")),
                 inline_script(include_str!("www/app/app.js"))
             ),
-            theme = window.theme.class(),
+            theme = class,
             key = Event::key_js(),
             click = Event::undefined_js(),
         );
@@ -143,7 +130,7 @@ pub struct Window {
     width: i32,
     height: i32,
     resizable: bool,
-    theme: Theme,
+    theme: Option<Theme>,
     child: Option<Box<Widget>>,
     menubar: Option<MenuBar>,
     listener: Option<Box<Listener>>,
@@ -159,8 +146,8 @@ impl Window {
     /// width: 640,
     /// height: 480,
     /// resizable: true,
-    /// theme: Theme::Breeze,
-    /// child: Some(widget),
+    /// theme: None,
+    /// child: None,
     /// ```
     pub fn new() -> Self {
         Window {
@@ -168,7 +155,7 @@ impl Window {
             width: 640,
             height: 480,
             resizable: true,
-            theme: Theme::Breeze,
+            theme: None,
             child: None,
             menubar: None,
             listener: None,
@@ -250,7 +237,7 @@ impl Window {
             width: self.width,
             height: self.height,
             resizable: self.resizable,
-            theme: theme,
+            theme: Some(theme),
             child: self.child,
             menubar: self.menubar,
             listener: self.listener,
@@ -273,9 +260,13 @@ impl Window {
 
     /// Render the menubar and widget tree
     fn render(&self, webview: &mut WebView<&str>) -> WVResult {
+        let class = match &self.theme {
+            Some(theme) => theme.class(),
+            None => ""
+        };
         let rendered = format!(
             r#"render("<div id=\"app\" class=\"{}\">{}</div>")"#,
-            self.theme.class(),
+            class,
             self.eval().replace(r#"""#, r#"\""#)
         );
         webview.eval(&rendered)

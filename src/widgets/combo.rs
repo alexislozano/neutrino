@@ -2,6 +2,8 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
+use crate::utils::theme::Theme;
+use crate::utils::pixmap::{Pixmap, Icon};
 
 /// # ComboBox
 ///
@@ -37,6 +39,7 @@ pub struct Combo {
     opened: bool,
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
+    arrow: Option<Pixmap>,
 }
 
 impl Combo {
@@ -60,6 +63,7 @@ impl Combo {
             opened: false,
             listener: None,
             observer: None,
+            arrow: None,
         }
     }
 
@@ -75,6 +79,7 @@ impl Combo {
             opened: self.opened,
             listener: self.listener,
             observer: self.observer,
+            arrow: self.arrow,
         }
     }
 
@@ -87,6 +92,7 @@ impl Combo {
             opened: self.opened,
             listener: self.listener,
             observer: self.observer,
+            arrow: self.arrow,
         }
     }
 
@@ -99,6 +105,7 @@ impl Combo {
             opened: opened,
             listener: self.listener,
             observer: self.observer,
+            arrow: self.arrow,
         }
     }
 
@@ -111,6 +118,7 @@ impl Combo {
             opened: self.opened,
             listener: Some(listener),
             observer: self.observer,
+            arrow: self.arrow,
         }
     }
 
@@ -123,6 +131,35 @@ impl Combo {
             opened: self.opened,
             listener: self.listener,
             observer: Some(observer),
+            arrow: self.arrow,
+        }
+    }
+
+    /// Set the arrow from a path
+    pub fn arrow_from_path(self, path: &str) -> Self {
+        let pixmap = Pixmap::from_path(path);
+        Combo {
+            name: self.name,
+            choices: self.choices,
+            selected: self.selected,
+            opened: self.opened,
+            listener: self.listener,
+            observer: self.observer,
+            arrow: Some(pixmap),
+        }
+    }
+
+    /// Set the arrow from a path
+    pub fn arrow_from_theme(self, theme: Theme, icon: Icon) -> Self {
+        let pixmap = Pixmap::from_theme(theme, icon);
+        Combo {
+            name: self.name,
+            choices: self.choices,
+            selected: self.selected,
+            opened: self.opened,
+            listener: self.listener,
+            observer: self.observer,
+            arrow: Some(pixmap),
         }
     }
 }
@@ -145,11 +182,24 @@ impl Widget for Combo {
     /// class = combo-choice
     /// ```
     fn eval(&self) -> String {
-        let mut s = format!(
-            r#"<div class="combo"><div onmousedown="{}" class="combo-button">{}</div>"#,
-            Event::change_js(&self.name, "'-1'"),
-            self.choices[self.selected as usize]
-        );
+        let mut s = match &self.arrow {
+            Some(arrow) => {
+                format!(
+                    r#"<div class="combo"><div onmousedown="{}" class="combo-button">{}<div><img src="data:image/{};base64,{}" /></div></div>"#,
+                    Event::change_js(&self.name, "'-1'"),
+                    self.choices[self.selected as usize],
+                    arrow.extension(),
+                    arrow.data(),
+                )
+            },
+            None => {
+                format!(
+                    r#"<div class="combo"><div onmousedown="{}" class="combo-button">{}</div>"#,
+                    Event::change_js(&self.name, "'-1'"),
+                    self.choices[self.selected as usize],
+                )
+            }
+        };
         if self.opened {
             s.push_str(r#"<div class="combo-choices">"#);
             for (i, choice) in self.choices.iter().enumerate() {

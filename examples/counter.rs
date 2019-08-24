@@ -5,6 +5,7 @@ use neutrino::widgets::button::Button;
 use neutrino::widgets::container::Container;
 use neutrino::widgets::label::Label;
 use neutrino::widgets::progressbar::ProgressBar;
+use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
 
 mod counter_mod;
@@ -54,7 +55,8 @@ fn main() {
         .title("Counter")
         .size(320, 240)
         .resizable(true)
-        .child(Box::new(container));
+        .child(Box::new(container))
+        .theme(Theme::Breeze);
 
     App::run(window);
 }

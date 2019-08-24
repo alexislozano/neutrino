@@ -10,6 +10,8 @@ use neutrino::widgets::range::Range;
 use neutrino::widgets::tabs::Tabs;
 use neutrino::widgets::textinput::TextInput;
 use neutrino::widgets::menubar::{MenuBar, MenuItem, MenuFunction};
+use neutrino::utils::pixmap::Icon;
+use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
 
 mod demo_mod;
@@ -43,7 +45,8 @@ fn main() {
 
     let combo1 = Combo::new("combo1")
         .choices(vec!["Combo box", "Combo fox"])
-        .selected(0);
+        .selected(0)
+        .arrow_from_theme(Theme::Breeze, Icon::Down);
 
     let range1 = Range::new("range1").min(0).max(100).value(25);
 
@@ -106,7 +109,8 @@ fn main() {
         .resizable(true)
         .child(Box::new(tabs1))
         .menubar(menu_bar)
-        .listener(Box::new(app_listener));
+        .listener(Box::new(app_listener))
+        .theme(Theme::Breeze);
 
     App::run(window);
 }

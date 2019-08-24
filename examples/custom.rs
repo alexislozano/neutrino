@@ -4,6 +4,7 @@ use std::rc::Rc;
 use neutrino::widgets::button::Button;
 use neutrino::widgets::container::Container;
 use neutrino::widgets::custom::Custom;
+use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
 
 mod custom_mod;
@@ -55,7 +56,8 @@ fn main() {
         .title("Custom")
         .size(340, 240)
         .resizable(true)
-        .child(Box::new(container2));
+        .child(Box::new(container2))
+        .theme(Theme::Breeze);
 
     App::run(window);
 }
