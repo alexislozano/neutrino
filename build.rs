@@ -1,28 +1,37 @@
 use std::env;
 use rsass::{compile_scss_file, OutputStyle};
 use std::fs;
+use base64::encode;
 
 fn main() {
-    let out_dir = env::var("OUT_DIR").unwrap();
+    let out = &env::var("OUT_DIR").unwrap();
 
     // Theming commons
-    compile_write(
-        "src/www/app.scss",
-        &format!("{}/app.css", out_dir)
-    );
+    scss("app", out);
 
     // Breeze theme
-    compile_write(
-        "src/www/breeze.scss",
-        &format!("{}/breeze.css", out_dir)
-    );
+    scss("breeze", out);
+    icons("breeze");
 }
 
-fn compile_write(path: &str, out: &str) {
+fn scss(name: &str, out: &str) {
+    let path = format!("src/www/{}/{}.scss", name, name);
+    let outdir = format!("{}/{}.css", out, name);
     let css = compile_scss_file(
         path.as_ref(),
         OutputStyle::Compressed
     ).unwrap();
+    fs::write(outdir, css).unwrap();
+}
 
-    fs::write(out, css).unwrap();
+fn icons(name: &str) {
+    let dir = format!("src/www/{}/icons", name);
+    match fs::read_dir(dir) {
+        Err(e) => panic!(e),
+        Ok(entries) => for entry in entries {
+            let path = entry.unwrap().path();
+            let data = String::from_utf8_lossy(&fs::read(path).unwrap()).replace("\n", "");
+            let b64 = encode(&data);
+        } 
+    }
 }

@@ -63,8 +63,8 @@ impl App {
             ),
             scripts = format!(
                 "{}\n{}\n",
-                inline_script(include_str!("www/morphdom.min.js")),
-                inline_script(include_str!("www/app.js"))
+                inline_script(include_str!("www/app/morphdom.min.js")),
+                inline_script(include_str!("www/app/app.js"))
             ),
             theme = window.theme.class(),
             key = Event::key_js(),
