@@ -116,7 +116,7 @@ impl MenuItem {
             ""
         };
         let mut s = format!(
-            r#"<div class="menuitem"><div class="menuitem-title {}" onclick="{}" onmouseover="{}">{}</div>"#,
+            r#"<div class="menuitem"><div class="menuitem-title {}" onmousedown="{}" onmouseover="{}">{}</div>"#,
             selected_str, Event::change_js("menuitem", &format!("'click;{}'", index)), 
             Event::change_js("menuitem", &format!("'over;{}'", index)), self.name
         );
@@ -154,7 +154,7 @@ impl MenuFunction {
 
     fn eval(&self, index: usize) -> String {
         format!(
-            r#"<div class="menufunction" onclick="{}"><span class="title">{}</span><span class="shortcut">{}</span></div>"#,
+            r#"<div class="menufunction" onmousedown="{}"><span class="title">{}</span><span class="shortcut">{}</span></div>"#,
             Event::change_js("menufunction", &format!("'{}'", index)),
             self.name, match &self.shortcut {
                 None => "",

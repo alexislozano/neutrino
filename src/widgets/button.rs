@@ -120,7 +120,7 @@ impl Widget for Button {
     fn eval(&self) -> String {
         let disabled = if self.disabled { "disabled" } else { "" };
         format!(
-            r#"<div onclick="{}" class="button {}">{}</div>"#,
+            r#"<div onmousedown="{}" class="button {}">{}</div>"#,
             Event::change_js(&self.name, "''"),
             disabled,
             self.text
@@ -180,7 +180,7 @@ mod tests {
         assert_eq!(
             button.eval(), 
             format!(
-                r#"<div onclick="{}" class="button disabled">Hello</div>"#,
+                r#"<div onmousedown="{}" class="button disabled">Hello</div>"#,
                 Event::change_js("button", "''"),
             )
         );
@@ -192,7 +192,7 @@ mod tests {
         assert_eq!(
             button.eval(), 
             format!(
-                r#"<div onclick="{}" class="button ">Hello</div>"#,
+                r#"<div onmousedown="{}" class="button ">Hello</div>"#,
                 Event::change_js("button", "''"),
             )
         );

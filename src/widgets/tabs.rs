@@ -123,7 +123,7 @@ impl Widget for Tabs {
                 ""
             };
             s.push_str(&format!(
-                r#"<div class="tab-title {}" onclick="{}">{}</div>"#,
+                r#"<div class="tab-title {}" onmousedown="{}">{}</div>"#,
                 selected,
                 Event::change_js(&self.name, &format!("'{}'", i)),
                 child.0

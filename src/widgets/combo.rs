@@ -146,7 +146,7 @@ impl Widget for Combo {
     /// ```
     fn eval(&self) -> String {
         let mut s = format!(
-            r#"<div class="combo"><div onclick="{}" class="combo-button">{}</div>"#,
+            r#"<div class="combo"><div onmousedown="{}" class="combo-button">{}</div>"#,
             Event::change_js(&self.name, "'-1'"),
             self.choices[self.selected as usize]
         );
@@ -154,7 +154,7 @@ impl Widget for Combo {
             s.push_str(r#"<div class="combo-choices">"#);
             for (i, choice) in self.choices.iter().enumerate() {
                 s.push_str(&format!(
-                    r#"<div class="combo-choice" onclick="{}">{}</div>"#,
+                    r#"<div class="combo-choice" onmousedown="{}">{}</div>"#,
                     Event::change_js(&self.name, &format!("'{}'", i)),
                     choice
                 ));

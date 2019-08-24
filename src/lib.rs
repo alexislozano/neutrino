@@ -26,7 +26,7 @@ use widgets::widget::Widget;
 use widgets::menubar::MenuBar;
 use utils::listener::Listener;
 
-use serde_json::Value;
+use json;
 
 /// # App
 ///
@@ -50,7 +50,7 @@ impl App {
                     <meta charset="UTF-8">
                     {styles}
                 </head>
-                <body onkeydown="{key}" onclick="{click}">
+                <body onkeydown="{key}" onmousedown="{click}">
                     <div id="app" class="{theme}"></div>
                     {scripts}
                 </body>
@@ -84,7 +84,7 @@ impl App {
             .user_data("")
             .debug(true)
             .invoke_handler(|webview, arg| {
-                let event: Event = match serde_json::from_str::<Value>(arg) {
+                let event: Event = match json::parse(arg) {
                     Ok(value) => match value["type"].as_str().unwrap() {
                         "Update" => Event::Update,
                         "Key" => match Key::new(value["key"].as_str().unwrap()) {
