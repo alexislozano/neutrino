@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use neutrino::widgets::button::Button;
-use neutrino::widgets::container::Container;
+use neutrino::widgets::container::{Container, Direction, Position, Alignment};
 use neutrino::widgets::label::Label;
 use neutrino::widgets::progressbar::ProgressBar;
 use neutrino::utils::theme::Theme;
@@ -44,7 +44,10 @@ fn main() {
     let progressbar1 =
         ProgressBar::new("progressbar1").observer(Box::new(progressbar1observer));
 
-    let mut container = Container::vertical();
+    let mut container = Container::new()
+        .direction(Direction::Vertical)
+        .position(Position::Center)
+        .alignment(Alignment::Center);
 
     container.add(Box::new(button1));
     container.add(Box::new(label1));

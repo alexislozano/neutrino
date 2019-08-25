@@ -5,13 +5,15 @@ body {
         width: 100%;
         height: 100vh;
         overflow: hidden;
+        display: flex;
+        flex-direction: column; 
 
         .container {
             display: flex;
             font-size: inherit;
             font-family: inherit;
             flex-wrap: wrap;
-            align-items: flex-start;
+            flex-grow: 1;
         }
 
         .image {

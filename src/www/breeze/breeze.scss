@@ -57,6 +57,8 @@
 
     .textinput {
         margin: 6px;
+        display: flex;
+        flex-grow: 1; 
 
         input {
             border: 1px solid #b5b5b6;
@@ -163,6 +165,7 @@
             color: black;
             outline: 0;
             display: flex;
+            justify-content: space-between;
 
             div {
                 margin-left: 10px;
@@ -264,6 +267,7 @@
         position: relative;
         width: 100%;
         cursor: default;
+        min-height: 30px;
 
         .menuitem {
             background-color: white;

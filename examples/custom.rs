@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use neutrino::widgets::button::Button;
-use neutrino::widgets::container::Container;
+use neutrino::widgets::container::{Container, Direction, Position, Alignment};
 use neutrino::widgets::custom::Custom;
 use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
@@ -43,12 +43,16 @@ fn main() {
         .text("Sigmund Freud")
         .listener(Box::new(button3listener));
 
-    let mut container1 = Container::horizontal();
+    let mut container1 = Container::new()
+        .direction(Direction::Horizontal)
+        .position(Position::Center)
+        .alignment(Alignment::Start);
     container1.add(Box::new(button1));
     container1.add(Box::new(button2));
     container1.add(Box::new(button3));
 
-    let mut container2 = Container::vertical();
+    let mut container2 = Container::new()
+        .direction(Direction::Vertical);
     container2.add(Box::new(custom1));
     container2.add(Box::new(container1));
 
