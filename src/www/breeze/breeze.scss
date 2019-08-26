@@ -10,18 +10,12 @@
     }
 
     .button {
-        white-space: nowrap;
         padding: 6px;
         margin: 6px;
         border: 1px solid #b3b5b6;
         border-radius: 2px;
         background-color: #e8e9ea;
         box-shadow: 1px 1px 1px lightgray;
-        font-size: inherit;
-        font-family: inherit;
-        user-select: none;
-        -webkit-user-select: none;
-        cursor: default;
         color: black;
         outline: 0;
     }
@@ -232,12 +226,18 @@
     }
 
     .tabs {
+
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+
         padding: 6px;
 
         .tab-titles {
             cursor: default;
             margin-bottom: -1px;
             display: flex;
+            z-index: 2;
 
             .tab-title {
                 background-color: #d0d2d2;
@@ -258,7 +258,13 @@
             border: 1px solid #bfc1c1;
             border-radius: 2px;
             border-top-left-radius: 0;
-            display: flex;
+            flex-grow: 1;
+            height: 1%;
+            
+            > * {
+                width: 100%;
+                height: 100%;
+            }
         }
     }
     
@@ -267,7 +273,11 @@
         position: relative;
         width: 100%;
         cursor: default;
-        min-height: 30px;
+        height: 30px;
+
+        + * {
+            top: 30px;
+        }
 
         .menuitem {
             background-color: white;

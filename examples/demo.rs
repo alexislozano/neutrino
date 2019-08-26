@@ -1,7 +1,7 @@
 use neutrino::widgets::button::Button;
 use neutrino::widgets::checkbox::CheckBox;
 use neutrino::widgets::combo::Combo;
-use neutrino::widgets::container::{Container, Direction, Alignment};
+use neutrino::widgets::container::{Container, Direction};
 use neutrino::widgets::custom::Custom;
 use neutrino::widgets::label::Label;
 use neutrino::widgets::progressbar::ProgressBar;
@@ -51,25 +51,24 @@ fn main() {
     let range1 = Range::new("range1").min(0).max(100).value(25);
 
     let mut container1 = Container::new()
-        .direction(Direction::Vertical);
+        .direction(Direction::Vertical)
+        .stretch();
     container1.add(Box::new(checkbox1));
     container1.add(Box::new(radio1));
 
     let mut container2 = Container::new()
-        .direction(Direction::Horizontal)
-        .alignment(Alignment::Stretch);
+        .direction(Direction::Horizontal);
     container2.add(Box::new(button1));
     container2.add(Box::new(textinput1));
 
     let mut container3 = Container::new()
         .direction(Direction::Vertical)
-        .alignment(Alignment::Stretch);
+        .stretch();
     container3.add(Box::new(combo1));
     container3.add(Box::new(container2));
 
     let mut container4 = Container::new()
-        .direction(Direction::Horizontal)
-        .alignment(Alignment::Stretch);
+        .direction(Direction::Horizontal);
     container4.add(Box::new(container1));
     container4.add(Box::new(container3));
 

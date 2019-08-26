@@ -278,7 +278,7 @@ impl Window {
             (Some(menubar), Some(child)) => format!("{}{}", menubar.eval(), child.eval()),
             (None, Some(child)) => format!("{}", child.eval()),
             (Some(menubar), None) => format!("{}", menubar.eval()),
-            (None, None) => "<div></div>".to_string(),
+            (None, None) => "".to_string(),
         }
     }
 

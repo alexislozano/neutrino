@@ -34,6 +34,7 @@ pub struct Tabs {
     selected: u32,
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
+    stretch: String,
 }
 
 impl Tabs {
@@ -55,6 +56,7 @@ impl Tabs {
             selected: 0,
             listener: None,
             observer: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -66,6 +68,7 @@ impl Tabs {
             selected: selected,
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -77,6 +80,7 @@ impl Tabs {
             selected: self.selected,
             listener: Some(listener),
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -88,6 +92,18 @@ impl Tabs {
             selected: self.selected,
             listener: self.listener,
             observer: Some(observer),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        Tabs {
+            name: self.name,
+            children: self.children,
+            selected: self.selected,
+            listener: self.listener,
+            observer: self.observer,
+            stretch: "stretch".to_string(),
         }
     }
 
@@ -115,7 +131,10 @@ impl Widget for Tabs {
     /// class = tab
     /// ```
     fn eval(&self) -> String {
-        let mut s = r#"<div class="tabs"><div class="tab-titles">"#.to_string();
+        let mut s = format!(
+            r#"<div class="tabs {}"><div class="tab-titles">"#,
+            self.stretch
+        );
         for (i, child) in self.children.iter().enumerate() {
             let selected = if self.selected == i as u32 {
                 "selected"

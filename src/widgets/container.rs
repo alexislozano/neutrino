@@ -24,6 +24,7 @@ pub struct Container {
     direction: String,
     position: String,
     alignment: String,
+    stretch: String,
 }
 
 impl Container {
@@ -31,53 +32,66 @@ impl Container {
     pub fn new() -> Self {
         Container {
             children: vec![],
-            direction: "flex-direction: column;".to_string(),
+            direction: "vertical".to_string(),
             position: "".to_string(),
             alignment: "".to_string(),
+            stretch: "".to_string(),
         }
     }
 
     pub fn direction(self, direction: Direction) -> Self {
         let direction_str = match direction {
-            Direction::Horizontal => "flex-direction: row;",
-            Direction::Vertical => "flex-direction: column;",
+            Direction::Horizontal => "direction-horizontal",
+            Direction::Vertical => "direction-vertical",
         };
         Container {
             children: self.children,
             direction: direction_str.to_string(),
             position: self.position,
             alignment: self.alignment,
+            stretch: self.stretch,
         }
     }
 
     pub fn position(self, position: Position) -> Self {
         let position_str = match position {
-            Position::Center => "justify-content: center;",
-            Position::Start => "justify-content: flex-start;",
-            Position::End => "justify-content: flex-end;",
-            Position::SpaceBetween => "justify-content: space-between;",
-            Position::SpaceAround => "justify-content: space-around;",
+            Position::Center => "position-center",
+            Position::Start => "position-start",
+            Position::End => "position-end",
+            Position::Between => "position-between",
+            Position::Around => "position-around",
         };
         Container {
             children: self.children,
             direction: self.direction,
             position: position_str.to_string(),
             alignment: self.alignment,
+            stretch: self.stretch,
         }
     }
 
     pub fn alignment(self, alignment: Alignment) -> Self {
         let alignment_str = match alignment {
-            Alignment::Center => "align-items: center;",
-            Alignment::Start => "align-items: flex-start;",
-            Alignment::End => "align-items: flex-end;",
-            Alignment::Stretch => "align-items: stretch;",
+            Alignment::Center => "alignment-center",
+            Alignment::Start => "alignment-start",
+            Alignment::End => "alignment-end",
         };
         Container {
             children: self.children,
             direction: self.direction,
             position: self.position,
             alignment: alignment_str.to_string(),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        Container {
+            children: self.children,
+            direction: self.direction,
+            position: self.position,
+            alignment: self.alignment,
+            stretch: "stretch".to_string(),
         }
     }
 
@@ -98,10 +112,11 @@ impl Widget for Container {
     /// ```
     fn eval(&self) -> String {
         let mut s = format!(
-            r#"<div class="container" style="{}{}{}">"#, 
+            r#"<div class="container {} {} {} {}">"#, 
             self.position,
             self.direction,
             self.alignment,
+            self.stretch,
         );
         for widget in self.children.iter() {
             s.push_str(&widget.eval());
@@ -137,13 +152,12 @@ pub enum Position {
     Center,
     Start,
     End,
-    SpaceBetween,
-    SpaceAround,
+    Between,
+    Around,
 }
 
 pub enum Alignment {
     Center,
     Start,
     End,
-    Stretch,
 }

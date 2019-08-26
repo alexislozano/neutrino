@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use neutrino::widgets::button::Button;
-use neutrino::widgets::container::{Container, Direction, Position, Alignment};
+use neutrino::widgets::container::{Container, Direction, Position};
 use neutrino::widgets::custom::Custom;
 use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
@@ -45,8 +45,7 @@ fn main() {
 
     let mut container1 = Container::new()
         .direction(Direction::Horizontal)
-        .position(Position::Center)
-        .alignment(Alignment::Start);
+        .position(Position::Center);
     container1.add(Box::new(button1));
     container1.add(Box::new(button2));
     container1.add(Box::new(button3));

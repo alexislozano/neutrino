@@ -34,6 +34,7 @@ pub struct Button {
     disabled: bool,
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
+    stretch: String,
 }
 
 impl Button {
@@ -55,6 +56,7 @@ impl Button {
             disabled: false,
             listener: None,
             observer: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -66,6 +68,7 @@ impl Button {
             disabled: self.disabled,
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -77,6 +80,7 @@ impl Button {
             disabled: disabled,
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -88,6 +92,7 @@ impl Button {
             disabled: self.disabled,
             listener: Some(listener),
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -99,6 +104,18 @@ impl Button {
             disabled: self.disabled,
             listener: self.listener,
             observer: Some(observer),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        Button {
+            name: self.name,
+            text: self.text,
+            disabled: self.disabled,
+            listener: self.listener,
+            observer: self.observer,
+            stretch: "stretch".to_string(),
         }
     }
 }
@@ -120,9 +137,10 @@ impl Widget for Button {
     fn eval(&self) -> String {
         let disabled = if self.disabled { "disabled" } else { "" };
         format!(
-            r#"<div onmousedown="{}" class="button {}">{}</div>"#,
+            r#"<div onmousedown="{}" class="button {} {}">{}</div>"#,
             Event::change_js(&self.name, "''"),
             disabled,
+            self.stretch,
             self.text
         )
     }
