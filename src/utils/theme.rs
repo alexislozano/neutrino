@@ -6,10 +6,10 @@ pub enum Theme {
 }
 
 impl Theme {
-    /// Return the CSS class corresponding to the theme
-    pub fn class(&self) -> &str {
+    /// Return the CSS string corresponding to the theme
+    pub fn css(&self) -> &str {
         match self {
-            Theme::Breeze => "breeze",
+            Theme::Breeze => include_str!(concat!(env!("OUT_DIR"), "/breeze.css")),
         }
     }
 }

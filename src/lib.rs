@@ -25,10 +25,6 @@ pub struct App;
 impl App {
     /// Run the application
     pub fn run(mut window: Window) {
-        let class = match &window.theme {
-            Some(theme) => theme.class(),
-            None => ""
-        };
         let html = format!(
             r#"
             <!doctype html>
@@ -38,7 +34,7 @@ impl App {
                     {styles}
                 </head>
                 <body onkeydown="{key}" onmousedown="{click}">
-                    <div id="app" class="{theme}"></div>
+                    <div id="app"></div>
                     {scripts}
                 </body>
             </html>
@@ -46,14 +42,16 @@ impl App {
             styles = format!(
                 "{}\n{}\n",
                 inline_style(include_str!(concat!(env!("OUT_DIR"), "/app.css"))),
-                inline_style(include_str!(concat!(env!("OUT_DIR"), "/breeze.css"))),
+                inline_style(match &window.theme {
+                    None => "",
+                    Some(theme) => theme.css()
+                }),
             ),
             scripts = format!(
                 "{}\n{}\n",
                 inline_script(include_str!("www/app/morphdom.min.js")),
                 inline_script(include_str!("www/app/app.js"))
             ),
-            theme = class,
             key = Event::key_js(),
             click = Event::undefined_js(),
         );
@@ -260,13 +258,8 @@ impl Window {
 
     /// Render the menubar and widget tree
     fn render(&self, webview: &mut WebView<&str>) -> WVResult {
-        let class = match &self.theme {
-            Some(theme) => theme.class(),
-            None => ""
-        };
         let rendered = format!(
-            r#"render("<div id=\"app\" class=\"{}\">{}</div>")"#,
-            class,
+            r#"render("<div id=\"app\">{}</div>")"#,
             self.eval().replace(r#"""#, r#"\""#)
         );
         webview.eval(&rendered)
