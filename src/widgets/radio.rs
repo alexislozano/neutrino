@@ -34,6 +34,7 @@ pub struct Radio {
     selected: u32,
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
+    stretch: String,
 }
 
 impl Radio {
@@ -55,6 +56,7 @@ impl Radio {
             selected: 0,
             listener: None,
             observer: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -69,6 +71,7 @@ impl Radio {
             selected: self.selected,
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -80,6 +83,7 @@ impl Radio {
             selected: selected,
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -91,6 +95,7 @@ impl Radio {
             selected: self.selected,
             listener: Some(listener),
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -102,6 +107,18 @@ impl Radio {
             selected: self.selected,
             listener: self.listener,
             observer: Some(observer),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        Radio {
+            name: self.name,
+            choices: self.choices,
+            selected: self.selected,
+            listener: self.listener,
+            observer: self.observer,
+            stretch: "stretch".to_string(),
         }
     }
 }

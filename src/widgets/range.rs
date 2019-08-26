@@ -38,6 +38,7 @@ pub struct Range {
     value: i32,
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
+    stretch: String,
 }
 
 impl Range {
@@ -61,6 +62,7 @@ impl Range {
             value: 0,
             observer: None,
             listener: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -73,6 +75,7 @@ impl Range {
             value: self.value,
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -85,6 +88,7 @@ impl Range {
             value: self.value,
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -97,6 +101,7 @@ impl Range {
             value: value,
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -109,6 +114,7 @@ impl Range {
             value: self.value,
             listener: Some(listener),
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -121,6 +127,19 @@ impl Range {
             value: self.value,
             listener: self.listener,
             observer: Some(observer),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        Range {
+            name: self.name,
+            min: self.min,
+            max: self.max,
+            value: self.value,
+            listener: self.listener,
+            observer: self.observer,
+            stretch: "stretch".to_string(),
         }
     }
 }

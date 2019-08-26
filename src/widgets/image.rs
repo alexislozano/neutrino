@@ -8,6 +8,7 @@ pub struct Image {
     keep_ratio_aspect: bool,
     background_color: String,
     extension: String,
+    stretch: String,
 }
 
 impl Image {
@@ -18,6 +19,7 @@ impl Image {
             keep_ratio_aspect: false,
             background_color: "black".to_string(),
             extension: pixmap.extension(),
+            stretch: "".to_string(),
         } 
     }
 
@@ -28,6 +30,7 @@ impl Image {
             keep_ratio_aspect: false,
             background_color: "black".to_string(),
             extension: pixmap.extension(),
+            stretch: "".to_string(),
         }
     }
 
@@ -37,6 +40,7 @@ impl Image {
             keep_ratio_aspect: keep_ratio_aspect,
             background_color: self.background_color,
             extension: self.extension,
+            stretch: self.stretch,
         } 
     }
 
@@ -46,6 +50,17 @@ impl Image {
             keep_ratio_aspect: self.keep_ratio_aspect,
             background_color: background_color.to_string(),
             extension: self.extension,
+            stretch: self.stretch,
+        } 
+    }
+
+    pub fn stretch(self) -> Self {
+        Image { 
+            data: self.data,
+            keep_ratio_aspect: self.keep_ratio_aspect,
+            background_color: self.background_color,
+            extension: self.extension,
+            stretch: "stretch".to_string(),
         } 
     }
 }

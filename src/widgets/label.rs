@@ -31,6 +31,7 @@ pub struct Label {
     text: String,
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
+    stretch: String,
 }
 
 impl Label {
@@ -50,6 +51,7 @@ impl Label {
             text: "Label".to_string(),
             listener: None,
             observer: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -60,6 +62,7 @@ impl Label {
             text: text.to_string(),
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -70,6 +73,7 @@ impl Label {
             text: self.text,
             listener: Some(listener),
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -80,6 +84,17 @@ impl Label {
             text: self.text,
             listener: self.listener,
             observer: Some(observer),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        Label {
+            name: self.name,
+            text: self.text,
+            listener: self.listener,
+            observer: self.observer,
+            stretch: "stretch".to_string(),
         }
     }
 }

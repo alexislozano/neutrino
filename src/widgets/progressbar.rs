@@ -31,6 +31,7 @@ pub struct ProgressBar {
     value: u8,
     observer: Option<Box<Observer>>,
     listener: Option<Box<Listener>>,
+    stretch: String,
 }
 
 impl ProgressBar {
@@ -50,6 +51,7 @@ impl ProgressBar {
             value: 0,
             observer: None,
             listener: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -60,6 +62,7 @@ impl ProgressBar {
             value: value,
             observer: self.observer,
             listener: self.listener,
+            stretch: self.stretch,
         }
     }
 
@@ -70,6 +73,7 @@ impl ProgressBar {
             value: self.value,
             observer: self.observer,
             listener: Some(listener),
+            stretch: self.stretch,
         }
     }
 
@@ -80,6 +84,17 @@ impl ProgressBar {
             value: self.value,
             observer: Some(observer),
             listener: self.listener,
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        ProgressBar {
+            name: self.name,
+            value: self.value,
+            observer: self.observer,
+            listener: self.listener,
+            stretch: "stretch".to_string(),
         }
     }
 }

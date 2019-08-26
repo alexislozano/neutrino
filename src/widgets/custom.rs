@@ -35,6 +35,7 @@ pub struct Custom {
     template: String,
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
+    stretch: String,
 }
 
 impl Custom {
@@ -56,6 +57,7 @@ impl Custom {
             template: "".to_string(),
             listener: None,
             observer: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -67,6 +69,7 @@ impl Custom {
             template: template.to_string(),
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -78,6 +81,7 @@ impl Custom {
             template: self.template,
             listener: Some(listener),
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -89,6 +93,18 @@ impl Custom {
             template: self.template,
             listener: self.listener,
             observer: Some(observer),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Custom {
+        Custom {
+            name: self.name,
+            fields: self.fields,
+            template: self.template,
+            listener: self.listener,
+            observer: self.observer,
+            stretch: "stretch".to_string(),
         }
     }
 }

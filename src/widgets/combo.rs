@@ -40,6 +40,7 @@ pub struct Combo {
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
     arrow: Option<Pixmap>,
+    stretch: String,
 }
 
 impl Combo {
@@ -64,6 +65,7 @@ impl Combo {
             listener: None,
             observer: None,
             arrow: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -80,6 +82,7 @@ impl Combo {
             listener: self.listener,
             observer: self.observer,
             arrow: self.arrow,
+            stretch: self.stretch,
         }
     }
 
@@ -93,6 +96,7 @@ impl Combo {
             listener: self.listener,
             observer: self.observer,
             arrow: self.arrow,
+            stretch: self.stretch,
         }
     }
 
@@ -106,6 +110,7 @@ impl Combo {
             listener: self.listener,
             observer: self.observer,
             arrow: self.arrow,
+            stretch: self.stretch,
         }
     }
 
@@ -119,6 +124,7 @@ impl Combo {
             listener: Some(listener),
             observer: self.observer,
             arrow: self.arrow,
+            stretch: self.stretch,
         }
     }
 
@@ -132,6 +138,7 @@ impl Combo {
             listener: self.listener,
             observer: Some(observer),
             arrow: self.arrow,
+            stretch: self.stretch,
         }
     }
 
@@ -146,6 +153,7 @@ impl Combo {
             listener: self.listener,
             observer: self.observer,
             arrow: Some(pixmap),
+            stretch: self.stretch,
         }
     }
 
@@ -160,6 +168,20 @@ impl Combo {
             listener: self.listener,
             observer: self.observer,
             arrow: Some(pixmap),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        Combo {
+            name: self.name,
+            choices: self.choices,
+            selected: self.selected,
+            opened: self.opened,
+            listener: self.listener,
+            observer: self.observer,
+            arrow: self.arrow,
+            stretch: "stretch".to_string(),
         }
     }
 }

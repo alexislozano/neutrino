@@ -31,6 +31,7 @@ pub struct TextInput {
     value: String,
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
+    stretch: String,
 }
 
 impl TextInput {
@@ -50,6 +51,7 @@ impl TextInput {
             value: "TextInput".to_string(),
             listener: None,
             observer: None,
+            stretch: "".to_string(),
         }
     }
 
@@ -60,6 +62,7 @@ impl TextInput {
             value: value.to_string(),
             listener: self.listener,
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -70,6 +73,7 @@ impl TextInput {
             value: self.value,
             listener: Some(listener),
             observer: self.observer,
+            stretch: self.stretch,
         }
     }
 
@@ -80,6 +84,17 @@ impl TextInput {
             value: self.value,
             listener: self.listener,
             observer: Some(observer),
+            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        TextInput {
+            name: self.name,
+            value: self.value,
+            listener: self.listener,
+            observer: self.observer,
+            stretch: "stretch".to_string(),
         }
     }
 }
