@@ -23,11 +23,11 @@
     }
 
     .progressbar {
-        margin-top: 12px;
-        margin-bottom: 12px;
+        margin-top: 8px;
+        margin-bottom: 8px;
         margin-left: 6px;
         margin-right: 6px;
-        height: 6px;
+        height: 10px;
         background-color: white;
         border: 1px solid black;
 
@@ -142,7 +142,7 @@
         .inner-range {
             -webkit-appearance: none;
             appearance: none;
-            height: 6px;
+            height: 10px;
             width: 100%;
             background-color: white;
             border: 1px solid black;
@@ -151,8 +151,8 @@
             &::-webkit-slider-thumb {
                 -webkit-appearance: none;
                 appearance: none;
-                width: 12px;
-                height: 6px;
+                width: 16px;
+                height: 10px;
                 background: black;
             }
         }
@@ -166,15 +166,14 @@
             .tab-title {
                 color: white;
                 background-color: black;
-                padding: 4px;
+                height: 28px;
                 padding-left: 13px;
                 padding-right: 13px;
-                border-bottom: 1px solid black;
+                border: 1px solid black;
 
                 &.selected {
                     color: black;
                     background-color: white;
-                    border: 1px solid black;
                     border-bottom-color: white;
                 }
             }
@@ -197,8 +196,6 @@
         .menuitem {
             
             .menuitem-title {
-                padding-top: 6px;
-                padding-bottom: 6px;
                 padding-left: 11px;
                 padding-right: 11px;
 
@@ -226,9 +223,9 @@
                 }
             }
         }
+    }
 
-        .custom {
-            margin: 6px;
-        }
+    .custom {
+        margin: 6px;
     }
 }

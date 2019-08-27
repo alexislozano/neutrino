@@ -49,11 +49,13 @@ $widget-margin: 6px;
         height: 6px;
         background-color: $mgrey-color;
         border-radius: 3px;
+        border: 1px solid $mgrey-color;
 
         .inner-progressbar {
             background-color: $primary-color;
             height: 100%;
             border-radius: 3px;
+            
         }
     }
 
@@ -180,6 +182,7 @@ $widget-margin: 6px;
             width: 100%;
             background-color: $mgrey-color;
             outline: none;
+            border: 1px solid $mgrey-color;
             border-radius: 3px;
 
             &::-webkit-slider-thumb {
@@ -202,15 +205,15 @@ $widget-margin: 6px;
             .tab-title {
                 color: black;
                 background-color: $lgrey-color;
-                padding: 4px;
+                height: 28px;
                 padding-left: 13px;
                 padding-right: 13px;
-                border-bottom: 1px solid $mgrey-color;
+                border: 1px solid $lgrey-color;
 
                 &.selected {
                     color: black;
                     background-color: $background-color;
-                    border: 1px solid $mgrey-color;
+                    border-color: $mgrey-color;
                     border-bottom-color: $background-color;
                 }
             }
@@ -235,8 +238,6 @@ $widget-margin: 6px;
         .menuitem {
             
             .menuitem-title {
-                padding-top: 6px;
-                padding-bottom: 6px;
                 padding-left: 11px;
                 padding-right: 11px;
 

@@ -93,6 +93,7 @@ body {
 
     .progressbar {
         min-width: 100px;
+        box-sizing: border-box;
     }
 
     .checkbox {
@@ -138,6 +139,7 @@ body {
             -webkit-user-select: none;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .combo-choices {
@@ -154,6 +156,7 @@ body {
         min-width: 100px;
 
         .inner-range {
+            box-sizing: border-box;
 
             &::-webkit-slider-thumb {
                 cursor: pointer;
@@ -175,6 +178,12 @@ body {
             margin-bottom: -1px;
             display: flex;
             z-index: 2;
+
+            .tab-title {
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+            }
         }
 
         .tab {
@@ -196,6 +205,12 @@ body {
 
         .menuitem {
 
+            .menuitem-title {
+                height: 100%;
+                display: flex;
+                align-items: center;
+            }
+
             .menufunctions {
                 display: flex;
                 flex-direction: column;
@@ -206,6 +221,10 @@ body {
                 .menufunction {
                     display: flex;
                     justify-content: space-between;
+
+                    span {
+                        white-space: nowrap;
+                    }
                 }
             }
         }
