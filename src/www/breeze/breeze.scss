@@ -187,7 +187,7 @@ $widget-margin: 6px;
                 appearance: none;
                 width: 18px;
                 height: 18px;
-                background: white;
+                background: $button-gradient;
                 border: 1px solid $dgrey-color;
                 border-radius: 50%;
             }
@@ -195,7 +195,7 @@ $widget-margin: 6px;
             &::-moz-range-thumb {
                 width: 18px;
                 height: 18px;
-                background: white;
+                background: $button-gradient;
                 border: 1px solid $dgrey-color;
                 border-radius: 50%;
             }
