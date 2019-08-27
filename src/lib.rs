@@ -42,10 +42,7 @@ impl App {
             styles = format!(
                 "{}\n{}\n",
                 inline_style(include_str!(concat!(env!("OUT_DIR"), "/app.css"))),
-                inline_style(match &window.theme {
-                    None => "",
-                    Some(theme) => theme.css()
-                }),
+                inline_style(&window.theme.css()),
             ),
             scripts = format!(
                 "{}\n{}\n",
@@ -128,7 +125,7 @@ pub struct Window {
     width: i32,
     height: i32,
     resizable: bool,
-    theme: Option<Theme>,
+    theme: Theme,
     child: Option<Box<dyn Widget>>,
     menubar: Option<MenuBar>,
     listener: Option<Box<dyn Listener>>,
@@ -153,7 +150,7 @@ impl Window {
             width: 640,
             height: 480,
             resizable: true,
-            theme: None,
+            theme: Theme::Default,
             child: None,
             menubar: None,
             listener: None,
@@ -235,7 +232,7 @@ impl Window {
             width: self.width,
             height: self.height,
             resizable: self.resizable,
-            theme: Some(theme),
+            theme: theme,
             child: self.child,
             menubar: self.menubar,
             listener: self.listener,

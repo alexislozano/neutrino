@@ -9,6 +9,10 @@ fn main() {
     // Theming commons
     scss("app", out_dir);
 
+    // Default theme
+    scss("default", out_dir);
+    icons("default", out_dir);
+
     // Breeze theme
     scss("breeze", out_dir);
     icons("breeze", out_dir);

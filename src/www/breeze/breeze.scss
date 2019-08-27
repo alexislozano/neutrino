@@ -32,13 +32,13 @@ $widget-margin: 6px;
         background: $button-gradient;
         color: black;
         outline: 0;
-    }
-
-    .button.disabled {
-        border-color: $mgrey-color;
-        background: $disabled-gradient;
-        color: $dgrey-color;
-        transition: border-color 300ms, background-color 300ms, color 300ms;
+        
+        &.disabled {
+            border-color: $mgrey-color;
+            background: $disabled-gradient;
+            color: $dgrey-color;
+            transition: border-color 300ms, background-color 300ms, color 300ms;
+        }
     }
 
     .progressbar {
@@ -191,14 +191,6 @@ $widget-margin: 6px;
                 border: 1px solid $dgrey-color;
                 border-radius: 50%;
             }
-            
-            &::-moz-range-thumb {
-                width: 18px;
-                height: 18px;
-                background: $button-gradient;
-                border: 1px solid $dgrey-color;
-                border-radius: 50%;
-            }
         }
     }
 
@@ -208,6 +200,7 @@ $widget-margin: 6px;
         .tab-titles {
 
             .tab-title {
+                color: black;
                 background-color: $lgrey-color;
                 padding: 4px;
                 padding-left: 13px;
@@ -215,6 +208,7 @@ $widget-margin: 6px;
                 border-bottom: 1px solid $mgrey-color;
 
                 &.selected {
+                    color: black;
                     background-color: $background-color;
                     border: 1px solid $mgrey-color;
                     border-bottom-color: $background-color;

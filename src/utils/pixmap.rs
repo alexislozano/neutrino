@@ -28,6 +28,16 @@ impl Pixmap {
 
     pub fn from_theme(theme: Theme, icon: Icon) -> Self {
         match theme {
+            Theme::Default => match icon {
+                Icon::Add => Pixmap {
+                    data: include_str!(concat!(env!("OUT_DIR"), "/default/add.data")).to_string(),
+                    extension: include_str!(concat!(env!("OUT_DIR"), "/default/add.extension")).to_string()
+                },
+                Icon::Down => Pixmap {
+                    data: include_str!(concat!(env!("OUT_DIR"), "/default/down.data")).to_string(),
+                    extension: include_str!(concat!(env!("OUT_DIR"), "/default/down.extension")).to_string()
+                },
+            },
             Theme::Breeze => match icon {
                 Icon::Add => Pixmap {
                     data: include_str!(concat!(env!("OUT_DIR"), "/breeze/add.data")).to_string(),
