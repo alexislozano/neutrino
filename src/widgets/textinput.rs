@@ -132,7 +132,8 @@ impl Widget for TextInput {
     /// ```
     fn eval(&self) -> String {
         format!(
-            r#"<div class="textinput"><input size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
+            r#"<div class="textinput {}"><input size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
+            self.stretch,
             self.size,
             self.size,
             self.value,

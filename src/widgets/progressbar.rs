@@ -110,7 +110,8 @@ impl Widget for ProgressBar {
     /// ```
     fn eval(&self) -> String {
         format!(
-            r#"<div class="progressbar"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
+            r#"<div class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
+            self.stretch,
             self.value
         )
     }

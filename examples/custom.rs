@@ -22,7 +22,7 @@ fn main() {
     let custom1observer = Custom1Observer::new(Rc::clone(&rperson));
 
     let custom1 = Custom::new("custom1")
-        .template("<h1>My name is {firstname} {lastname}.</h1>")
+        .template(r#"<h1 style="margin: 0;">My name is {firstname} {lastname}.</h1>"#)
         .observer(Box::new(custom1observer));
 
     let button1listener = ButtonListener::new(Rc::clone(&rperson), "Ada", "Lovelace");

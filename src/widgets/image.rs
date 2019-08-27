@@ -72,8 +72,12 @@ impl Widget for Image {
             false => r#"width="100%" height="100%""#
         };
         format!(
-            r#"<div class="image" style="background-color:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
-            self.background_color, ratio, self.extension, self.data,
+            r#"<div class="image {}" style="background-color:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
+            self.stretch, 
+            self.background_color, 
+            ratio, 
+            self.extension, 
+            self.data,
         )
     }
 

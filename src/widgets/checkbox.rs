@@ -139,8 +139,12 @@ impl Widget for CheckBox {
     fn eval(&self) -> String {
         let checked = if self.checked { "checked" } else { "" };
         format!(
-            r#"<div class="checkbox" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
-            Event::change_js(&self.name, "''"), checked, checked, self.text
+            r#"<div class="checkbox {}" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
+            self.stretch,
+            Event::change_js(&self.name, "''"), 
+            checked, 
+            checked, 
+            self.text,
         )
     }
 

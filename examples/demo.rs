@@ -29,9 +29,9 @@ fn main() {
 
     let textinput1 = TextInput::new("input1").value("0").size(4);
 
-    let button1 = Button::new("button1").text("Bouton à pousser");
+    let button1 = Button::new("button1").text("Bouton à pousser").stretch();
 
-    let progressbar1 = ProgressBar::new("progressbar1").value(70);
+    let progressbar1 = ProgressBar::new("progressbar1").value(70).stretch();
 
     let label1 = Label::new("label1").text("70%");
 
@@ -48,7 +48,7 @@ fn main() {
         .selected(0)
         .arrow_from_theme(Theme::Breeze, Icon::Down);
 
-    let range1 = Range::new("range1").min(0).max(100).value(25);
+    let range1 = Range::new("range1").min(0).max(100).value(25).stretch();
 
     let mut container1 = Container::new()
         .direction(Direction::Vertical)
@@ -83,7 +83,7 @@ fn main() {
     container6.add(Box::new(container4));
     container6.add(Box::new(container5));
 
-    let custom2 = Custom::new("custom2").template(r#"<h2 style="margin: 6px;">This is Tab 2</h2>"#);
+    let custom2 = Custom::new("custom2").template(r#"<h2 style="margin: 0;">This is Tab 2</h2>"#);
 
     let tabs_observer = TabsObserver::new(Rc::clone(&rpanes));
     let tabs_listener = TabsListener::new(Rc::clone(&rpanes));

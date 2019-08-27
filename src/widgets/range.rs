@@ -161,8 +161,12 @@ impl Widget for Range {
     /// ```
     fn eval(&self) -> String {
         format!(
-            r#"<div class="range"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
-            Event::change_js(&self.name, "value"), self.min, self.max, self.value
+            r#"<div class="range {}"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
+            self.stretch,
+            Event::change_js(&self.name, "value"), 
+            self.min, 
+            self.max, 
+            self.value
         )
     }
 

@@ -207,7 +207,8 @@ impl Widget for Combo {
         let mut s = match &self.arrow {
             Some(arrow) => {
                 format!(
-                    r#"<div class="combo" style="flex-grow: 1;"><div onmousedown="{}" class="combo-button">{}<div><img src="data:image/{};base64,{}" /></div></div>"#,
+                    r#"<div class="combo {}"><div onmousedown="{}" class="combo-button">{}<div><img src="data:image/{};base64,{}" /></div></div>"#,
+                    self.stretch,
                     Event::change_js(&self.name, "'-1'"),
                     self.choices[self.selected as usize],
                     arrow.extension(),
@@ -216,7 +217,8 @@ impl Widget for Combo {
             },
             None => {
                 format!(
-                    r#"<div class="combo"><div onmousedown="{}" class="combo-button">{}</div>"#,
+                    r#"<div class="combo {}"><div onmousedown="{}" class="combo-button">{}</div>"#,
+                    self.stretch,
                     Event::change_js(&self.name, "'-1'"),
                     self.choices[self.selected as usize],
                 )

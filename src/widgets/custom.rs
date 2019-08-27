@@ -112,7 +112,11 @@ impl Custom {
 impl Widget for Custom {
     /// Return the HTML representation
     fn eval(&self) -> String {
-        strfmt(&self.template, &self.fields).unwrap_or(self.template.to_string())
+        format!(
+            r#"<div class="custom {}">{}</div>"#,
+            self.stretch,
+            strfmt(&self.template, &self.fields).unwrap_or(self.template.to_string())
+        )
     }
 
     /// Trigger changes depending on the event

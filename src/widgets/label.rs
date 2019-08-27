@@ -115,7 +115,8 @@ impl Widget for Label {
     /// ```
     fn eval(&self) -> String {
         format!(
-            r#"<div class="label" onmousedown="{}">{}</div>"#,
+            r#"<div class="label {}" onmousedown="{}">{}</div>"#,
+            self.stretch,
             Event::change_js(&self.name, "''"),
             self.text
         )
