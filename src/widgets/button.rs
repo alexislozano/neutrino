@@ -157,7 +157,7 @@ impl Widget for Button {
         match event {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
-                if source == &self.name {
+                if source == &self.name && !self.disabled {
                     match &self.listener {
                         None => (),
                         Some(listener) => {

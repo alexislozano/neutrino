@@ -41,6 +41,7 @@ fn main() {
 
     let button3 = Button::new("button3")
         .text("Sigmund Freud")
+        .disabled(true)
         .listener(Box::new(button3listener));
 
     let mut container1 = Container::new()
