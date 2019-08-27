@@ -111,7 +111,7 @@ impl App {
 ///     height: i32,
 ///     resizable: bool,
 ///     theme: Theme,
-///     child: Option<Box<Widget>>,
+///     child: Option<Box<dyn Widget>>,
 /// }
 /// ```
 ///
@@ -129,9 +129,9 @@ pub struct Window {
     height: i32,
     resizable: bool,
     theme: Option<Theme>,
-    child: Option<Box<Widget>>,
+    child: Option<Box<dyn Widget>>,
     menubar: Option<MenuBar>,
-    listener: Option<Box<Listener>>,
+    listener: Option<Box<dyn Listener>>,
 }
 
 impl Window {
@@ -160,7 +160,7 @@ impl Window {
         }
     }
 
-    pub fn child(self, widget: Box<Widget>) -> Self {
+    pub fn child(self, widget: Box<dyn Widget>) -> Self {
         Window {
             title: self.title,
             width: self.width,
@@ -243,7 +243,7 @@ impl Window {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         Window {
             title: self.title,
             width: self.width,

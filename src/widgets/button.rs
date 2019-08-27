@@ -14,8 +14,8 @@ use crate::widgets::widget::Widget;
 ///     name: String,
 ///     text: String,
 ///     disabled: bool,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -32,8 +32,8 @@ pub struct Button {
     name: String,
     text: String,
     disabled: bool,
-    listener: Option<Box<Listener>>,
-    observer: Option<Box<Observer>>,
+    listener: Option<Box<dyn Listener>>,
+    observer: Option<Box<dyn Observer>>,
     stretch: String,
 }
 
@@ -85,7 +85,7 @@ impl Button {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         Button {
             name: self.name,
             text: self.text,
@@ -97,7 +97,7 @@ impl Button {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Self {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
         Button {
             name: self.name,
             text: self.text,

@@ -16,8 +16,8 @@ use crate::widgets::widget::Widget;
 ///     min: i32,
 ///     max: i32,
 ///     value: i32,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -36,8 +36,8 @@ pub struct Range {
     min: i32,
     max: i32,
     value: i32,
-    listener: Option<Box<Listener>>,
-    observer: Option<Box<Observer>>,
+    listener: Option<Box<dyn Listener>>,
+    observer: Option<Box<dyn Observer>>,
     stretch: String,
 }
 
@@ -106,7 +106,7 @@ impl Range {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         Range {
             name: self.name,
             min: self.min,
@@ -119,7 +119,7 @@ impl Range {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Self {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
         Range {
             name: self.name,
             min: self.min,

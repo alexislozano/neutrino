@@ -17,8 +17,8 @@ use crate::utils::pixmap::{Pixmap, Icon};
 ///     choices: Vec<String>,
 ///     selected: u32,
 ///     opened: bool,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -37,8 +37,8 @@ pub struct Combo {
     choices: Vec<String>,
     selected: u32,
     opened: bool,
-    listener: Option<Box<Listener>>,
-    observer: Option<Box<Observer>>,
+    listener: Option<Box<dyn Listener>>,
+    observer: Option<Box<dyn Observer>>,
     arrow: Option<Pixmap>,
     stretch: String,
 }
@@ -115,7 +115,7 @@ impl Combo {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         Combo {
             name: self.name,
             choices: self.choices,
@@ -129,7 +129,7 @@ impl Combo {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Self {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
         Combo {
             name: self.name,
             choices: self.choices,

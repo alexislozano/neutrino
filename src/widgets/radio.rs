@@ -14,8 +14,8 @@ use crate::widgets::widget::Widget;
 ///     name: String,
 ///     choices: Vec<String>,
 ///     selected: u32,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -32,8 +32,8 @@ pub struct Radio {
     name: String,
     choices: Vec<String>,
     selected: u32,
-    listener: Option<Box<Listener>>,
-    observer: Option<Box<Observer>>,
+    listener: Option<Box<dyn Listener>>,
+    observer: Option<Box<dyn Observer>>,
     stretch: String,
 }
 
@@ -88,7 +88,7 @@ impl Radio {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         Radio {
             name: self.name,
             choices: self.choices,
@@ -100,7 +100,7 @@ impl Radio {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Self {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
         Radio {
             name: self.name,
             choices: self.choices,

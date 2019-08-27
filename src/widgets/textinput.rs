@@ -13,8 +13,8 @@ use crate::widgets::widget::Widget;
 /// pub struct TextInput {
 ///     name: String,
 ///     value: String,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -29,8 +29,8 @@ use crate::widgets::widget::Widget;
 pub struct TextInput {
     name: String,
     value: String,
-    listener: Option<Box<Listener>>,
-    observer: Option<Box<Observer>>,
+    listener: Option<Box<dyn Listener>>,
+    observer: Option<Box<dyn Observer>>,
     stretch: String,
     size: u32,
 }
@@ -70,7 +70,7 @@ impl TextInput {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         TextInput {
             name: self.name,
             value: self.value,
@@ -82,7 +82,7 @@ impl TextInput {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Self {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
         TextInput {
             name: self.name,
             value: self.value,

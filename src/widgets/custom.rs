@@ -16,8 +16,8 @@ use strfmt::strfmt;
 ///     name: String,
 ///     fields: HashMap<String, String>
 ///     template: String,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -33,8 +33,8 @@ pub struct Custom {
     name: String,
     fields: HashMap<String, String>,
     template: String,
-    listener: Option<Box<Listener>>,
-    observer: Option<Box<Observer>>,
+    listener: Option<Box<dyn Listener>>,
+    observer: Option<Box<dyn Observer>>,
     stretch: String,
 }
 
@@ -74,7 +74,7 @@ impl Custom {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Custom {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Custom {
         Custom {
             name: self.name,
             fields: self.fields,
@@ -86,7 +86,7 @@ impl Custom {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Custom {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Custom {
         Custom {
             name: self.name,
             fields: self.fields,

@@ -5,7 +5,7 @@ use crate::utils::listener::Listener;
 pub struct MenuBar {
     items: Vec<MenuItem>,
     selected: Option<u32>,
-    listener: Option<Box<Listener>>,
+    listener: Option<Box<dyn Listener>>,
 }
 
 impl MenuBar {
@@ -17,7 +17,7 @@ impl MenuBar {
         }
     }
 
-    pub fn listener(self, listener: Box::<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         MenuBar {
             items: self.items,
             selected: self.selected,

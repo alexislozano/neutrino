@@ -9,7 +9,7 @@ use crate::widgets::widget::Widget;
 /// 
 /// ```text
 /// pub struct Container {
-///     children: Vec<Box<Widget>>,
+///     children: Vec<Box<dyn Widget>>,
 ///     style: String,
 /// }
 /// ```
@@ -20,7 +20,7 @@ use crate::widgets::widget::Widget;
 /// let my_container = Container::horizontal();
 /// ```
 pub struct Container {
-    children: Vec<Box<Widget>>,
+    children: Vec<Box<dyn Widget>>,
     direction: String,
     position: String,
     alignment: String,
@@ -96,7 +96,7 @@ impl Container {
     }
 
     /// Add a widget
-    pub fn add(&mut self, widget: Box<Widget>) {
+    pub fn add(&mut self, widget: Box<dyn Widget>) {
         self.children.push(widget);
     }
 }

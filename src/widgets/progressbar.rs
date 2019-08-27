@@ -13,8 +13,8 @@ use crate::widgets::widget::Widget;
 /// pub struct ProgressBar {
 ///     name: String,
 ///     value: u8,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -29,8 +29,8 @@ use crate::widgets::widget::Widget;
 pub struct ProgressBar {
     name: String,
     value: u8,
-    observer: Option<Box<Observer>>,
-    listener: Option<Box<Listener>>,
+    observer: Option<Box<dyn Observer>>,
+    listener: Option<Box<dyn Listener>>,
     stretch: String,
 }
 
@@ -67,7 +67,7 @@ impl ProgressBar {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         ProgressBar {
             name: self.name,
             value: self.value,
@@ -78,7 +78,7 @@ impl ProgressBar {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Self {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
         ProgressBar {
             name: self.name,
             value: self.value,

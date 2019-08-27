@@ -12,10 +12,10 @@ use crate::widgets::widget::Widget;
 /// ```text
 /// pub struct Tabs {
 ///     name: String,
-///     children: Vec<(String, Box<Widget>)>,
+///     children: Vec<(String, Box<dyn Widget>)>,
 ///     selected: u32,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -30,10 +30,10 @@ use crate::widgets::widget::Widget;
 /// ```
 pub struct Tabs {
     name: String,
-    children: Vec<(String, Box<Widget>)>,
+    children: Vec<(String, Box<dyn Widget>)>,
     selected: u32,
-    listener: Option<Box<Listener>>,
-    observer: Option<Box<Observer>>,
+    listener: Option<Box<dyn Listener>>,
+    observer: Option<Box<dyn Observer>>,
     stretch: String,
 }
 
@@ -73,7 +73,7 @@ impl Tabs {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         Tabs {
             name: self.name,
             children: self.children,
@@ -85,7 +85,7 @@ impl Tabs {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Self {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
         Tabs {
             name: self.name,
             children: self.children,
@@ -108,7 +108,7 @@ impl Tabs {
     }
 
     /// Add a tab
-    pub fn add(&mut self, child: (&str, Box<Widget>)) {
+    pub fn add(&mut self, child: (&str, Box<dyn Widget>)) {
         self.children.push((child.0.to_string(), child.1));
     }
 }

@@ -13,8 +13,8 @@ use crate::widgets::widget::Widget;
 /// pub struct Label {
 ///     name: String,
 ///     text: String,
-///     listener: Option<Box<Listener>>,
-///     observer: Option<Box<Observer>>,
+///     listener: Option<Box<dyn Listener>>,
+///     observer: Option<Box<dyn Observer>>,
 /// }
 /// ```
 ///
@@ -29,8 +29,8 @@ use crate::widgets::widget::Widget;
 pub struct Label {
     name: String,
     text: String,
-    listener: Option<Box<Listener>>,
-    observer: Option<Box<Observer>>,
+    listener: Option<Box<dyn Listener>>,
+    observer: Option<Box<dyn Observer>>,
     stretch: String,
 }
 
@@ -67,7 +67,7 @@ impl Label {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<Listener>) -> Self {
+    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
         Label {
             name: self.name,
             text: self.text,
@@ -78,7 +78,7 @@ impl Label {
     }
 
     /// Set the observer
-    pub fn observer(self, observer: Box<Observer>) -> Self {
+    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
         Label {
             name: self.name,
             text: self.text,
