@@ -10,7 +10,7 @@ use neutrino::widgets::range::Range;
 use neutrino::widgets::tabs::Tabs;
 use neutrino::widgets::textinput::TextInput;
 use neutrino::widgets::menubar::{MenuBar, MenuItem, MenuFunction};
-use neutrino::utils::pixmap::Icon;
+use neutrino::utils::icon::BreezeIcon;
 use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
 
@@ -46,7 +46,7 @@ fn main() {
     let combo1 = Combo::new("combo1")
         .choices(vec!["Combo box", "Combo fox"])
         .selected(0)
-        .arrow_from_theme(Theme::Breeze, Icon::Down);
+        .arrow_from_icon(Box::new(BreezeIcon::Down));
 
     let range1 = Range::new("range1").min(0).max(100).value(25).stretch();
 

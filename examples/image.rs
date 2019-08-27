@@ -1,10 +1,10 @@
 use neutrino::widgets::image::Image;
 use neutrino::utils::theme::Theme;
-use neutrino::utils::pixmap::Icon;
+use neutrino::utils::icon::BreezeIcon;
 use neutrino::{App, Window};
 
 fn main() {
-    let image1 = Image::from_theme(Theme::Breeze, Icon::Plus)
+    let image1 = Image::from_icon(Box::new(BreezeIcon::Plus))
         .keep_ratio_aspect(false)
         .background_color("fzfdgz");
 

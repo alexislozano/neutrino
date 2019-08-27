@@ -1,7 +1,7 @@
 use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
-use crate::utils::theme::Theme;
-use crate::utils::pixmap::{Icon, Pixmap};
+use crate::utils::icon::Icon;
+use crate::utils::pixmap::Pixmap;
 
 pub struct Image {
     data: String,
@@ -23,8 +23,8 @@ impl Image {
         } 
     }
 
-    pub fn from_theme(theme: Theme, icon: Icon) -> Self {
-        let pixmap = Pixmap::from_theme(theme, icon);
+    pub fn from_icon(icon: Box<Icon>) -> Self {
+        let pixmap = Pixmap::from_icon(icon);
         Image {
             data: pixmap.data(),
             keep_ratio_aspect: false,

@@ -2,8 +2,8 @@ use crate::utils::event::Event;
 use crate::utils::listener::Listener;
 use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
-use crate::utils::theme::Theme;
-use crate::utils::pixmap::{Pixmap, Icon};
+use crate::utils::pixmap::Pixmap;
+use crate::utils::icon::Icon;
 
 /// # ComboBox
 ///
@@ -157,9 +157,9 @@ impl Combo {
         }
     }
 
-    /// Set the arrow from a path
-    pub fn arrow_from_theme(self, theme: Theme, icon: Icon) -> Self {
-        let pixmap = Pixmap::from_theme(theme, icon);
+    /// Set the arrow from an icon
+    pub fn arrow_from_icon(self, icon: Box<Icon>) -> Self {
+        let pixmap = Pixmap::from_icon(icon);
         Combo {
             name: self.name,
             choices: self.choices,
