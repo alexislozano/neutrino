@@ -32,6 +32,7 @@ pub struct TextInput {
     listener: Option<Box<Listener>>,
     observer: Option<Box<Observer>>,
     stretch: String,
+    size: u32,
 }
 
 impl TextInput {
@@ -52,6 +53,7 @@ impl TextInput {
             listener: None,
             observer: None,
             stretch: "".to_string(),
+            size: 20,
         }
     }
 
@@ -63,6 +65,7 @@ impl TextInput {
             listener: self.listener,
             observer: self.observer,
             stretch: self.stretch,
+            size: self.size,
         }
     }
 
@@ -74,6 +77,7 @@ impl TextInput {
             listener: Some(listener),
             observer: self.observer,
             stretch: self.stretch,
+            size: self.size,
         }
     }
 
@@ -85,6 +89,7 @@ impl TextInput {
             listener: self.listener,
             observer: Some(observer),
             stretch: self.stretch,
+            size: self.size,
         }
     }
 
@@ -95,6 +100,18 @@ impl TextInput {
             listener: self.listener,
             observer: self.observer,
             stretch: "stretch".to_string(),
+            size: self.size,
+        }
+    }
+
+    pub fn size(self, size: u32) -> Self {
+        TextInput {
+            name: self.name,
+            value: self.value,
+            listener: self.listener,
+            observer: self.observer,
+            stretch: self.stretch,
+            size: size,
         }
     }
 }
@@ -115,7 +132,9 @@ impl Widget for TextInput {
     /// ```
     fn eval(&self) -> String {
         format!(
-            r#"<div class="textinput"><input value="{}" onchange="{}" /></div>"#,
+            r#"<div class="textinput"><input size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
+            self.size,
+            self.size,
             self.value,
             Event::change_js(&self.name, "value")
         )

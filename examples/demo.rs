@@ -27,7 +27,7 @@ fn main() {
     let panes = Panes::new();
     let rpanes = Rc::new(RefCell::new(panes));
 
-    let textinput1 = TextInput::new("input1").value("0");
+    let textinput1 = TextInput::new("input1").value("0").size(4);
 
     let button1 = Button::new("button1").text("Bouton à pousser");
 
