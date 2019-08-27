@@ -4,7 +4,7 @@ use neutrino::utils::pixmap::Icon;
 use neutrino::{App, Window};
 
 fn main() {
-    let image1 = Image::from_theme(Theme::Breeze, Icon::Add)
+    let image1 = Image::from_theme(Theme::Breeze, Icon::Plus)
         .keep_ratio_aspect(false)
         .background_color("fzfdgz");
 
