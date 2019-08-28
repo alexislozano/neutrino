@@ -23,7 +23,7 @@ impl Image {
         } 
     }
 
-    pub fn from_icon(icon: Box<Icon>) -> Self {
+    pub fn from_icon(icon: Box<dyn Icon>) -> Self {
         let pixmap = Pixmap::from_icon(icon);
         Image {
             data: pixmap.data(),

@@ -21,7 +21,7 @@ impl Pixmap {
         Pixmap { data, extension }
     }
 
-    pub fn from_icon(icon: Box<Icon>) -> Self {
+    pub fn from_icon(icon: Box<dyn Icon>) -> Self {
         let extension = icon.extension();
         let data = icon.data();
         Pixmap { data, extension }

@@ -158,7 +158,7 @@ impl Combo {
     }
 
     /// Set the arrow from an icon
-    pub fn arrow_from_icon(self, icon: Box<Icon>) -> Self {
+    pub fn arrow_from_icon(self, icon: Box<dyn Icon>) -> Self {
         let pixmap = Pixmap::from_icon(icon);
         Combo {
             name: self.name,
