@@ -41,7 +41,7 @@ impl App {
             "#,
             styles = format!(
                 "{}\n{}\n",
-                inline_style(include_str!(concat!(env!("OUT_DIR"), "/themes/app.css"))),
+                inline_style(include_str!(concat!(env!("OUT_DIR"), "/app.css"))),
                 inline_style(&window.theme.css()),
             ),
             scripts = format!(
