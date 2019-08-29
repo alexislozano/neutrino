@@ -18,13 +18,13 @@ impl Pixmap {
             Ok(file) => encode(&file),
             Err(_) => "".to_string(),
         };
-        Pixmap { data, extension }
+        Self { data, extension }
     }
 
     pub fn from_icon(icon: Box<dyn Icon>) -> Self {
         let extension = icon.extension();
         let data = icon.data();
-        Pixmap { data, extension }
+        Self { data, extension }
     }
 
     pub fn data(&self) -> String {

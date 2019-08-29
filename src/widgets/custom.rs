@@ -1,9 +1,14 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
-use std::collections::HashMap;
-use strfmt::strfmt;
+
+struct CustomState {
+    template: String,
+    stretched: bool,
+}
+
+trait CustomListener {
+    fn on_update(&self, state: &mut CustomState);
+}
 
 /// # Custom
 ///
@@ -31,11 +36,8 @@ use strfmt::strfmt;
 /// ```
 pub struct Custom {
     name: String,
-    fields: HashMap<String, String>,
-    template: String,
-    listener: Option<Box<dyn Listener>>,
-    observer: Option<Box<dyn Observer>>,
-    stretch: String,
+    state: CustomState,
+    listener: Option<Box<dyn CustomListener>>,
 }
 
 impl Custom {
@@ -51,60 +53,45 @@ impl Custom {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        Custom {
+        Self {
             name: name.to_string(),
-            fields: HashMap::new(),
-            template: "".to_string(),
+            state: CustomState {
+                template: "".to_string(),
+                stretched: false,
+            },
             listener: None,
-            observer: None,
-            stretch: "".to_string(),
         }
     }
 
     /// Set the template
-    pub fn template(self, template: &str) -> Custom {
-        Custom {
+    pub fn template(self, template: &str) -> Self {
+        Self {
             name: self.name,
-            fields: self.fields,
-            template: template.to_string(),
+            state: CustomState {
+                template: template.to_string(),
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretch(self) -> Self {
+        Self {
+            name: self.name,
+            state: CustomState {
+                template: self.state.template,
+                stretched: true,
+            },
+            listener: self.listener,
         }
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Custom {
-        Custom {
+    pub fn listener(self, listener: Box<dyn CustomListener>) -> Self {
+        Self {
             name: self.name,
-            fields: self.fields,
-            template: self.template,
+            state: self.state,
             listener: Some(listener),
-            observer: self.observer,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Custom {
-        Custom {
-            name: self.name,
-            fields: self.fields,
-            template: self.template,
-            listener: self.listener,
-            observer: Some(observer),
-            stretch: self.stretch,
-        }
-    }
-
-    pub fn stretch(self) -> Custom {
-        Custom {
-            name: self.name,
-            fields: self.fields,
-            template: self.template,
-            listener: self.listener,
-            observer: self.observer,
-            stretch: "stretch".to_string(),
         }
     }
 }
@@ -112,10 +99,11 @@ impl Custom {
 impl Widget for Custom {
     /// Return the HTML representation
     fn eval(&self) -> String {
+        let stretched = if self.state.stretched { "stretched" } else { "" };
         format!(
             r#"<div class="custom {}">{}</div>"#,
-            self.stretch,
-            strfmt(&self.template, &self.fields).unwrap_or(self.template.to_string())
+            stretched,
+            self.state.template,
         )
     }
 
@@ -130,30 +118,18 @@ impl Widget for Custom {
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => self.on_update(),
-            Event::Change { source, value } => {
-                if source == &self.name {
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(value);
-                        }
-                    }
-                }
-            },
             _ => (),
         }
     }
 
-    /// Set the fields of the widget using the fields of the HashMap
-    /// returned by the observer
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(observer) => {
-                for (key, value) in observer.observe() {
-                    self.fields.insert(key, value);
-                }
+            Some(listener) => {
+                listener.on_update(&mut self.state);
             }
         }
     }
+
+    fn on_change(&self, _value: String) {}
 }

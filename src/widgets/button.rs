@@ -1,7 +1,16 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
+
+struct ButtonState {
+    text: String,
+    disabled: bool,
+    stretched: bool,
+}
+
+trait ButtonListener {
+    fn on_change(&self, state: &ButtonState);
+    fn on_update(&self, state: &mut ButtonState);
+}
 
 /// # Button
 ///
@@ -30,11 +39,8 @@ use crate::widgets::widget::Widget;
 /// ```
 pub struct Button {
     name: String,
-    text: String,
-    disabled: bool,
-    listener: Option<Box<dyn Listener>>,
-    observer: Option<Box<dyn Observer>>,
-    stretch: String,
+    state: ButtonState,
+    listener: Option<Box<dyn ButtonListener>>,
 }
 
 impl Button {
@@ -50,72 +56,61 @@ impl Button {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        Button {
+        Self {
             name: name.to_string(),
-            text: "Button".to_string(),
-            disabled: false,
+            state: ButtonState {
+                text: "Button".to_string(),
+                disabled: false,
+                stretched: false,
+            },
             listener: None,
-            observer: None,
-            stretch: "".to_string(),
         }
     }
 
     /// Set the text
     pub fn text(self, text: &str) -> Self {
-        Button {
+        Self {
             name: self.name,
-            text: text.to_string(),
-            disabled: self.disabled,
+            state: ButtonState {
+                text: text.to_string(),
+                disabled: self.state.disabled,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
         }
     }
 
     /// Set the disabled flag
-    pub fn disabled(self, disabled: bool) -> Self {
-        Button {
+    pub fn disabled(self) -> Self {
+        Self {
             name: self.name,
-            text: self.text,
-            disabled: disabled,
+            state: ButtonState {
+                text: self.state.text,
+                disabled: true,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretched(self) -> Self {
+        Self {
+            name: self.name,
+            state: ButtonState {
+                text: self.state.text,
+                disabled: self.state.disabled,
+                stretched: true,
+            },
+            listener: self.listener,
         }
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        Button {
+    pub fn listener(self, listener: Box<dyn ButtonListener>) -> Self {
+        Self {
             name: self.name,
-            text: self.text,
-            disabled: self.disabled,
+            state: self.state,
             listener: Some(listener),
-            observer: self.observer,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
-        Button {
-            name: self.name,
-            text: self.text,
-            disabled: self.disabled,
-            listener: self.listener,
-            observer: Some(observer),
-            stretch: self.stretch,
-        }
-    }
-
-    pub fn stretch(self) -> Self {
-        Button {
-            name: self.name,
-            text: self.text,
-            disabled: self.disabled,
-            listener: self.listener,
-            observer: self.observer,
-            stretch: "stretch".to_string(),
         }
     }
 }
@@ -135,13 +130,14 @@ impl Widget for Button {
     /// class = button [disabled]
     /// ```
     fn eval(&self) -> String {
-        let disabled = if self.disabled { "disabled" } else { "" };
+        let disabled = if self.state.disabled { "disabled" } else { "" };
+        let stretched = if self.state.stretched { "stretched" } else { "" };
         format!(
             r#"<div onmousedown="{}" class="button {} {}">{}</div>"#,
             Event::change_js(&self.name, "''"),
             disabled,
-            self.stretch,
-            self.text
+            stretched,
+            self.state.text
         )
     }
 
@@ -157,62 +153,29 @@ impl Widget for Button {
         match event {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
-                if source == &self.name && !self.disabled {
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(value);
-                        }
-                    }
+                if source == &self.name && !self.state.disabled {
+                    self.on_change(value)
                 }
             },
             _ => (),
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// text
-    /// ```
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(observer) => {
-                self.text = observer.observe()["text"].to_string();
+            Some(listener) => {
+                listener.on_update(&mut self.state);
             }
         }
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn eval_disabled() {
-        let button = Button::new("button").text("Hello").disabled(true);
-        assert_eq!(
-            button.eval(), 
-            format!(
-                r#"<div onmousedown="{}" class="button disabled">Hello</div>"#,
-                Event::change_js("button", "''"),
-            )
-        );
-    }
-
-    #[test]
-    fn eval_enabled() {
-        let button = Button::new("button").text("Hello").disabled(false);
-        assert_eq!(
-            button.eval(), 
-            format!(
-                r#"<div onmousedown="{}" class="button ">Hello</div>"#,
-                Event::change_js("button", "''"),
-            )
-        );
+    fn on_change(&self, _value: String) {
+        match &self.listener {
+            None => (),
+            Some(listener) => {
+                listener.on_change(&self.state);
+            }
+        }
     }
 }

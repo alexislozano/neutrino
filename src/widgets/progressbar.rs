@@ -1,7 +1,14 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
+
+struct ProgressBarState {
+    value: u8,
+    stretched: bool,
+}
+
+trait ProgressBarListener {
+    fn on_update(&self, state: &mut ProgressBarState);
+}
 
 /// # ProgressBar
 ///
@@ -28,10 +35,8 @@ use crate::widgets::widget::Widget;
 /// ```
 pub struct ProgressBar {
     name: String,
-    value: u8,
-    observer: Option<Box<dyn Observer>>,
-    listener: Option<Box<dyn Listener>>,
-    stretch: String,
+    state: ProgressBarState,
+    listener: Option<Box<dyn ProgressBarListener>>,
 }
 
 impl ProgressBar {
@@ -46,55 +51,49 @@ impl ProgressBar {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        ProgressBar {
+        Self {
             name: name.to_string(),
-            value: 0,
-            observer: None,
+            state: ProgressBarState {
+                value: 0,
+                stretched: false,
+            },
             listener: None,
-            stretch: "".to_string(),
         }
     }
 
     // Set the value
     pub fn value(self, value: u8) -> Self {
-        ProgressBar {
+        Self {
             name: self.name,
-            value: value,
-            observer: self.observer,
+            state: ProgressBarState {
+                value: value,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            stretch: self.stretch,
+        }
+    }
+
+    // Set the stretched flag
+    pub fn stretched(self) -> Self {
+        Self {
+            name: self.name,
+            state: ProgressBarState {
+                value: self.state.value,
+                stretched: true,
+            },
+            listener: self.listener,
         }
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        ProgressBar {
+    pub fn listener(self, listener: Box<dyn ProgressBarListener>) -> Self {
+        Self {
             name: self.name,
-            value: self.value,
-            observer: self.observer,
+            state: ProgressBarState {
+                value: self.state.value,
+                stretched: self.state.stretched,
+            },
             listener: Some(listener),
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
-        ProgressBar {
-            name: self.name,
-            value: self.value,
-            observer: Some(observer),
-            listener: self.listener,
-            stretch: self.stretch,
-        }
-    }
-
-    pub fn stretch(self) -> Self {
-        ProgressBar {
-            name: self.name,
-            value: self.value,
-            observer: self.observer,
-            listener: self.listener,
-            stretch: "stretch".to_string(),
         }
     }
 }
@@ -109,42 +108,29 @@ impl Widget for ProgressBar {
     /// class = inner-progressbar
     /// ```
     fn eval(&self) -> String {
+        let stretched = if self.state.stretched { "stretched" } else { "" };
         format!(
             r#"<div class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
-            self.stretch,
-            self.value
+            stretched,
+            self.state.value
         )
     }
 
-    /// Trigger changes depending on the event
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// update -> self.on_update()
-    /// ```
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => self.on_update(),
-            Event::Change { source: _, value: _ } => (),
             _ => (),
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// value
-    /// ```
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(observer) => {
-                self.value = observer.observe()["value"].parse::<u8>().unwrap();
+            Some(listener) => {
+                listener.on_update(&mut self.state);
             }
         }
     }
+
+    fn on_change(&mut self, _value: String) {}
 }

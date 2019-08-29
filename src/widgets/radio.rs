@@ -1,7 +1,16 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
+
+struct RadioState {
+    choices: Vec<String>,
+    selected: u32,
+    stretched: bool,
+}
+
+trait RadioListener {
+    fn on_change(&self, state: &RadioState);
+    fn on_update(&self, state: &mut RadioState);
+}
 
 /// # Radio
 ///
@@ -30,11 +39,8 @@ use crate::widgets::widget::Widget;
 /// ```
 pub struct Radio {
     name: String,
-    choices: Vec<String>,
-    selected: u32,
-    listener: Option<Box<dyn Listener>>,
-    observer: Option<Box<dyn Observer>>,
-    stretch: String,
+    state: RadioState,
+    listener: Option<Box<dyn RadioListener>>,
 }
 
 impl Radio {
@@ -50,75 +56,67 @@ impl Radio {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        Radio {
+        Self {
             name: name.to_string(),
-            choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
-            selected: 0,
+            state: RadioState {
+                choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
+                selected: 0,
+                stretched: false,
+            },
             listener: None,
-            observer: None,
-            stretch: "".to_string(),
         }
     }
 
     /// Set the choices
     pub fn choices(self, choices: Vec<&str>) -> Self {
-        Radio {
+        Self {
             name: self.name,
-            choices: choices
-                .iter()
-                .map(|c| c.to_string())
-                .collect::<Vec<String>>(),
-            selected: self.selected,
+            state: RadioState {
+                choices: choices.iter()
+                    .map(|c| c.to_string())
+                    .collect::<Vec<String>>(),
+                selected: self.state.selected,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
         }
     }
 
     /// Set the index of the selected choice
     pub fn selected(self, selected: u32) -> Self {
-        Radio {
+        Self {
             name: self.name,
-            choices: self.choices,
-            selected: selected,
+            state: RadioState {
+                choices: self.state.choices,
+                selected: selected,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretched(self) -> Self {
+        Self {
+            name: self.name,
+            state: RadioState {
+                choices: self.state.choices,
+                selected: self.state.selected,
+                stretched: false,
+            },
+            listener: self.listener,
         }
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        Radio {
+    pub fn listener(self, listener: Box<dyn RadioListener>) -> Self {
+        Self {
             name: self.name,
-            choices: self.choices,
-            selected: self.selected,
+            state: RadioState {
+                choices: self.state.choices,
+                selected: self.state.selected,
+                stretched: self.state.stretched,
+            },
             listener: Some(listener),
-            observer: self.observer,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
-        Radio {
-            name: self.name,
-            choices: self.choices,
-            selected: self.selected,
-            listener: self.listener,
-            observer: Some(observer),
-            stretch: self.stretch,
-        }
-    }
-
-    pub fn stretch(self) -> Self {
-        Radio {
-            name: self.name,
-            choices: self.choices,
-            selected: self.selected,
-            listener: self.listener,
-            observer: self.observer,
-            stretch: "stretch".to_string(),
         }
     }
 }
@@ -140,9 +138,10 @@ impl Widget for Radio {
     /// class = radio-inner [checked]
     /// ```
     fn eval(&self) -> String {
+        let stretched = if self.state.stretched { "stretched" } else { "" };
         let mut s = "".to_string();
-        for (i, choice) in self.choices.iter().enumerate() {
-            let selected = if self.selected == i as u32 {
+        for (i, choice) in self.state.choices.iter().enumerate() {
+            let selected = if self.state.selected == i as u32 {
                 "selected"
             } else {
                 ""
@@ -150,7 +149,7 @@ impl Widget for Radio {
             s.push_str(
                 &format!(
                     r#"<div class="radio {}" onmousedown="{}"><div class="radio-outer {}"><div class="radio-inner {}"></div></div><label>{}</label></div>"#, 
-                    self.stretch,
+                    stretched,
                     Event::change_js(&self.name, &format!("'{}'", i)), 
                     selected, 
                     selected, 
@@ -175,30 +174,29 @@ impl Widget for Radio {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == &self.name {
-                    self.selected = value.parse::<u32>().unwrap();
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(value);
-                        }
-                    }
+                    self.on_change(value);
                 }
             },
             _ => (),
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// ```
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(_observer) => {}
+            Some(listener) => {
+                listener.on_update(&mut self.state);
+            }
+        }
+    }
+
+    fn on_change(&mut self, value: &str) {
+        self.state.selected = value.parse::<u32>().unwrap();
+        match &self.listener {
+            None => (),
+            Some(listener) => {
+                listener.on_change(&self.state);
+            }
         }
     }
 }
