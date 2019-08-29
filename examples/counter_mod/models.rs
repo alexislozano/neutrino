@@ -4,7 +4,7 @@ pub struct Counter {
 
 impl Counter {
     pub fn new() -> Self {
-        Counter { value: 0 }
+        Self { value: 0 }
     }
 
     pub fn value(&self) -> i32 {

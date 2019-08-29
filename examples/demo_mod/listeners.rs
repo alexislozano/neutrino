@@ -1,22 +1,27 @@
-use neutrino::utils::listener::Listener;
-use neutrino::utils::event::Key;
-use super::models::Panes;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-pub struct AppListener {
+use neutrino::WindowListener;
+use neutrino::widgets::tabs::{TabsListener, TabsState};
+use neutrino::widgets::menubar::{MenuBarListener, MenuBarState};
+use neutrino::utils::event::Key;
+
+use super::models::Panes;
+
+
+pub struct MyWindowListener {
     panes: Rc<RefCell<Panes>>,
 }
 
-impl AppListener {
+impl MyWindowListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        AppListener {
+        Self {
             panes: panes,
         }
     }
 }
 
-impl Listener for AppListener {
+impl WindowListener for MyWindowListener {
     fn on_key(&self, key: Key) {
         match key {
             Key::Num1 => self.panes.borrow_mut().set_value(0),
@@ -25,53 +30,60 @@ impl Listener for AppListener {
             _ => (),
         }
     }
-
-    fn on_change(&self, _value: &str) {}
 }
 
-pub struct TabsListener {
+pub struct MyTabsListener {
     panes: Rc<RefCell<Panes>>,
 }
 
-impl TabsListener {
+impl MyTabsListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        TabsListener {
+        Self {
             panes: panes,
         }
     }
 }
 
-impl Listener for TabsListener {
-    fn on_change(&self, value: &str) {
-        self.panes.borrow_mut().set_value(value.parse::<u8>().unwrap());
+impl TabsListener for MyTabsListener {
+    fn on_update(&self, state: &mut TabsState) {
+        state.set_selected(self.panes.borrow().value() as u32);
     }
 
-    fn on_key(&self, _key: Key) {}
+    fn on_change(&self, state: &TabsState) {
+        self.panes.borrow_mut().set_value(state.selected() as u8);
+    }
 }
 
-pub struct MenuBarListener {
+pub struct MyMenuBarListener {
     panes: Rc<RefCell<Panes>>,
 }
 
-impl MenuBarListener {
+impl MyMenuBarListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        MenuBarListener {
+        Self {
             panes: panes,
         }
     }
 }
 
-impl Listener for MenuBarListener {
-    fn on_change(&self, value: &str) {
-        let values = value.split(";").map(|v| {
-            v.parse::<u8>().unwrap()
-        }).collect::<Vec<u8>>();
-        if values[0] == 0 {
-            std::process::exit(0);
-        } else if values[0] == 1 {
-            self.panes.borrow_mut().set_value(values[1]);
-        }
+impl MenuBarListener for MyMenuBarListener {
+    fn on_change(&self, state: &MenuBarState) {
+        match state.selected_item() {
+            None => (),
+            Some(selected_item) => {
+                if selected_item == 0 {
+                    std::process::exit(0);
+                } else if selected_item == 1 {
+                    match state.selected_function() {
+                        None => (),
+                        Some(selected_function) => {
+                            self.panes.borrow_mut().set_value(
+                                selected_function as u8
+                            );
+                        }
+                    }
+                }
+            }
+        } 
     }
-
-    fn on_key(&self, _key: Key) {}
 }

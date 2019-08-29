@@ -6,6 +6,12 @@ pub struct LabelState {
     stretched: bool,
 }
 
+impl LabelState {
+    pub fn set_text(&mut self, text: &str) {
+        self.text = text.to_string();
+    }
+}
+
 pub trait LabelListener {
     fn on_update(&self, state: &mut LabelState);
 }

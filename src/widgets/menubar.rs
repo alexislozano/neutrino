@@ -6,6 +6,16 @@ pub struct MenuBarState {
     selected_function: Option<u32>,
 }
 
+impl MenuBarState {
+    pub fn selected_item(&self) -> Option<u32> {
+        self.selected_item
+    }
+
+    pub fn selected_function(&self) -> Option<u32> {
+        self.selected_function
+    }
+}
+
 pub trait MenuBarListener {
     fn on_change(&self, state: &MenuBarState);
 }
@@ -57,6 +67,7 @@ impl MenuBar {
 
     pub fn trigger(&mut self, event: &Event) {
         match event {
+            Event::Update => (),
             Event::Change { source, value } => {
                 if source == "menuitem" {
                     self.on_item_change(value);    

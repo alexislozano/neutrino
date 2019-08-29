@@ -6,6 +6,16 @@ pub struct ProgressBarState {
     stretched: bool,
 }
 
+impl ProgressBarState {
+    pub fn set_value(&mut self, value: u8) {
+        self.value = if value > 100 {
+            100
+        } else {
+            value
+        };
+    }
+}
+
 pub trait ProgressBarListener {
     fn on_update(&self, state: &mut ProgressBarState);
 }
@@ -63,12 +73,14 @@ impl ProgressBar {
 
     // Set the value
     pub fn value(self, value: u8) -> Self {
+        let mut state = ProgressBarState {
+            value: 0,
+            stretched: self.state.stretched,
+        };
+        state.set_value(value);
         Self {
             name: self.name,
-            state: ProgressBarState {
-                value: value,
-                stretched: self.state.stretched,
-            },
+            state: state,
             listener: self.listener,
         }
     }

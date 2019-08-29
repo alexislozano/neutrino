@@ -4,7 +4,7 @@ pub struct Panes {
 
 impl Panes {
     pub fn new() -> Self {
-        Panes {
+        Self {
             value: 0,
         }
     }

@@ -5,7 +5,7 @@ pub struct Person {
 
 impl Person {
     pub fn new() -> Self {
-        Person {
+        Self {
             firstname: "John".to_string(),
             lastname: "Doe".to_string(),
         }

@@ -45,8 +45,8 @@ impl Container {
             state: ContainerState {
                 children: vec![],
                 direction: Direction::Vertical,
-                position: Position::Center,
-                alignment: Alignment::Center,
+                position: Position::Start,
+                alignment: Alignment::Start,
                 stretched: false,
             },
             listener: None,

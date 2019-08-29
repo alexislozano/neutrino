@@ -6,6 +6,12 @@ pub struct CustomState {
     stretched: bool,
 }
 
+impl CustomState {
+    pub fn set_template(&mut self, template: &str) {
+        self.template = template.to_string();
+    }
+}
+
 pub trait CustomListener {
     fn on_update(&self, state: &mut CustomState);
 }

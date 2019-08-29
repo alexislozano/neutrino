@@ -10,9 +10,9 @@ use neutrino::{App, Window};
 
 mod counter_mod;
 
-use counter_mod::listeners::{Button1Listener, Button2Listener, Label1Listener};
+use counter_mod::listeners::{Button1Listener, Button2Listener, Label1Listener, 
+ProgressBar1Listener};
 use counter_mod::models::Counter;
-use counter_mod::observers::{Label1Observer, ProgressBar1Observer};
 
 fn main() {
     let mut counter = Counter::new();
@@ -29,22 +29,19 @@ fn main() {
 
     let button2 = Button::new("button2")
         .text("Increment")
-        .disabled(false)
         .listener(Box::new(button2listener));
 
     let label1listener = Label1Listener::new(Rc::clone(&rcounter));
-    let label1observer = Label1Observer::new(Rc::clone(&rcounter));
 
     let label1 = Label::new("label1")
-        .listener(Box::new(label1listener))
-        .observer(Box::new(label1observer));
+        .listener(Box::new(label1listener));
 
-    let progressbar1observer = ProgressBar1Observer::new(Rc::clone(&rcounter));
+    let progressbar1listener = ProgressBar1Listener::new(Rc::clone(&rcounter));
 
-    let progressbar1 =
-        ProgressBar::new("progressbar1").observer(Box::new(progressbar1observer));
+    let progressbar1 = ProgressBar::new("progressbar1")
+        .listener(Box::new(progressbar1listener));
 
-    let mut container = Container::new()
+    let mut container = Container::new("container")
         .direction(Direction::Vertical)
         .position(Position::Center)
         .alignment(Alignment::Center);

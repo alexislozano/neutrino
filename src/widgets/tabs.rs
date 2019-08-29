@@ -7,6 +7,16 @@ pub struct TabsState {
     stretched: bool,
 }
 
+impl TabsState {
+    pub fn set_selected(&mut self, selected: u32) {
+        self.selected = selected;
+    }
+
+    pub fn selected(&self) -> u32 {
+        self.selected
+    }
+}
+
 pub trait TabsListener {
     fn on_update(&self, state: &mut TabsState);
     fn on_change(&self, state: &TabsState);
