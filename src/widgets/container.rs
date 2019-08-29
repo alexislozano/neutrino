@@ -1,7 +1,7 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct ContainerState {
+pub struct ContainerState {
     children: Vec<Box<dyn Widget>>,
     direction: Direction,
     position: Position,
@@ -9,7 +9,7 @@ struct ContainerState {
     stretched: bool,
 }
 
-trait ContainerListener {
+pub trait ContainerListener {
     fn on_update(&self, state: &mut ContainerState);
 }
 
@@ -159,6 +159,8 @@ impl Widget for Container {
             }
         }
     }
+
+    fn on_change(&mut self, _value: &str) {}
 }
 
 

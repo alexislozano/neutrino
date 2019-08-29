@@ -1,13 +1,13 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct RadioState {
+pub struct RadioState {
     choices: Vec<String>,
     selected: u32,
     stretched: bool,
 }
 
-trait RadioListener {
+pub trait RadioListener {
     fn on_change(&self, state: &RadioState);
     fn on_update(&self, state: &mut RadioState);
 }

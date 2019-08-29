@@ -3,7 +3,7 @@ use crate::widgets::widget::Widget;
 use crate::utils::pixmap::Pixmap;
 use crate::utils::icon::Icon;
 
-struct ComboState {
+pub struct ComboState {
     choices: Vec<String>,
     selected: u32,
     opened: bool,
@@ -11,7 +11,7 @@ struct ComboState {
     arrow: Option<Pixmap>
 }
 
-trait ComboListener {
+pub trait ComboListener {
     fn on_change(&self, state: &ComboState);
     fn on_update(&self, state: &mut ComboState);
 }
@@ -266,7 +266,7 @@ impl Widget for Combo {
         }
     }
 
-    fn on_change(&self, value: &str) {
+    fn on_change(&mut self, value: &str) {
         self.state.opened = !self.state.opened;
         let selected = value.parse::<i32>().unwrap();
         if selected > -1 {

@@ -1,12 +1,12 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct LabelState {
+pub struct LabelState {
     text: String,
     stretched: bool,
 }
 
-trait LabelListener {
+pub trait LabelListener {
     fn on_update(&self, state: &mut LabelState);
 }
 
@@ -144,5 +144,5 @@ impl Widget for Label {
         }
     }
 
-    fn on_change(&self, _value: String) {}
+    fn on_change(&mut self, _value: &str) {}
 }

@@ -1,12 +1,12 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct CustomState {
+pub struct CustomState {
     template: String,
     stretched: bool,
 }
 
-trait CustomListener {
+pub trait CustomListener {
     fn on_update(&self, state: &mut CustomState);
 }
 
@@ -131,5 +131,5 @@ impl Widget for Custom {
         }
     }
 
-    fn on_change(&self, _value: String) {}
+    fn on_change(&mut self, _value: &str) {}
 }

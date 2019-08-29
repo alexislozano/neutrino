@@ -95,7 +95,7 @@ impl App {
 }
 
 pub trait WindowListener {
-    fn on_key(&self, key: &Event.Key);
+    fn on_key(&self, _key: Key);
 }
 
 /// # Window

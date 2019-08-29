@@ -1,12 +1,12 @@
 use crate::utils::event::Event;
 
-struct MenuBarState {
+pub struct MenuBarState {
     items: Vec<MenuItem>,
     selected_item: Option<u32>,
     selected_function: Option<u32>,
 }
 
-trait MenuBarListener {
+pub trait MenuBarListener {
     fn on_change(&self, state: &MenuBarState);
 }
 
@@ -70,7 +70,7 @@ impl MenuBar {
         }
     }
 
-    fn on_item_change(&self, value: &str) {
+    fn on_item_change(&mut self, value: &str) {
         let values = value.split(";").collect::<Vec<&str>>();
         let e = values[0];
         let index = values[1].parse::<u32>().unwrap();
@@ -86,7 +86,7 @@ impl MenuBar {
         }
     }
 
-    fn on_function_change(&self, value: &str) {
+    fn on_function_change(&mut self, value: &str) {
         self.state.selected_function = Some(value.parse::<u32>().unwrap());
         match &self.listener {
             None => (),

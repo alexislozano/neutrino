@@ -1,14 +1,14 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct RangeState {
+pub struct RangeState {
     min: i32,
     max: i32,
     value: i32,
     stretched: bool,
 }
 
-trait RangeListener {
+pub trait RangeListener {
     fn on_update(&self, state: &mut RangeState);
     fn on_change(&self, state: &RangeState);
 }

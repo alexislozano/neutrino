@@ -1,13 +1,13 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct TextInputState {
+pub struct TextInputState {
     value: String,
     size: u32,
     stretched: bool,
 }
 
-trait TextInputListener {
+pub trait TextInputListener {
     fn on_update(&self, state: &mut TextInputState);
     fn on_change(&self, state: &TextInputState);
 }

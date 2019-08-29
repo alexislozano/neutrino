@@ -1,13 +1,13 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct TabsState {
+pub struct TabsState {
     children: Vec<(String, Box<dyn Widget>)>,
     selected: u32,
     stretched: bool,
 }
 
-trait TabsListener {
+pub trait TabsListener {
     fn on_update(&self, state: &mut TabsState);
     fn on_change(&self, state: &TabsState);
 }

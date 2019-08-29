@@ -3,7 +3,7 @@ use crate::utils::event::Event;
 use crate::utils::icon::Icon;
 use crate::utils::pixmap::Pixmap;
 
-struct ImageState {
+pub struct ImageState {
     data: String,
     extension: String,
     background_color: String,
@@ -11,7 +11,7 @@ struct ImageState {
     stretched: bool,
 }
 
-trait ImageListener {
+pub trait ImageListener {
     fn on_update(&self, state: &mut ImageState);
 }
 

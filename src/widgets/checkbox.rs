@@ -1,13 +1,13 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct CheckBoxState {
+pub struct CheckBoxState {
     text: String,
     checked: bool,
     stretched: bool,
 }
 
-trait CheckBoxListener {
+pub trait CheckBoxListener {
     fn on_change(&self, state: &CheckBoxState);
     fn on_update(&self, state: &mut CheckBoxState);
 }
@@ -175,7 +175,7 @@ impl Widget for CheckBox {
         }
     }
 
-    fn on_change(&self, _value: String) {
+    fn on_change(&mut self, _value: &str) {
         self.state.checked = !self.state.checked;
         match &self.listener {
             None => (),

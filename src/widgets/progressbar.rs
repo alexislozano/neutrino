@@ -1,12 +1,12 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct ProgressBarState {
+pub struct ProgressBarState {
     value: u8,
     stretched: bool,
 }
 
-trait ProgressBarListener {
+pub trait ProgressBarListener {
     fn on_update(&self, state: &mut ProgressBarState);
 }
 
@@ -132,5 +132,5 @@ impl Widget for ProgressBar {
         }
     }
 
-    fn on_change(&mut self, _value: String) {}
+    fn on_change(&mut self, _value: &str) {}
 }

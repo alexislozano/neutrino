@@ -1,13 +1,13 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
-struct ButtonState {
+pub struct ButtonState {
     text: String,
     disabled: bool,
     stretched: bool,
 }
 
-trait ButtonListener {
+pub trait ButtonListener {
     fn on_change(&self, state: &ButtonState);
     fn on_update(&self, state: &mut ButtonState);
 }
@@ -170,7 +170,7 @@ impl Widget for Button {
         }
     }
 
-    fn on_change(&self, _value: String) {
+    fn on_change(&mut self, _value: &str) {
         match &self.listener {
             None => (),
             Some(listener) => {
