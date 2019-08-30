@@ -6,7 +6,6 @@ pub struct ContainerState {
     direction: Direction,
     position: Position,
     alignment: Alignment,
-    stretched: bool,
 }
 
 pub trait ContainerListener {
@@ -46,8 +45,7 @@ impl Container {
                 children: vec![],
                 direction: Direction::Vertical,
                 position: Position::Start,
-                alignment: Alignment::Start,
-                stretched: false,
+                alignment: Alignment::None,
             },
             listener: None,
         }
@@ -61,7 +59,6 @@ impl Container {
                 direction: direction,
                 position: self.state.position,
                 alignment: self.state.alignment,
-                stretched: self.state.stretched,
             },
             listener: self.listener,
         }
@@ -75,7 +72,6 @@ impl Container {
                 direction: self.state.direction,
                 position: position,
                 alignment: self.state.alignment,
-                stretched: self.state.stretched,
             },
             listener: self.listener,
         }
@@ -89,21 +85,6 @@ impl Container {
                 direction: self.state.direction,
                 position: self.state.position,
                 alignment: alignment,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
-    }
-
-    pub fn stretched(self) -> Self {
-        Self {
-            name: self.name,
-            state: ContainerState {
-                children: self.state.children,
-                direction: self.state.direction,
-                position: self.state.position,
-                alignment: self.state.alignment,
-                stretched: true,
             },
             listener: self.listener,
         }
@@ -125,13 +106,11 @@ impl Widget for Container {
     /// class = container
     /// ```
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched { "stretched" } else { "" };
         let mut s = format!(
-            r#"<div class="container {} {} {} {}">"#, 
+            r#"<div class="container {} {} {}">"#, 
             self.state.position.css(),
             self.state.direction.css(),
             self.state.alignment.css(),
-            stretched,
         );
         for widget in self.state.children.iter() {
             s.push_str(&widget.eval());
@@ -199,6 +178,8 @@ impl Position {
 }
 
 pub enum Alignment {
+    None,
+    Stretched,
     Center,
     Start,
     End,
@@ -207,6 +188,8 @@ pub enum Alignment {
 impl Alignment {
     fn css(&self) -> &str {
         match &self {
+            Alignment::None => "",
+            Alignment::Stretched => "stretched",
             Alignment::Center => "alignment-center",
             Alignment::Start => "alignment-start",
             Alignment::End => "alignment-end",
