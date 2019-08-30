@@ -253,7 +253,7 @@ impl Widget for Combo {
                     self.state.opened = false;
                 }
             },
-            _ => (),
+            _ => self.state.opened = false,
         }
     }
 
