@@ -94,6 +94,10 @@ body {
     .progressbar {
         min-width: 100px;
         box-sizing: border-box;
+
+        .inner-progressbar {
+            box-sizing: border-box;
+        }
     }
 
     .checkbox {
@@ -140,6 +144,8 @@ body {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 11;
         }
 
         .combo-choices {
@@ -154,6 +160,8 @@ body {
 
     .range {
         min-width: 100px;
+        display: flex;
+        align-items: center;
 
         .inner-range {
             box-sizing: border-box;
@@ -175,7 +183,6 @@ body {
 
         .tab-titles {
             cursor: default;
-            margin-bottom: -1px;
             display: flex;
             z-index: 2;
 

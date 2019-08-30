@@ -199,12 +199,14 @@ impl Widget for Combo {
     /// ```
     fn eval(&self) -> String {
         let stretched = if self.state.stretched { "stretched" } else { "" };
+        let opened = if self.state.opened { "opened" } else { "" };
         let mut s = match &self.state.arrow {
             Some(arrow) => {
                 format!(
-                    r#"<div class="combo {}"><div onmousedown="{}" class="combo-button">{}<div><img src="data:image/{};base64,{}" /></div></div>"#,
+                    r#"<div class="combo {}"><div onmousedown="{}" class="combo-button {}">{}<div><img src="data:image/{};base64,{}" /></div></div>"#,
                     stretched,
                     Event::change_js(&self.name, "'-1'"),
+                    opened,
                     self.state.choices[self.state.selected as usize],
                     arrow.extension(),
                     arrow.data(),

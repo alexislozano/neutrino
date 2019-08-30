@@ -39,6 +39,7 @@ fn main() {
 
     let button3 = Button::new("button3")
         .text("Sigmund Freud")
+        .disabled()
         .listener(Box::new(mybutton3listener));
 
     let mut container1 = Container::new("container1")
@@ -60,7 +61,7 @@ fn main() {
         .size(400, 200)
         .resizable(true)
         .child(Box::new(container2))
-        .theme(Theme::Breeze);
+        .theme(Theme::Adwaita);
 
     App::run(window);
 }

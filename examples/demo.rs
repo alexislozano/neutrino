@@ -43,7 +43,7 @@ fn main() {
         .selected(0);
 
     let combo1 = Combo::new("combo1")
-        .choices(vec!["Combo box", "Combo fox"])
+        .choices(vec!["Combo Box", "Jumbo Fox"])
         .selected(0)
         .arrow_from_icon(Box::new(BreezeIcon::Down));
 
@@ -72,7 +72,8 @@ fn main() {
     container4.add(Box::new(container3));
 
     let mut container5 = Container::new("container5")
-        .direction(Direction::Horizontal);
+        .direction(Direction::Horizontal)
+        .alignment(Alignment::Center);
     container5.add(Box::new(range1));
     container5.add(Box::new(progressbar1));
     container5.add(Box::new(label1));
@@ -115,7 +116,7 @@ fn main() {
         .child(Box::new(tabs1))
         .menubar(menu_bar)
         .listener(Box::new(app_listener))
-        .theme(Theme::Breeze);
+        .theme(Theme::Adwaita);
 
     App::run(window);
 }
