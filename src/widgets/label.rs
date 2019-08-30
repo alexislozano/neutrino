@@ -1,7 +1,20 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
+
+pub struct LabelState {
+    text: String,
+    stretched: bool,
+}
+
+impl LabelState {
+    pub fn set_text(&mut self, text: &str) {
+        self.text = text.to_string();
+    }
+}
+
+pub trait LabelListener {
+    fn on_update(&self, state: &mut LabelState);
+}
 
 /// # Label
 ///
@@ -28,10 +41,8 @@ use crate::widgets::widget::Widget;
 /// ```
 pub struct Label {
     name: String,
-    text: String,
-    listener: Option<Box<dyn Listener>>,
-    observer: Option<Box<dyn Observer>>,
-    stretch: String,
+    state: LabelState,
+    listener: Option<Box<dyn LabelListener>>,
 }
 
 impl Label {
@@ -46,55 +57,48 @@ impl Label {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        Label {
+        Self {
             name: name.to_string(),
-            text: "Label".to_string(),
+            state: LabelState { 
+                text: "Label".to_string(),
+                stretched: false,
+            },
             listener: None,
-            observer: None,
-            stretch: "".to_string(),
         }
     }
 
     /// Set the text
     pub fn text(self, text: &str) -> Self {
-        Label {
+        Self {
             name: self.name,
-            text: text.to_string(),
+            state: LabelState { 
+                text: text.to_string(),
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        Label {
-            name: self.name,
-            text: self.text,
-            listener: Some(listener),
-            observer: self.observer,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
-        Label {
-            name: self.name,
-            text: self.text,
-            listener: self.listener,
-            observer: Some(observer),
-            stretch: self.stretch,
         }
     }
 
     pub fn stretch(self) -> Self {
-        Label {
+        Self {
             name: self.name,
-            text: self.text,
+            state: LabelState { 
+                text: self.state.text,
+                stretched: true,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: "stretch".to_string(),
+        }
+    }
+
+    /// Set the listener
+    pub fn listener(self, listener: Box<dyn LabelListener>) -> Self {
+        Self {
+            name: self.name,
+            state: LabelState { 
+                text: self.state.text,
+                stretched: self.state.stretched,
+            },
+            listener: Some(listener),
         }
     }
 }
@@ -114,11 +118,11 @@ impl Widget for Label {
     /// class = label
     /// ```
     fn eval(&self) -> String {
+        let stretched = if self.state.stretched { "stretched" } else { "" };
         format!(
-            r#"<div class="label {}" onmousedown="{}">{}</div>"#,
-            self.stretch,
-            Event::change_js(&self.name, "''"),
-            self.text
+            r#"<div class="label {}">{}</div>"#,
+            stretched,
+            self.state.text
         )
     }
 
@@ -133,34 +137,18 @@ impl Widget for Label {
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => self.on_update(),
-            Event::Change { source, value } => {
-                if source == &self.name {
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(value);
-                        }
-                    }
-                }
-            },
             _ => (),
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// text
-    /// ```
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(observer) => {
-                self.text = observer.observe()["text"].to_string();
+            Some(listener) => {
+                listener.on_update(&mut self.state);
             }
         }
     }
+
+    fn on_change(&mut self, _value: &str) {}
 }

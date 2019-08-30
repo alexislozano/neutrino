@@ -1,7 +1,16 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
+
+pub struct CheckBoxState {
+    text: String,
+    checked: bool,
+    stretched: bool,
+}
+
+pub trait CheckBoxListener {
+    fn on_change(&self, state: &CheckBoxState);
+    fn on_update(&self, state: &mut CheckBoxState);
+}
 
 /// # Checkbox
 ///
@@ -30,11 +39,8 @@ use crate::widgets::widget::Widget;
 /// ```
 pub struct CheckBox {
     name: String,
-    checked: bool,
-    text: String,
-    listener: Option<Box<dyn Listener>>,
-    observer: Option<Box<dyn Observer>>,
-    stretch: String,
+    state: CheckBoxState,
+    listener: Option<Box<dyn CheckBoxListener>>,
 }
 
 impl CheckBox {
@@ -50,72 +56,62 @@ impl CheckBox {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        CheckBox {
+        Self {
             name: name.to_string(),
-            checked: false,
-            text: "CheckBox".to_string(),
+            state: CheckBoxState {
+                text: "CheckBox".to_string(),
+                checked: false,
+                stretched: false,
+            },
             listener: None,
-            observer: None,
-            stretch: "".to_string(),
-        }
-    }
-
-    /// Set the checked flag
-    pub fn checked(self, checked: bool) -> Self {
-        CheckBox {
-            name: self.name,
-            checked: checked,
-            text: self.text,
-            listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
         }
     }
 
     /// Set the label
     pub fn text(self, text: &str) -> Self {
-        CheckBox {
+        Self {
             name: self.name,
-            checked: self.checked,
-            text: text.to_string(),
+            state: CheckBoxState {
+                text: text.to_string(),
+                checked: self.state.checked,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
+        }
+    }
+
+    /// Set the checked flag
+    pub fn checked(self) -> Self {
+        Self {
+            name: self.name,
+            state: CheckBoxState {
+                text: self.state.text,
+                checked: true,
+                stretched: self.state.stretched,
+            },
+            listener: self.listener,
+        }
+    }
+
+    /// Set the stretched flag
+    pub fn stretched(self) -> Self {
+        Self {
+            name: self.name,
+            state: CheckBoxState {
+                text: self.state.text,
+                checked: self.state.checked,
+                stretched: true,
+            },
+            listener: self.listener,
         }
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        CheckBox {
+    pub fn listener(self, listener: Box<dyn CheckBoxListener>) -> Self {
+        Self {
             name: self.name,
-            checked: self.checked,
-            text: self.text,
+            state: self.state,
             listener: Some(listener),
-            observer: self.observer,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
-        CheckBox {
-            name: self.name,
-            checked: self.checked,
-            text: self.text,
-            listener: self.listener,
-            observer: Some(observer),
-            stretch: self.stretch,
-        }
-    }
-
-    pub fn stretch(self) -> Self {
-        CheckBox {
-            name: self.name,
-            checked: self.checked,
-            text: self.text,
-            listener: self.listener,
-            observer: self.observer,
-            stretch: "stretch".to_string(),
         }
     }
 }
@@ -137,14 +133,15 @@ impl Widget for CheckBox {
     /// class = checkbox-inner [checked]
     /// ```
     fn eval(&self) -> String {
-        let checked = if self.checked { "checked" } else { "" };
+        let checked = if self.state.checked { "checked" } else { "" };
+        let stretched = if self.state.stretched { "checked" } else { "" };
         format!(
             r#"<div class="checkbox {}" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
-            self.stretch,
+            stretched,
             Event::change_js(&self.name, "''"), 
             checked, 
             checked, 
-            self.text,
+            self.state.text,
         )
     }
 
@@ -162,35 +159,28 @@ impl Widget for CheckBox {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == &self.name {
-                    self.checked = !self.checked;
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(value);
-                        }
-                    }
+                    self.on_change(value)
                 }
             },
             _ => (),
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// text
-    /// checked
-    /// ```
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(observer) => {
-                let hash = observer.observe();
-                self.text = hash["text"].to_string();
-                self.checked = hash["checked"].parse().unwrap();
+            Some(listener) => {
+                listener.on_update(&mut self.state);
+            }
+        }
+    }
+
+    fn on_change(&mut self, _value: &str) {
+        self.state.checked = !self.state.checked;
+        match &self.listener {
+            None => (),
+            Some(listener) => {
+                listener.on_change(&self.state);
             }
         }
     }

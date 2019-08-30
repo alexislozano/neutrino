@@ -7,7 +7,6 @@ use utils::event::{Event, Key};
 use utils::theme::Theme;
 use widgets::widget::Widget;
 use widgets::menubar::MenuBar;
-use utils::listener::Listener;
 
 use json;
 
@@ -95,6 +94,10 @@ impl App {
     }
 }
 
+pub trait WindowListener {
+    fn on_key(&self, _key: Key);
+}
+
 /// # Window
 ///
 /// A window containing the widgets.
@@ -128,7 +131,7 @@ pub struct Window {
     theme: Theme,
     child: Option<Box<dyn Widget>>,
     menubar: Option<MenuBar>,
-    listener: Option<Box<dyn Listener>>,
+    listener: Option<Box<dyn WindowListener>>,
 }
 
 impl Window {
@@ -145,7 +148,7 @@ impl Window {
     /// child: None,
     /// ```
     pub fn new() -> Self {
-        Window {
+        Self {
             title: "Untitled".to_string(),
             width: 640,
             height: 480,
@@ -158,7 +161,7 @@ impl Window {
     }
 
     pub fn child(self, widget: Box<dyn Widget>) -> Self {
-        Window {
+        Self {
             title: self.title,
             width: self.width,
             height: self.height,
@@ -171,7 +174,7 @@ impl Window {
     }
 
     pub fn menubar(self, menubar: MenuBar) -> Self {
-        Window {
+        Self {
             title: self.title,
             width: self.width,
             height: self.height,
@@ -185,7 +188,7 @@ impl Window {
 
     /// Set the title
     pub fn title(self, title: &str) -> Self {
-        Window {
+        Self {
             title: title.to_string(),
             width: self.width,
             height: self.height,
@@ -199,7 +202,7 @@ impl Window {
 
     /// Set the size
     pub fn size(self, width: i32, height: i32) -> Self {
-        Window {
+        Self {
             title: self.title,
             width: width,
             height: height,
@@ -213,7 +216,7 @@ impl Window {
 
     /// Set the resizable flag
     pub fn resizable(self, resizable: bool) -> Self {
-        Window {
+        Self {
             title: self.title,
             width: self.width,
             height: self.height,
@@ -227,7 +230,7 @@ impl Window {
 
     /// Set the theme
     pub fn theme(self, theme: Theme) -> Self {
-        Window {
+        Self {
             title: self.title,
             width: self.width,
             height: self.height,
@@ -240,8 +243,8 @@ impl Window {
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        Window {
+    pub fn listener(self, listener: Box<dyn WindowListener>) -> Self {
+        Self {
             title: self.title,
             width: self.width,
             height: self.height,

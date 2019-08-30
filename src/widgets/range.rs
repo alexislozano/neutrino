@@ -1,7 +1,17 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
+
+pub struct RangeState {
+    min: i32,
+    max: i32,
+    value: i32,
+    stretched: bool,
+}
+
+pub trait RangeListener {
+    fn on_update(&self, state: &mut RangeState);
+    fn on_change(&self, state: &RangeState);
+}
 
 /// # Range
 ///
@@ -33,12 +43,8 @@ use crate::widgets::widget::Widget;
 /// ```
 pub struct Range {
     name: String,
-    min: i32,
-    max: i32,
-    value: i32,
-    listener: Option<Box<dyn Listener>>,
-    observer: Option<Box<dyn Observer>>,
-    stretch: String,
+    state: RangeState,
+    listener: Option<Box<dyn RangeListener>>,
 }
 
 impl Range {
@@ -55,91 +61,84 @@ impl Range {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        Range {
+        Self {
             name: name.to_string(),
-            min: 0,
-            max: 100,
-            value: 0,
-            observer: None,
+            state: RangeState {
+                min: 0,
+                max: 100,
+                value: 0,
+                stretched: false,
+            },
             listener: None,
-            stretch: "".to_string(),
         }
     }
 
     /// Set the min
     pub fn min(self, min: i32) -> Self {
-        Range {
+        Self {
             name: self.name,
-            min: min,
-            max: self.max,
-            value: self.value,
+            state: RangeState {
+                min: min,
+                max: self.state.max,
+                value: self.state.value,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
         }
     }
 
     /// Set the max
     pub fn max(self, max: i32) -> Self {
-        Range {
+        Self {
             name: self.name,
-            min: self.min,
-            max: max,
-            value: self.value,
+            state: RangeState {
+                min: self.state.min,
+                max: max,
+                value: self.state.value,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
         }
     }
 
     /// Set the value
     pub fn value(self, value: i32) -> Self {
-        Range {
+        Self {
             name: self.name,
-            min: self.min,
-            max: self.max,
-            value: value,
+            state: RangeState {
+                min: self.state.min,
+                max: self.state.max,
+                value: value,
+                stretched: self.state.stretched,
+            },
             listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
+        }
+    }
+
+    pub fn stretched(self) -> Self {
+        Self {
+            name: self.name,
+            state: RangeState {
+                min: self.state.min,
+                max: self.state.max,
+                value: self.state.value,
+                stretched: true,
+            },
+            listener: self.listener,
         }
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        Range {
+    pub fn listener(self, listener: Box<dyn RangeListener>) -> Self {
+        Self {
             name: self.name,
-            min: self.min,
-            max: self.max,
-            value: self.value,
+            state: RangeState {
+                min: self.state.min,
+                max: self.state.max,
+                value: self.state.value,
+                stretched: self.state.stretched,
+            },
             listener: Some(listener),
-            observer: self.observer,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
-        Range {
-            name: self.name,
-            min: self.min,
-            max: self.max,
-            value: self.value,
-            listener: self.listener,
-            observer: Some(observer),
-            stretch: self.stretch,
-        }
-    }
-
-    pub fn stretch(self) -> Self {
-        Range {
-            name: self.name,
-            min: self.min,
-            max: self.max,
-            value: self.value,
-            listener: self.listener,
-            observer: self.observer,
-            stretch: "stretch".to_string(),
         }
     }
 }
@@ -160,13 +159,14 @@ impl Widget for Range {
     /// class = inner-range
     /// ```
     fn eval(&self) -> String {
+        let stretched = if self.state.stretched { "stretched" } else { "" };
         format!(
             r#"<div class="range {}"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
-            self.stretch,
+            stretched,
             Event::change_js(&self.name, "value"), 
-            self.min, 
-            self.max, 
-            self.value
+            self.state.min, 
+            self.state.max, 
+            self.state.value,
         )
     }
 
@@ -184,32 +184,28 @@ impl Widget for Range {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == &self.name {
-                    self.value = value.parse::<i32>().unwrap();
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(value);
-                        }
-                    }
+                    self.on_change(value);
                 }
             },
             _ => (),
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// value
-    /// ```
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(observer) => {
-                self.value = observer.observe()["value"].parse::<i32>().unwrap();
+            Some(listener) => {
+                listener.on_update(&mut self.state);
+            }
+        }
+    }
+
+    fn on_change(&mut self, value: &str) {
+        self.state.value = value.parse::<i32>().unwrap();
+        match &self.listener {
+            None => (),
+            Some(listener) => {
+                listener.on_change(&self.state);
             }
         }
     }

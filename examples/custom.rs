@@ -2,16 +2,15 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use neutrino::widgets::button::Button;
-use neutrino::widgets::container::{Container, Direction, Position};
+use neutrino::widgets::container::{Container, Direction, Position, Alignment};
 use neutrino::widgets::custom::Custom;
 use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
 
 mod custom_mod;
 
-use custom_mod::listeners::ButtonListener;
+use custom_mod::listeners::{MyButtonListener, MyCustomListener};
 use custom_mod::models::Person;
-use custom_mod::observers::Custom1Observer;
 
 fn main() {
     let mut person = Person::new();
@@ -19,46 +18,46 @@ fn main() {
     person.set_lastname("Lovelace");
     let rperson = Rc::new(RefCell::new(person));
 
-    let custom1observer = Custom1Observer::new(Rc::clone(&rperson));
+    let mycustomlistener = MyCustomListener::new(Rc::clone(&rperson));
 
     let custom1 = Custom::new("custom1")
-        .template(r#"<h1 style="margin: 0;">My name is {firstname} {lastname}.</h1>"#)
-        .observer(Box::new(custom1observer));
+        .listener(Box::new(mycustomlistener));
 
-    let button1listener = ButtonListener::new(Rc::clone(&rperson), "Ada", "Lovelace");
+    let mybutton1listener = MyButtonListener::new(Rc::clone(&rperson), "Ada", "Lovelace");
 
     let button1 = Button::new("button1")
         .text("Ada Lovelace")
-        .listener(Box::new(button1listener));
+        .listener(Box::new(mybutton1listener));
 
-    let button2listener = ButtonListener::new(Rc::clone(&rperson), "Harry", "Potter");
+    let mybutton2listener = MyButtonListener::new(Rc::clone(&rperson), "Harry", "Potter");
 
     let button2 = Button::new("button2")
         .text("Harry Potter")
-        .listener(Box::new(button2listener));
+        .listener(Box::new(mybutton2listener));
 
-    let button3listener = ButtonListener::new(Rc::clone(&rperson), "Sigmund", "Freud");
+    let mybutton3listener = MyButtonListener::new(Rc::clone(&rperson), "Sigmund", "Freud");
 
     let button3 = Button::new("button3")
         .text("Sigmund Freud")
-        .disabled(true)
-        .listener(Box::new(button3listener));
+        .listener(Box::new(mybutton3listener));
 
-    let mut container1 = Container::new()
+    let mut container1 = Container::new("container1")
         .direction(Direction::Horizontal)
         .position(Position::Center);
     container1.add(Box::new(button1));
     container1.add(Box::new(button2));
     container1.add(Box::new(button3));
 
-    let mut container2 = Container::new()
-        .direction(Direction::Vertical);
+    let mut container2 = Container::new("container2")
+        .direction(Direction::Vertical)
+        .position(Position::Center)
+        .alignment(Alignment::Center);
     container2.add(Box::new(custom1));
     container2.add(Box::new(container1));
 
     let window = Window::new()
         .title("Custom")
-        .size(340, 240)
+        .size(400, 200)
         .resizable(true)
         .child(Box::new(container2))
         .theme(Theme::Breeze);

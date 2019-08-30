@@ -1,6 +1,17 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
+pub struct ContainerState {
+    children: Vec<Box<dyn Widget>>,
+    direction: Direction,
+    position: Position,
+    alignment: Alignment,
+}
+
+pub trait ContainerListener {
+    fn on_update(&self, state: &mut ContainerState);
+}
+
 /// # Container
 ///
 /// A container for other widgets.
@@ -20,84 +31,68 @@ use crate::widgets::widget::Widget;
 /// let my_container = Container::horizontal();
 /// ```
 pub struct Container {
-    children: Vec<Box<dyn Widget>>,
-    direction: String,
-    position: String,
-    alignment: String,
-    stretch: String,
+    name: String,
+    state: ContainerState,
+    listener: Option<Box<dyn ContainerListener>>
 }
 
 impl Container {
     /// Create an empty Container
-    pub fn new() -> Self {
-        Container {
-            children: vec![],
-            direction: "vertical".to_string(),
-            position: "".to_string(),
-            alignment: "".to_string(),
-            stretch: "".to_string(),
+    pub fn new(name: &str) -> Self {
+        Self {
+            name: name.to_string(),
+            state: ContainerState {
+                children: vec![],
+                direction: Direction::Vertical,
+                position: Position::Start,
+                alignment: Alignment::None,
+            },
+            listener: None,
         }
     }
 
     pub fn direction(self, direction: Direction) -> Self {
-        let direction_str = match direction {
-            Direction::Horizontal => "direction-horizontal",
-            Direction::Vertical => "direction-vertical",
-        };
-        Container {
-            children: self.children,
-            direction: direction_str.to_string(),
-            position: self.position,
-            alignment: self.alignment,
-            stretch: self.stretch,
+        Self {
+            name: self.name,
+            state: ContainerState {
+                children: self.state.children,
+                direction: direction,
+                position: self.state.position,
+                alignment: self.state.alignment,
+            },
+            listener: self.listener,
         }
     }
 
     pub fn position(self, position: Position) -> Self {
-        let position_str = match position {
-            Position::Center => "position-center",
-            Position::Start => "position-start",
-            Position::End => "position-end",
-            Position::Between => "position-between",
-            Position::Around => "position-around",
-        };
-        Container {
-            children: self.children,
-            direction: self.direction,
-            position: position_str.to_string(),
-            alignment: self.alignment,
-            stretch: self.stretch,
+        Self {
+            name: self.name,
+            state: ContainerState {
+                children: self.state.children,
+                direction: self.state.direction,
+                position: position,
+                alignment: self.state.alignment,
+            },
+            listener: self.listener,
         }
     }
 
     pub fn alignment(self, alignment: Alignment) -> Self {
-        let alignment_str = match alignment {
-            Alignment::Center => "alignment-center",
-            Alignment::Start => "alignment-start",
-            Alignment::End => "alignment-end",
-        };
-        Container {
-            children: self.children,
-            direction: self.direction,
-            position: self.position,
-            alignment: alignment_str.to_string(),
-            stretch: self.stretch,
-        }
-    }
-
-    pub fn stretch(self) -> Self {
-        Container {
-            children: self.children,
-            direction: self.direction,
-            position: self.position,
-            alignment: self.alignment,
-            stretch: "stretch".to_string(),
+        Self {
+            name: self.name,
+            state: ContainerState {
+                children: self.state.children,
+                direction: self.state.direction,
+                position: self.state.position,
+                alignment: alignment,
+            },
+            listener: self.listener,
         }
     }
 
     /// Add a widget
     pub fn add(&mut self, widget: Box<dyn Widget>) {
-        self.children.push(widget);
+        self.state.children.push(widget);
     }
 }
 
@@ -112,13 +107,12 @@ impl Widget for Container {
     /// ```
     fn eval(&self) -> String {
         let mut s = format!(
-            r#"<div class="container {} {} {} {}">"#, 
-            self.position,
-            self.direction,
-            self.alignment,
-            self.stretch,
+            r#"<div class="container {} {} {}">"#, 
+            self.state.position.css(),
+            self.state.direction.css(),
+            self.state.alignment.css(),
         );
-        for widget in self.children.iter() {
+        for widget in self.state.children.iter() {
             s.push_str(&widget.eval());
         }
         s.push_str("</div>");
@@ -127,25 +121,40 @@ impl Widget for Container {
 
     /// Trigger the trigger function of the children of the Container
     fn trigger(&mut self, event: &Event) {
-        for widget in self.children.iter_mut() {
+        match event {
+            Event::Update => self.on_update(),
+            _ => (),
+        };
+        for widget in self.state.children.iter_mut() {
             widget.trigger(event);
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// ```
-    fn on_update(&mut self) {}
+    fn on_update(&mut self) {
+        match &self.listener {
+            None => (),
+            Some(listener) => {
+                listener.on_update(&mut self.state);
+            }
+        }
+    }
+
+    fn on_change(&mut self, _value: &str) {}
 }
 
 
 pub enum Direction {
     Horizontal,
     Vertical,
+}
+
+impl Direction {
+    fn css(&self) -> &str {
+        match &self {
+            Direction::Horizontal => "direction-horizontal",
+            Direction::Vertical => "direction-vertical",
+        }
+    }
 }
 
 pub enum Position {
@@ -156,8 +165,34 @@ pub enum Position {
     Around,
 }
 
+impl Position {
+    fn css(&self) -> &str {
+        match &self {
+            Position::Center => "position-center",
+            Position::Start => "position-start",
+            Position::End => "position-end",
+            Position::Between => "position-between",
+            Position::Around => "position-around",
+        }
+    }
+}
+
 pub enum Alignment {
+    None,
+    Stretched,
     Center,
     Start,
     End,
+}
+
+impl Alignment {
+    fn css(&self) -> &str {
+        match &self {
+            Alignment::None => "",
+            Alignment::Stretched => "stretched",
+            Alignment::Center => "alignment-center",
+            Alignment::Start => "alignment-start",
+            Alignment::End => "alignment-end",
+        }
+    }
 }

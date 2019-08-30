@@ -1,7 +1,26 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
+
+pub struct TabsState {
+    children: Vec<(String, Box<dyn Widget>)>,
+    selected: u32,
+    stretched: bool,
+}
+
+impl TabsState {
+    pub fn set_selected(&mut self, selected: u32) {
+        self.selected = selected;
+    }
+
+    pub fn selected(&self) -> u32 {
+        self.selected
+    }
+}
+
+pub trait TabsListener {
+    fn on_update(&self, state: &mut TabsState);
+    fn on_change(&self, state: &TabsState);
+}
 
 /// # Tabs
 ///
@@ -30,11 +49,8 @@ use crate::widgets::widget::Widget;
 /// ```
 pub struct Tabs {
     name: String,
-    children: Vec<(String, Box<dyn Widget>)>,
-    selected: u32,
-    listener: Option<Box<dyn Listener>>,
-    observer: Option<Box<dyn Observer>>,
-    stretch: String,
+    state: TabsState,
+    listener: Option<Box<dyn TabsListener>>,
 }
 
 impl Tabs {
@@ -50,66 +66,58 @@ impl Tabs {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        Tabs {
+        Self {
             name: name.to_string(),
-            children: vec![],
-            selected: 0,
+            state: TabsState {
+                children: vec![],
+                selected: 0,
+                stretched: false,
+            },
             listener: None,
-            observer: None,
-            stretch: "".to_string(),
         }
     }
 
     // Set the index of the selected tab
     pub fn selected(self, selected: u32) -> Self {
-        Tabs {
+        Self {
             name: self.name,
-            children: self.children,
-            selected: selected,
-            listener: self.listener,
-            observer: self.observer,
-            stretch: self.stretch,
+            state: TabsState {
+                children: self.state.children,
+                selected: selected,
+                stretched: self.state.stretched,
+            },
+            listener: None,
+        }
+    }
+
+    pub fn stretched(self) -> Self {
+        Self {
+            name: self.name,
+            state: TabsState {
+                children: self.state.children,
+                selected: self.state.selected,
+                stretched: true,
+            },
+            listener: None,
         }
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        Tabs {
+    pub fn listener(self, listener: Box<dyn TabsListener>) -> Self {
+        Self {
             name: self.name,
-            children: self.children,
-            selected: self.selected,
+            state: TabsState {
+                children: self.state.children,
+                selected: self.state.selected,
+                stretched: self.state.stretched,
+            },
             listener: Some(listener),
-            observer: self.observer,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
-        Tabs {
-            name: self.name,
-            children: self.children,
-            selected: self.selected,
-            listener: self.listener,
-            observer: Some(observer),
-            stretch: self.stretch,
-        }
-    }
-
-    pub fn stretch(self) -> Self {
-        Tabs {
-            name: self.name,
-            children: self.children,
-            selected: self.selected,
-            listener: self.listener,
-            observer: self.observer,
-            stretch: "stretch".to_string(),
         }
     }
 
     /// Add a tab
     pub fn add(&mut self, child: (&str, Box<dyn Widget>)) {
-        self.children.push((child.0.to_string(), child.1));
+        self.state.children.push((child.0.to_string(), child.1));
     }
 }
 
@@ -131,12 +139,13 @@ impl Widget for Tabs {
     /// class = tab
     /// ```
     fn eval(&self) -> String {
+        let stretched = if self.state.stretched { "stretched" } else { "" };
         let mut s = format!(
             r#"<div class="tabs {}"><div class="tab-titles">"#,
-            self.stretch
+            stretched
         );
-        for (i, child) in self.children.iter().enumerate() {
-            let selected = if self.selected == i as u32 {
+        for (i, child) in self.state.children.iter().enumerate() {
+            let selected = if self.state.selected == i as u32 {
                 "selected"
             } else {
                 ""
@@ -150,7 +159,7 @@ impl Widget for Tabs {
         }
         s.push_str(&format!(
             r#"</div><div class="tab">{}</div>"#,
-            self.children[self.selected as usize].1.eval()
+            self.state.children[self.state.selected as usize].1.eval()
         ));
         s.push_str("</div>");
         s
@@ -170,36 +179,33 @@ impl Widget for Tabs {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == &self.name {
-                    let selected = value.parse::<i32>().unwrap();
-                    if selected > -1 {
-                        self.selected = selected as u32;
-                    }
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(value);
-                        }
-                    }
+                    self.on_change(value);
                 } else {
-                    self.children[self.selected as usize].1.trigger(event);
+                    self.state.children[self.state.selected as usize].1.trigger(event);
                 };
             },
-            _ => self.children[self.selected as usize].1.trigger(event),
+            _ => self.state.children[self.state.selected as usize].1.trigger(event),
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// ```
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(observer) => {
-                self.selected = observer.observe()["selected"].parse::<u32>().unwrap();
+            Some(listener) => {
+                listener.on_update(&mut self.state);
+            }
+        }
+    }
+
+    fn on_change(&mut self, value: &str) {
+        let selected = value.parse::<i32>().unwrap();
+        if selected > -1 {
+            self.state.selected = selected as u32;
+        }
+        match &self.listener {
+            None => (),
+            Some(listener) => {
+                listener.on_change(&self.state);
             }
         }
     }

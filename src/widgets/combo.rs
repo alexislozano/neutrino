@@ -1,11 +1,22 @@
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
-use crate::utils::observer::Observer;
 use crate::widgets::widget::Widget;
 use crate::utils::pixmap::Pixmap;
 use crate::utils::icon::Icon;
 
-/// # ComboBox
+pub struct ComboState {
+    choices: Vec<String>,
+    selected: u32,
+    opened: bool,
+    stretched: bool,
+    arrow: Option<Pixmap>
+}
+
+pub trait ComboListener {
+    fn on_change(&self, state: &ComboState);
+    fn on_update(&self, state: &mut ComboState);
+}
+
+/// # Combo
 ///
 /// A collapsible list of strings.
 ///
@@ -34,13 +45,8 @@ use crate::utils::icon::Icon;
 /// ```
 pub struct Combo {
     name: String,
-    choices: Vec<String>,
-    selected: u32,
-    opened: bool,
-    listener: Option<Box<dyn Listener>>,
-    observer: Option<Box<dyn Observer>>,
-    arrow: Option<Pixmap>,
-    stretch: String,
+    state: ComboState,
+    listener: Option<Box<dyn ComboListener>>,
 }
 
 impl Combo {
@@ -57,131 +63,119 @@ impl Combo {
     /// observer: None,
     /// ```
     pub fn new(name: &str) -> Self {
-        Combo {
+        Self {
             name: name.to_string(),
-            choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
-            selected: 0,
-            opened: false,
+            state: ComboState {
+                choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
+                selected: 0,
+                opened: false,
+                stretched: false,
+                arrow: None,
+            },
             listener: None,
-            observer: None,
-            arrow: None,
-            stretch: "".to_string(),
         }
     }
 
     /// Set the choices
     pub fn choices(self, choices: Vec<&str>) -> Self {
-        Combo {
+        Self {
             name: self.name,
-            choices: choices
-                .iter()
-                .map(|c| c.to_string())
-                .collect::<Vec<String>>(),
-            selected: self.selected,
-            opened: self.opened,
+            state: ComboState {
+                choices: choices.iter()
+                    .map(|c| c.to_string())
+                    .collect::<Vec<String>>(),
+                selected: self.state.selected,
+                opened: self.state.opened,
+                stretched: self.state.stretched,
+                arrow: self.state.arrow,
+            },
             listener: self.listener,
-            observer: self.observer,
-            arrow: self.arrow,
-            stretch: self.stretch,
         }
     }
 
     /// Set the index of the selected choice
     pub fn selected(self, selected: u32) -> Self {
-        Combo {
+        Self {
             name: self.name,
-            choices: self.choices,
-            selected: selected,
-            opened: self.opened,
+            state: ComboState {
+                choices: self.state.choices,
+                selected: selected,
+                opened: self.state.opened,
+                stretched: self.state.stretched,
+                arrow: self.state.arrow,
+            },
             listener: self.listener,
-            observer: self.observer,
-            arrow: self.arrow,
-            stretch: self.stretch,
         }
     }
 
     /// Set the opened flag
-    pub fn opened(self, opened: bool) -> Self {
-        Combo {
+    pub fn opened(self) -> Self {
+        Self {
             name: self.name,
-            choices: self.choices,
-            selected: self.selected,
-            opened: opened,
+            state: ComboState {
+                choices: self.state.choices,
+                selected: self.state.selected,
+                opened: true,
+                stretched: self.state.stretched,
+                arrow: self.state.arrow,
+            },
             listener: self.listener,
-            observer: self.observer,
-            arrow: self.arrow,
-            stretch: self.stretch,
         }
     }
 
-    /// Set the listener
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        Combo {
+    /// Set the stretced flag
+    pub fn stretched(self) -> Self {
+        Self {
             name: self.name,
-            choices: self.choices,
-            selected: self.selected,
-            opened: self.opened,
-            listener: Some(listener),
-            observer: self.observer,
-            arrow: self.arrow,
-            stretch: self.stretch,
-        }
-    }
-
-    /// Set the observer
-    pub fn observer(self, observer: Box<dyn Observer>) -> Self {
-        Combo {
-            name: self.name,
-            choices: self.choices,
-            selected: self.selected,
-            opened: self.opened,
+            state: ComboState {
+                choices: self.state.choices,
+                selected: self.state.selected,
+                opened: self.state.opened,
+                stretched: true,
+                arrow: self.state.arrow,
+            },
             listener: self.listener,
-            observer: Some(observer),
-            arrow: self.arrow,
-            stretch: self.stretch,
         }
     }
 
     /// Set the arrow from a path
     pub fn arrow_from_path(self, path: &str) -> Self {
         let pixmap = Pixmap::from_path(path);
-        Combo {
+        Self {
             name: self.name,
-            choices: self.choices,
-            selected: self.selected,
-            opened: self.opened,
+            state: ComboState {
+                choices: self.state.choices,
+                selected: self.state.selected,
+                opened: self.state.opened,
+                stretched: self.state.stretched,
+                arrow: Some(pixmap),
+            },
             listener: self.listener,
-            observer: self.observer,
-            arrow: Some(pixmap),
-            stretch: self.stretch,
         }
     }
 
     /// Set the arrow from an icon
     pub fn arrow_from_icon(self, icon: Box<dyn Icon>) -> Self {
         let pixmap = Pixmap::from_icon(icon);
-        Combo {
+        Self {
             name: self.name,
-            choices: self.choices,
-            selected: self.selected,
-            opened: self.opened,
+            state: ComboState {
+                choices: self.state.choices,
+                selected: self.state.selected,
+                opened: self.state.opened,
+                stretched: self.state.stretched,
+                arrow: Some(pixmap),
+            },
             listener: self.listener,
-            observer: self.observer,
-            arrow: Some(pixmap),
-            stretch: self.stretch,
         }
     }
 
-    pub fn stretch(self) -> Self {
-        Combo {
+    /// Set the listener
+    pub fn listener(self, listener: Box<dyn ComboListener>) -> Self {
+        Self {
             name: self.name,
-            choices: self.choices,
-            selected: self.selected,
-            opened: self.opened,
-            listener: self.listener,
-            observer: self.observer,
-            arrow: self.arrow,
-            stretch: "stretch".to_string(),
+            state: self.state,
+            listener: Some(listener),
         }
     }
 }
@@ -204,13 +198,14 @@ impl Widget for Combo {
     /// class = combo-choice
     /// ```
     fn eval(&self) -> String {
-        let mut s = match &self.arrow {
+        let stretched = if self.state.stretched { "stretched" } else { "" };
+        let mut s = match &self.state.arrow {
             Some(arrow) => {
                 format!(
                     r#"<div class="combo {}"><div onmousedown="{}" class="combo-button">{}<div><img src="data:image/{};base64,{}" /></div></div>"#,
-                    self.stretch,
+                    stretched,
                     Event::change_js(&self.name, "'-1'"),
-                    self.choices[self.selected as usize],
+                    self.state.choices[self.state.selected as usize],
                     arrow.extension(),
                     arrow.data(),
                 )
@@ -218,15 +213,15 @@ impl Widget for Combo {
             None => {
                 format!(
                     r#"<div class="combo {}"><div onmousedown="{}" class="combo-button">{}</div>"#,
-                    self.stretch,
+                    stretched,
                     Event::change_js(&self.name, "'-1'"),
-                    self.choices[self.selected as usize],
+                    self.state.choices[self.state.selected as usize],
                 )
             }
         };
-        if self.opened {
+        if self.state.opened {
             s.push_str(r#"<div class="combo-choices">"#);
-            for (i, choice) in self.choices.iter().enumerate() {
+            for (i, choice) in self.state.choices.iter().enumerate() {
                 s.push_str(&format!(
                     r#"<div class="combo-choice" onmousedown="{}">{}</div>"#,
                     Event::change_js(&self.name, &format!("'{}'", i)),
@@ -253,36 +248,35 @@ impl Widget for Combo {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
                 if source == &self.name {
-                    self.opened = !self.opened;
-                    let selected = value.parse::<i32>().unwrap();
-                    if selected > -1 {
-                        self.selected = selected as u32;
-                    }
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(value);
-                        }
-                    }
+                    self.on_change(value);
                 } else {
-                    self.opened = false;
+                    self.state.opened = false;
                 }
             },
-            _ => self.opened = false,
+            _ => self.state.opened = false,
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// ```
     fn on_update(&mut self) {
-        match &self.observer {
+        match &self.listener {
             None => (),
-            Some(_observer) => {}
+            Some(listener) => {
+                listener.on_update(&mut self.state);
+            }
+        }
+    }
+
+    fn on_change(&mut self, value: &str) {
+        self.state.opened = !self.state.opened;
+        let selected = value.parse::<i32>().unwrap();
+        if selected > -1 {
+            self.state.selected = selected as u32;
+        }
+        match &self.listener {
+            None => (),
+            Some(listener) => {
+                listener.on_change(&self.state);
+            }
         }
     }
 }

@@ -1,95 +1,112 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
-use crate::utils::listener::Listener;
+
+pub struct MenuBarState {
+    items: Vec<MenuItem>,
+    selected_item: Option<u32>,
+    selected_function: Option<u32>,
+}
+
+impl MenuBarState {
+    pub fn selected_item(&self) -> Option<u32> {
+        self.selected_item
+    }
+
+    pub fn selected_function(&self) -> Option<u32> {
+        self.selected_function
+    }
+}
+
+pub trait MenuBarListener {
+    fn on_change(&self, state: &MenuBarState);
+}
 
 pub struct MenuBar {
-    items: Vec<MenuItem>,
-    selected: Option<u32>,
-    listener: Option<Box<dyn Listener>>,
+    state: MenuBarState,
+    listener: Option<Box<dyn MenuBarListener>>,
 }
 
 impl MenuBar {
     pub fn new() -> Self {
-        MenuBar {
-            items: vec![],
-            selected: None,
+        Self {
+            state: MenuBarState {
+                items: vec![],
+                selected_item: None,
+                selected_function: None,
+            },
             listener: None,
         }
     }
 
-    pub fn listener(self, listener: Box<dyn Listener>) -> Self {
-        MenuBar {
-            items: self.items,
-            selected: self.selected,
+    pub fn listener(self, listener: Box<dyn MenuBarListener>) -> Self {
+        Self {
+            state: MenuBarState {
+                items: self.state.items,
+                selected_item: self.state.selected_item,
+                selected_function: self.state.selected_function,
+            },
             listener: Some(listener),
         }
     }
 
     pub fn add(&mut self, item: MenuItem) {
-        self.items.push(item);
+        self.state.items.push(item);
     }
-}
-
-impl Widget for MenuBar {
-    fn eval(&self) -> String {
+    
+    pub fn eval(&self) -> String {
         let mut s = r#"<div class="menubar">"#.to_string();
-        for (i, item) in self.items.iter().enumerate() {
-            let selected = match self.selected {
+        for (i, item) in self.state.items.iter().enumerate() {
+            let selected_item = match self.state.selected_item {
                 None => false,
-                Some(selected) => selected == i as u32
+                Some(selected_item) => selected_item == i as u32
             };
-            s.push_str(&item.eval(i, selected));
+            s.push_str(&item.eval(i, selected_item));
         }
         s.push_str(r#"</div>"#);
         s
     }
 
-    fn trigger(&mut self, event: &Event) {
+    pub fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Update => self.on_update(),
+            Event::Update => (),
             Event::Change { source, value } => {
                 if source == "menuitem" {
-                    let values = value.split(";").collect::<Vec<&str>>();
-                    let e = values[0];
-                    let index = values[1].parse::<u32>().unwrap();
-                    self.selected = match self.selected {
-                        Some(_) => match e {
-                            "click" => None,
-                            _ => Some(index),
-                        },
-                        None => match e {
-                            "click" => Some(index),
-                            _ => None,
-                        }
-                    }
+                    self.on_item_change(value);    
                 } else if source == "menufunction" {
-                    let selected = value.parse::<u32>().unwrap();
-                    match &self.listener {
-                        None => (),
-                        Some(listener) => {
-                            listener.on_change(&format!(
-                                "{};{}",
-                                self.selected.unwrap(), selected
-                            ));
-                        }
-                    };
-                    self.selected = None;
+                    self.on_function_change(value);
                 } else {
-                    self.selected = None;
+                    self.state.selected_item = None;
                 }
             },
-            _ => self.selected = None,
+            _ => self.state.selected_item = None,
         }
     }
 
-    /// Set the values of the widget using the fields of the HashMap
-    /// returned by the observer
-    ///
-    /// # Fields
-    ///
-    /// ```text
-    /// ```
-    fn on_update(&mut self) {}
+    fn on_item_change(&mut self, value: &str) {
+        let values = value.split(";").collect::<Vec<&str>>();
+        let e = values[0];
+        let index = values[1].parse::<u32>().unwrap();
+        self.state.selected_item = match self.state.selected_item {
+            Some(_) => match e {
+                "click" => None,
+                _ => Some(index),
+            },
+            None => match e {
+                "click" => Some(index),
+                _ => None,
+            }
+        }
+    }
+
+    fn on_function_change(&mut self, value: &str) {
+        self.state.selected_function = Some(value.parse::<u32>().unwrap());
+        match &self.listener {
+            None => (),
+            Some(listener) => {
+                listener.on_change(&self.state);
+            }
+        };
+        self.state.selected_item = None;
+    }
 }
 
 pub struct MenuItem {
@@ -117,8 +134,10 @@ impl MenuItem {
         };
         let mut s = format!(
             r#"<div class="menuitem"><div class="menuitem-title {}" onmousedown="{}" onmouseover="{}">{}</div>"#,
-            selected_str, Event::change_js("menuitem", &format!("'click;{}'", index)), 
-            Event::change_js("menuitem", &format!("'over;{}'", index)), self.name
+            selected_str, 
+            Event::change_js("menuitem", &format!("'click;{}'", index)), 
+            Event::change_js("menuitem", &format!("'over;{}'", index)), 
+            self.name
         );
         if selected {
             s.push_str(r#"<div class="menufunctions">"#);
