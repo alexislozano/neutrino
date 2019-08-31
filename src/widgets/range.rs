@@ -8,6 +8,40 @@ pub struct RangeState {
     stretched: bool,
 }
 
+impl RangeState {
+    pub fn min(&self) -> i32 {
+        self.min
+    }
+
+    pub fn max(&self) -> i32 {
+        self.max
+    }
+
+    pub fn value(&self) -> i32 {
+        self.value
+    }
+
+    pub fn stretched(&self) -> bool {
+        self.stretched
+    }
+
+    pub fn set_min(&mut self, min: i32) {
+        self.min = min;
+    }
+
+    pub fn set_max(&mut self, max: i32) {
+        self.max = max;
+    }
+
+    pub fn set_value(&mut self, value: i32) {
+        self.value = value;
+    }
+
+    pub fn set_stretched(&mut self, stretched: bool) {
+        self.stretched = stretched;
+    }
+}
+
 pub trait RangeListener {
     fn on_update(&self, state: &mut RangeState);
     fn on_change(&self, state: &RangeState);
@@ -74,72 +108,27 @@ impl Range {
     }
 
     /// Set the min
-    pub fn min(self, min: i32) -> Self {
-        Self {
-            name: self.name,
-            state: RangeState {
-                min: min,
-                max: self.state.max,
-                value: self.state.value,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_min(&mut self, min: i32) {
+        self.state.set_min(min);
     }
 
     /// Set the max
-    pub fn max(self, max: i32) -> Self {
-        Self {
-            name: self.name,
-            state: RangeState {
-                min: self.state.min,
-                max: max,
-                value: self.state.value,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_max(&mut self, max: i32) {
+        self.state.set_max(max);
     }
 
     /// Set the value
-    pub fn value(self, value: i32) -> Self {
-        Self {
-            name: self.name,
-            state: RangeState {
-                min: self.state.min,
-                max: self.state.max,
-                value: value,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_value(&mut self, value: i32) {
+        self.state.set_value(value);
     }
 
-    pub fn stretched(self) -> Self {
-        Self {
-            name: self.name,
-            state: RangeState {
-                min: self.state.min,
-                max: self.state.max,
-                value: self.state.value,
-                stretched: true,
-            },
-            listener: self.listener,
-        }
+    pub fn set_stretched(&mut self) {
+        self.state.set_stretched(true);
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn RangeListener>) -> Self {
-        Self {
-            name: self.name,
-            state: RangeState {
-                min: self.state.min,
-                max: self.state.max,
-                value: self.state.value,
-                stretched: self.state.stretched,
-            },
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn RangeListener>) {
+        self.listener = Some(listener);
     }
 }
 
@@ -159,14 +148,14 @@ impl Widget for Range {
     /// class = inner-range
     /// ```
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched { "stretched" } else { "" };
+        let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
             r#"<div class="range {}"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
             stretched,
             Event::change_js(&self.name, "value"), 
-            self.state.min, 
-            self.state.max, 
-            self.state.value,
+            self.state.min(), 
+            self.state.max(), 
+            self.state.value(),
         )
     }
 
@@ -201,7 +190,7 @@ impl Widget for Range {
     }
 
     fn on_change(&mut self, value: &str) {
-        self.state.value = value.parse::<i32>().unwrap();
+        self.state.set_value(value.parse::<i32>().unwrap());
         match &self.listener {
             None => (),
             Some(listener) => {

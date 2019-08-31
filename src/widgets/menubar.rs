@@ -1,7 +1,6 @@
 use crate::utils::event::Event;
 
 pub struct MenuBarState {
-    items: Vec<MenuItem>,
     selected_item: Option<u32>,
     selected_function: Option<u32>,
 }
@@ -14,6 +13,14 @@ impl MenuBarState {
     pub fn selected_function(&self) -> Option<u32> {
         self.selected_function
     }
+
+    pub fn set_selected_item(&mut self, selected_item: Option<u32>) {
+        self.selected_item = selected_item;
+    }
+
+    pub fn set_selected_function(&mut self, selected_function: Option<u32>) {
+        self.selected_function = selected_function;
+    }
 }
 
 pub trait MenuBarListener {
@@ -21,6 +28,7 @@ pub trait MenuBarListener {
 }
 
 pub struct MenuBar {
+    items: Vec<MenuItem>,
     state: MenuBarState,
     listener: Option<Box<dyn MenuBarListener>>,
 }
@@ -28,8 +36,8 @@ pub struct MenuBar {
 impl MenuBar {
     pub fn new() -> Self {
         Self {
+            items: vec![],
             state: MenuBarState {
-                items: vec![],
                 selected_item: None,
                 selected_function: None,
             },
@@ -37,24 +45,17 @@ impl MenuBar {
         }
     }
 
-    pub fn listener(self, listener: Box<dyn MenuBarListener>) -> Self {
-        Self {
-            state: MenuBarState {
-                items: self.state.items,
-                selected_item: self.state.selected_item,
-                selected_function: self.state.selected_function,
-            },
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn MenuBarListener>) {
+        self.listener = Some(listener);
     }
 
     pub fn add(&mut self, item: MenuItem) {
-        self.state.items.push(item);
+        self.items.push(item);
     }
     
     pub fn eval(&self) -> String {
         let mut s = r#"<div class="menubar">"#.to_string();
-        for (i, item) in self.state.items.iter().enumerate() {
+        for (i, item) in self.items.iter().enumerate() {
             let selected_item = match self.state.selected_item {
                 None => false,
                 Some(selected_item) => selected_item == i as u32
@@ -69,15 +70,15 @@ impl MenuBar {
         match event {
             Event::Update => (),
             Event::Change { source, value } => {
-                if source == "menuitem" {
+                if *source == "menuitem" {
                     self.on_item_change(value);    
-                } else if source == "menufunction" {
+                } else if *source == "menufunction" {
                     self.on_function_change(value);
                 } else {
-                    self.state.selected_item = None;
+                    self.state.set_selected_item(None);
                 }
             },
-            _ => self.state.selected_item = None,
+            _ => self.state.set_selected_item(None),
         }
     }
 
@@ -85,7 +86,7 @@ impl MenuBar {
         let values = value.split(";").collect::<Vec<&str>>();
         let e = values[0];
         let index = values[1].parse::<u32>().unwrap();
-        self.state.selected_item = match self.state.selected_item {
+        self.state.set_selected_item(match self.state.selected_item() {
             Some(_) => match e {
                 "click" => None,
                 _ => Some(index),
@@ -94,18 +95,18 @@ impl MenuBar {
                 "click" => Some(index),
                 _ => None,
             }
-        }
+        });
     }
 
     fn on_function_change(&mut self, value: &str) {
-        self.state.selected_function = Some(value.parse::<u32>().unwrap());
+        self.state.set_selected_function(Some(value.parse::<u32>().unwrap()));
         match &self.listener {
             None => (),
             Some(listener) => {
                 listener.on_change(&self.state);
             }
         };
-        self.state.selected_item = None;
+        self.state.set_selected_item(None);
     }
 }
 
@@ -116,7 +117,7 @@ pub struct MenuItem {
 
 impl MenuItem {
     pub fn new(name: &str) -> Self {
-        MenuItem {
+        Self {
             name: name.to_string(),
             functions: vec![],
         }
@@ -158,17 +159,14 @@ pub struct MenuFunction {
 
 impl MenuFunction {
     pub fn new(name: &str) -> Self {
-        MenuFunction {
+        Self {
             name: name.to_string(),
             shortcut: None,
         }
     }
 
-    pub fn shortcut(self, shortcut: &str) -> Self {
-        MenuFunction {
-            name: self.name,
-            shortcut: Some(shortcut.to_string()),
-        }
+    pub fn set_shortcut(&mut self, shortcut: &str) {
+        self.shortcut = Some(shortcut.to_string());
     }
 
     fn eval(&self, index: usize) -> String {

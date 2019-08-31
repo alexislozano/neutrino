@@ -7,12 +7,24 @@ pub struct ProgressBarState {
 }
 
 impl ProgressBarState {
+    pub fn value(&self) -> u8 {
+        self.value
+    }
+
+    pub fn stretched(&self) -> bool {
+        self.stretched
+    }
+
     pub fn set_value(&mut self, value: u8) {
         self.value = if value > 100 {
             100
         } else {
             value
         };
+    }
+
+    pub fn set_stretched(&mut self, stretched: bool) {
+        self.stretched = stretched;
     }
 }
 
@@ -72,41 +84,18 @@ impl ProgressBar {
     }
 
     // Set the value
-    pub fn value(self, value: u8) -> Self {
-        let mut state = ProgressBarState {
-            value: 0,
-            stretched: self.state.stretched,
-        };
-        state.set_value(value);
-        Self {
-            name: self.name,
-            state: state,
-            listener: self.listener,
-        }
+    pub fn set_value(&mut self, value: u8) {
+        self.state.set_value(value);
     }
 
     // Set the stretched flag
-    pub fn stretched(self) -> Self {
-        Self {
-            name: self.name,
-            state: ProgressBarState {
-                value: self.state.value,
-                stretched: true,
-            },
-            listener: self.listener,
-        }
+    pub fn set_stretched(&mut self) {
+        self.state.set_stretched(true);
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn ProgressBarListener>) -> Self {
-        Self {
-            name: self.name,
-            state: ProgressBarState {
-                value: self.state.value,
-                stretched: self.state.stretched,
-            },
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn ProgressBarListener>) {
+        self.listener = Some(listener);
     }
 }
 
@@ -120,11 +109,11 @@ impl Widget for ProgressBar {
     /// class = inner-progressbar
     /// ```
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched { "stretched" } else { "" };
+        let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
             r#"<div class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
             stretched,
-            self.state.value
+            self.state.value()
         )
     }
 

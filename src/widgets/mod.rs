@@ -2,7 +2,6 @@ pub mod button;
 pub mod checkbox;
 pub mod combo;
 pub mod container;
-pub mod custom;
 pub mod label;
 pub mod progressbar;
 pub mod radio;

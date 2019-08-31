@@ -7,8 +7,20 @@ pub struct LabelState {
 }
 
 impl LabelState {
+    pub fn text(&self) -> &str {
+        &self.text
+    }
+
+    pub fn stretched(&self) -> bool {
+        self.stretched
+    }
+    
     pub fn set_text(&mut self, text: &str) {
         self.text = text.to_string();
+    }
+
+    pub fn set_stretched(&mut self, stretched: bool) {
+        self.stretched = stretched;
     }
 }
 
@@ -68,38 +80,17 @@ impl Label {
     }
 
     /// Set the text
-    pub fn text(self, text: &str) -> Self {
-        Self {
-            name: self.name,
-            state: LabelState { 
-                text: text.to_string(),
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_text(&mut self, text: &str) {
+        self.state.set_text(text);
     }
 
-    pub fn stretch(self) -> Self {
-        Self {
-            name: self.name,
-            state: LabelState { 
-                text: self.state.text,
-                stretched: true,
-            },
-            listener: self.listener,
-        }
+    pub fn set_stretched(&mut self) {
+        self.state.set_stretched(true);
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn LabelListener>) -> Self {
-        Self {
-            name: self.name,
-            state: LabelState { 
-                text: self.state.text,
-                stretched: self.state.stretched,
-            },
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn LabelListener>) {
+        self.listener = Some(listener);
     }
 }
 
@@ -118,11 +109,11 @@ impl Widget for Label {
     /// class = label
     /// ```
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched { "stretched" } else { "" };
+        let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
             r#"<div class="label {}">{}</div>"#,
             stretched,
-            self.state.text
+            self.state.text()
         )
     }
 

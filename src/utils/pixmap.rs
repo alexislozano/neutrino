@@ -9,6 +9,10 @@ pub struct Pixmap {
 }
 
 impl Pixmap {
+    pub fn new(data: &str, extension: &str) -> Self {
+        Pixmap { data: data.to_string(), extension: extension.to_string() }
+    }
+
     pub fn from_path(path: &str) -> Self {
         let extension = match Path::new(path).extension() {
             Some(ext) => ext.to_str().unwrap().to_string(),
@@ -27,14 +31,14 @@ impl Pixmap {
         Self { data, extension }
     }
 
-    pub fn data(&self) -> String {
-        self.data.clone()
+    pub fn data(&self) -> &str {
+        &self.data
     } 
 
-    pub fn extension(&self) -> String {
+    pub fn extension(&self) -> &str {
         match self.extension.as_ref() {
-            "svg" => "svg+xml".to_string(),
-            ext => ext.to_string(),
+            "svg" => "svg+xml",
+            ext => ext,
         }
     } 
 }

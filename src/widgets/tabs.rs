@@ -8,12 +8,25 @@ pub struct TabsState {
 }
 
 impl TabsState {
+    
+    pub fn selected(&self) -> u32 {
+        self.selected
+    }
+
+    pub fn stretched(&self) -> bool {
+        self.stretched
+    }
+
     pub fn set_selected(&mut self, selected: u32) {
         self.selected = selected;
     }
 
-    pub fn selected(&self) -> u32 {
-        self.selected
+    pub fn set_stretched(&mut self, stretched: bool) {
+        self.stretched = stretched;
+    }
+
+    pub fn add(&mut self, name: &str, child: Box<dyn Widget>) {
+        self.children.push((name.to_string(), child));
     }
 }
 
@@ -78,46 +91,22 @@ impl Tabs {
     }
 
     // Set the index of the selected tab
-    pub fn selected(self, selected: u32) -> Self {
-        Self {
-            name: self.name,
-            state: TabsState {
-                children: self.state.children,
-                selected: selected,
-                stretched: self.state.stretched,
-            },
-            listener: None,
-        }
+    pub fn set_selected(&mut self, selected: u32) {
+        self.state.set_selected(selected);
     }
 
-    pub fn stretched(self) -> Self {
-        Self {
-            name: self.name,
-            state: TabsState {
-                children: self.state.children,
-                selected: self.state.selected,
-                stretched: true,
-            },
-            listener: None,
-        }
+    pub fn set_stretched(&mut self) {
+        self.state.set_stretched(true);
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn TabsListener>) -> Self {
-        Self {
-            name: self.name,
-            state: TabsState {
-                children: self.state.children,
-                selected: self.state.selected,
-                stretched: self.state.stretched,
-            },
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn TabsListener>) {
+        self.listener = Some(listener);
     }
 
     /// Add a tab
-    pub fn add(&mut self, child: (&str, Box<dyn Widget>)) {
-        self.state.children.push((child.0.to_string(), child.1));
+    pub fn add(&mut self, name: &str, child: Box<dyn Widget>) {
+        self.state.add(name, child);
     }
 }
 
@@ -139,13 +128,13 @@ impl Widget for Tabs {
     /// class = tab
     /// ```
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched { "stretched" } else { "" };
+        let stretched = if self.state.stretched() { "stretched" } else { "" };
         let mut s = format!(
             r#"<div class="tabs {}"><div class="tab-titles">"#,
             stretched
         );
         for (i, child) in self.state.children.iter().enumerate() {
-            let selected = if self.state.selected == i as u32 {
+            let selected = if self.state.selected() == i as u32 {
                 "selected"
             } else {
                 ""
@@ -159,7 +148,7 @@ impl Widget for Tabs {
         }
         s.push_str(&format!(
             r#"</div><div class="tab">{}</div>"#,
-            self.state.children[self.state.selected as usize].1.eval()
+            self.state.children[self.state.selected() as usize].1.eval()
         ));
         s.push_str("</div>");
         s
@@ -200,7 +189,7 @@ impl Widget for Tabs {
     fn on_change(&mut self, value: &str) {
         let selected = value.parse::<i32>().unwrap();
         if selected > -1 {
-            self.state.selected = selected as u32;
+            self.state.set_selected(selected as u32);
         }
         match &self.listener {
             None => (),

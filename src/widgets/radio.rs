@@ -7,6 +7,34 @@ pub struct RadioState {
     stretched: bool,
 }
 
+impl RadioState {
+    pub fn choices(&self) -> &Vec<String> {
+        &self.choices
+    }
+
+    pub fn selected(&self) -> u32 {
+        self.selected
+    }
+
+    pub fn stretched(&self) -> bool {
+        self.stretched
+    }
+
+    pub fn set_choices(&mut self, choices: Vec<&str>) {
+        self.choices = choices.iter().map(
+            |c| c.to_string()
+        ).collect::<Vec<String>>();
+    }
+
+    pub fn set_selected(&mut self, selected: u32) {
+        self.selected = selected;
+    }
+
+    pub fn set_stretched(&mut self, stretched: bool) {
+        self.stretched = stretched;
+    }
+}
+
 pub trait RadioListener {
     fn on_change(&self, state: &RadioState);
     fn on_update(&self, state: &mut RadioState);
@@ -68,56 +96,22 @@ impl Radio {
     }
 
     /// Set the choices
-    pub fn choices(self, choices: Vec<&str>) -> Self {
-        Self {
-            name: self.name,
-            state: RadioState {
-                choices: choices.iter()
-                    .map(|c| c.to_string())
-                    .collect::<Vec<String>>(),
-                selected: self.state.selected,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_choices(&mut self, choices: Vec<&str>) {
+        self.state.set_choices(choices);
     }
 
     /// Set the index of the selected choice
-    pub fn selected(self, selected: u32) -> Self {
-        Self {
-            name: self.name,
-            state: RadioState {
-                choices: self.state.choices,
-                selected: selected,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_selected(&mut self, selected: u32) {
+        self.state.set_selected(selected);
     }
 
-    pub fn stretched(self) -> Self {
-        Self {
-            name: self.name,
-            state: RadioState {
-                choices: self.state.choices,
-                selected: self.state.selected,
-                stretched: false,
-            },
-            listener: self.listener,
-        }
+    pub fn set_stretched(&mut self) {
+        self.state.set_stretched(true);
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn RadioListener>) -> Self {
-        Self {
-            name: self.name,
-            state: RadioState {
-                choices: self.state.choices,
-                selected: self.state.selected,
-                stretched: self.state.stretched,
-            },
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn RadioListener>) {
+        self.listener = Some(listener);
     }
 }
 
@@ -138,10 +132,10 @@ impl Widget for Radio {
     /// class = radio-inner [checked]
     /// ```
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched { "stretched" } else { "" };
+        let stretched = if self.state.stretched() { "stretched" } else { "" };
         let mut s = "".to_string();
-        for (i, choice) in self.state.choices.iter().enumerate() {
-            let selected = if self.state.selected == i as u32 {
+        for (i, choice) in self.state.choices().iter().enumerate() {
+            let selected = if self.state.selected() == i as u32 {
                 "selected"
             } else {
                 ""
@@ -191,7 +185,7 @@ impl Widget for Radio {
     }
 
     fn on_change(&mut self, value: &str) {
-        self.state.selected = value.parse::<u32>().unwrap();
+        self.state.set_selected(value.parse::<u32>().unwrap());
         match &self.listener {
             None => (),
             Some(listener) => {

@@ -8,6 +8,37 @@ pub struct ContainerState {
     alignment: Alignment,
 }
 
+impl ContainerState {
+
+    pub fn direction(&self) -> &Direction {
+        &self.direction
+    }
+
+    pub fn position(&self) -> &Position {
+        &self.position
+    }
+
+    pub fn alignment(&self) -> &Alignment {
+        &self.alignment
+    }
+
+    pub fn set_direction(&mut self, direction: Direction) {
+        self.direction = direction;
+    }
+
+    pub fn set_position(&mut self, position: Position) {
+        self.position = position;
+    }
+
+    pub fn set_alignment(&mut self, alignment: Alignment) {
+        self.alignment = alignment;
+    }
+
+    pub fn add(&mut self, children: Box<dyn Widget>) {
+        self.children.push(children);
+    }
+}
+
 pub trait ContainerListener {
     fn on_update(&self, state: &mut ContainerState);
 }
@@ -51,43 +82,16 @@ impl Container {
         }
     }
 
-    pub fn direction(self, direction: Direction) -> Self {
-        Self {
-            name: self.name,
-            state: ContainerState {
-                children: self.state.children,
-                direction: direction,
-                position: self.state.position,
-                alignment: self.state.alignment,
-            },
-            listener: self.listener,
-        }
+    pub fn set_direction(&mut self, direction: Direction) {
+        self.state.set_direction(direction);
     }
 
-    pub fn position(self, position: Position) -> Self {
-        Self {
-            name: self.name,
-            state: ContainerState {
-                children: self.state.children,
-                direction: self.state.direction,
-                position: position,
-                alignment: self.state.alignment,
-            },
-            listener: self.listener,
-        }
+    pub fn set_position(&mut self, position: Position) {
+        self.state.set_position(position);
     }
 
-    pub fn alignment(self, alignment: Alignment) -> Self {
-        Self {
-            name: self.name,
-            state: ContainerState {
-                children: self.state.children,
-                direction: self.state.direction,
-                position: self.state.position,
-                alignment: alignment,
-            },
-            listener: self.listener,
-        }
+    pub fn set_alignment(&mut self, alignment: Alignment) {
+        self.state.set_alignment(alignment);
     }
 
     /// Add a widget
@@ -108,9 +112,9 @@ impl Widget for Container {
     fn eval(&self) -> String {
         let mut s = format!(
             r#"<div class="container {} {} {}">"#, 
-            self.state.position.css(),
-            self.state.direction.css(),
-            self.state.alignment.css(),
+            self.state.position().css(),
+            self.state.direction().css(),
+            self.state.alignment().css(),
         );
         for widget in self.state.children.iter() {
             s.push_str(&widget.eval());

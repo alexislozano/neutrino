@@ -58,7 +58,8 @@ impl Label1Listener {
 
 impl LabelListener for Label1Listener {
     fn on_update(&self, state: &mut LabelState) {
-        state.set_text(&self.counter.borrow().value().to_string());
+        let value = self.counter.borrow().value().to_string();
+        state.set_text(&value);
     }
 }
 

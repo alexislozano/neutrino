@@ -21,30 +21,30 @@ fn main() {
 
     let button1listener = Button1Listener::new(Rc::clone(&rcounter));
 
-    let button1 = Button::new("button1")
-        .text("Decrement")
-        .listener(Box::new(button1listener));
+    let mut button1 = Button::new("button1");
+    button1.set_text("Decrement");
+    button1.set_listener(Box::new(button1listener));
 
     let button2listener = Button2Listener::new(Rc::clone(&rcounter));
 
-    let button2 = Button::new("button2")
-        .text("Increment")
-        .listener(Box::new(button2listener));
+    let mut button2 = Button::new("button2");
+    button2.set_text("Increment");
+    button2.set_listener(Box::new(button2listener));
 
     let label1listener = Label1Listener::new(Rc::clone(&rcounter));
 
-    let label1 = Label::new("label1")
-        .listener(Box::new(label1listener));
+    let mut label1 = Label::new("label1");
+    label1.set_listener(Box::new(label1listener));
 
     let progressbar1listener = ProgressBar1Listener::new(Rc::clone(&rcounter));
 
-    let progressbar1 = ProgressBar::new("progressbar1")
-        .listener(Box::new(progressbar1listener));
+    let mut progressbar1 = ProgressBar::new("progressbar1");
+    progressbar1.set_listener(Box::new(progressbar1listener));
 
-    let mut container = Container::new("container")
-        .direction(Direction::Vertical)
-        .position(Position::Center)
-        .alignment(Alignment::Center);
+    let mut container = Container::new("container");
+    container.set_direction(Direction::Vertical);
+    container.set_position(Position::Center);
+    container.set_alignment(Alignment::Center);
 
     container.add(Box::new(button1));
     container.add(Box::new(label1));

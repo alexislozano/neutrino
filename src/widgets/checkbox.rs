@@ -7,6 +7,38 @@ pub struct CheckBoxState {
     stretched: bool,
 }
 
+impl CheckBoxState {
+    /// Get the text
+    pub fn text(&self) -> &str {
+        &self.text
+    }
+
+    /// Get the text
+    pub fn checked(&self) -> bool {
+        self.checked
+    }
+
+    /// Get the text
+    pub fn stretched(&self) -> bool {
+        self.stretched
+    }
+
+    /// Set the text
+    pub fn set_text(&mut self, text: &str) {
+        self.text = text.to_string();
+    }
+
+    /// Set the checked flag
+    pub fn set_checked(&mut self, checked: bool) {
+        self.checked = checked;
+    }
+
+    /// Set the streched flag
+    pub fn set_stretched(&mut self, stretched: bool) {
+        self.stretched = stretched;
+    }
+}
+
 pub trait CheckBoxListener {
     fn on_change(&self, state: &CheckBoxState);
     fn on_update(&self, state: &mut CheckBoxState);
@@ -68,51 +100,23 @@ impl CheckBox {
     }
 
     /// Set the label
-    pub fn text(self, text: &str) -> Self {
-        Self {
-            name: self.name,
-            state: CheckBoxState {
-                text: text.to_string(),
-                checked: self.state.checked,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_text(&mut self, text: &str) {
+        self.state.set_text(text);
     }
 
     /// Set the checked flag
-    pub fn checked(self) -> Self {
-        Self {
-            name: self.name,
-            state: CheckBoxState {
-                text: self.state.text,
-                checked: true,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_checked(&mut self) {
+        self.state.set_checked(true);
     }
 
     /// Set the stretched flag
-    pub fn stretched(self) -> Self {
-        Self {
-            name: self.name,
-            state: CheckBoxState {
-                text: self.state.text,
-                checked: self.state.checked,
-                stretched: true,
-            },
-            listener: self.listener,
-        }
+    pub fn set_stretched(&mut self) {
+        self.state.set_stretched(true);
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn CheckBoxListener>) -> Self {
-        Self {
-            name: self.name,
-            state: self.state,
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn CheckBoxListener>) {
+        self.listener = Some(listener);
     }
 }
 
@@ -133,8 +137,8 @@ impl Widget for CheckBox {
     /// class = checkbox-inner [checked]
     /// ```
     fn eval(&self) -> String {
-        let checked = if self.state.checked { "checked" } else { "" };
-        let stretched = if self.state.stretched { "checked" } else { "" };
+        let checked = if self.state.checked() { "checked" } else { "" };
+        let stretched = if self.state.stretched() { "checked" } else { "" };
         format!(
             r#"<div class="checkbox {}" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
             stretched,
@@ -176,7 +180,7 @@ impl Widget for CheckBox {
     }
 
     fn on_change(&mut self, _value: &str) {
-        self.state.checked = !self.state.checked;
+        self.state.set_checked(!self.state.checked());
         match &self.listener {
             None => (),
             Some(listener) => {

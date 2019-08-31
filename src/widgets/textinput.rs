@@ -7,6 +7,32 @@ pub struct TextInputState {
     stretched: bool,
 }
 
+impl TextInputState {
+    pub fn value(&self) -> &str {
+        &self.value
+    }
+
+    pub fn size(&self) -> u32 {
+        self.size
+    }
+
+    pub fn stretched(&self) -> bool {
+        self.stretched
+    }
+
+    pub fn set_value(&mut self, value: &str) {
+        self.value = value.to_string();
+    }
+
+    pub fn set_size(&mut self, size: u32) {
+        self.size = size;
+    }
+
+    pub fn set_stretched(&mut self, stretched: bool) {
+        self.stretched = stretched;
+    }
+}
+
 pub trait TextInputListener {
     fn on_update(&self, state: &mut TextInputState);
     fn on_change(&self, state: &TextInputState);
@@ -65,55 +91,23 @@ impl TextInput {
     }
 
     /// Set the value
-    pub fn value(self, value: &str) -> Self {
-        Self {
-            name: self.name,
-            state: TextInputState {
-                value: value.to_string(),
-                size: self.state.size,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_value(&mut self, value: &str) {
+        self.state.set_value(value);
     }
 
     /// Set the size
-    pub fn size(self, size: u32) -> Self {
-        Self {
-            name: self.name,
-            state: TextInputState {
-                value: self.state.value,
-                size: size,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_size(&mut self, size: u32) {
+        self.state.set_size(size);
     }
 
     /// Set the stretched flag
-    pub fn stretched(self) -> Self {
-        Self {
-            name: self.name,
-            state: TextInputState {
-                value: self.state.value,
-                size: self.state.size,
-                stretched: true,
-            },
-            listener: self.listener,
-        }
+    pub fn set_stretched(&mut self) {
+        self.state.set_stretched(true);
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn TextInputListener>) -> Self {
-        Self {
-            name: self.name,
-            state: TextInputState {
-                value: self.state.value,
-                size: self.state.size,
-                stretched: self.state.stretched,
-            },
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn TextInputListener>) {
+        self.listener = Some(listener);
     }
 }
 
@@ -132,13 +126,13 @@ impl Widget for TextInput {
     /// class = textinput
     /// ```
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched { "stretched" } else { "" };
+        let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
             r#"<div class="textinput {}"><input size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
             stretched,
-            self.state.size,
-            self.state.size,
-            self.state.value,
+            self.state.size(),
+            self.state.size(),
+            self.state.value(),
             Event::change_js(&self.name, "value")
         )
     }
@@ -174,7 +168,7 @@ impl Widget for TextInput {
     }
 
     fn on_change(&mut self, value: &str) {
-        self.state.value = value.to_string();
+        self.state.set_value(value);
         match &self.listener {
             None => (),
             Some(listener) => {

@@ -4,9 +4,9 @@ use neutrino::utils::icon::BreezeIcon;
 use neutrino::{App, Window};
 
 fn main() {
-    let image1 = Image::from_icon("image1", Box::new(BreezeIcon::Plus))
-        .keep_ratio_aspect()
-        .background_color("fuschia");
+    let mut image1 = Image::from_icon("image1", Box::new(BreezeIcon::Plus));
+    image1.set_keep_ratio_aspect();
+    image1.set_background_color("fuschia");
 
     let window = Window::new()
         .title("Image")

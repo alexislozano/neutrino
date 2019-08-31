@@ -2,7 +2,6 @@ use neutrino::widgets::button::Button;
 use neutrino::widgets::checkbox::CheckBox;
 use neutrino::widgets::combo::Combo;
 use neutrino::widgets::container::{Container, Direction, Alignment};
-use neutrino::widgets::custom::Custom;
 use neutrino::widgets::label::Label;
 use neutrino::widgets::progressbar::ProgressBar;
 use neutrino::widgets::radio::Radio;
@@ -26,84 +25,105 @@ fn main() {
     let panes = Panes::new();
     let rpanes = Rc::new(RefCell::new(panes));
 
-    let textinput1 = TextInput::new("input1").value("0").size(4);
+    let mut textinput1 = TextInput::new("input1");
+    textinput1.set_value("0");
+    textinput1.set_size(4);
 
-    let button1 = Button::new("button1").text("Bouton à pousser").stretched();
+    let mut button1 = Button::new("button1");
+    button1.set_text("Bouton à pousser");
+    button1.set_stretched();
 
-    let progressbar1 = ProgressBar::new("progressbar1").value(70).stretched();
+    let mut progressbar1 = ProgressBar::new("progressbar1");
+    progressbar1.set_value(70);
+    progressbar1.set_stretched();
 
-    let label1 = Label::new("label1").text("70%");
+    let mut label1 = Label::new("label1");
+    label1.set_text("70%");
 
-    let checkbox1 = CheckBox::new("checkbox1")
-        .text("Case à cocher")
-        .checked();
+    let mut checkbox1 = CheckBox::new("checkbox1");
+    checkbox1.set_text("Case à cocher");
+    checkbox1.set_checked();
 
-    let radio1 = Radio::new("radio1")
-        .choices(vec!["Bouton radio", "Bouton radio"])
-        .selected(0);
+    let mut radio1 = Radio::new("radio1");
+    radio1.set_choices(vec!["Bouton radio", "Bouton radio"]);
+    radio1.set_selected(0);
 
-    let combo1 = Combo::new("combo1")
-        .choices(vec!["Combo Box", "Jumbo Fox"])
-        .selected(0)
-        .arrow_from_icon(Box::new(BreezeIcon::Down));
+    let mut combo1 = Combo::new("combo1");
+    combo1.set_choices(vec!["Combo Box", "Jumbo Fox"]);
+    combo1.set_selected(0);
+    combo1.set_arrow_from_icon(Box::new(BreezeIcon::Down));
 
-    let range1 = Range::new("range1").min(0).max(100).value(25).stretched();
+    let mut range1 = Range::new("range1");
+    range1.set_min(0);
+    range1.set_max(100);
+    range1.set_value(25);
+    range1.set_stretched();
 
-    let mut container1 = Container::new("container1")
-        .direction(Direction::Vertical)
-        .alignment(Alignment::Stretched);
+    let mut container1 = Container::new("container1");
+    container1.set_direction(Direction::Vertical);
+    container1.set_alignment(Alignment::Stretched);
     container1.add(Box::new(checkbox1));
     container1.add(Box::new(radio1));
 
-    let mut container2 = Container::new("container2")
-        .direction(Direction::Horizontal);
+    let mut container2 = Container::new("container2");
+    container2.set_direction(Direction::Horizontal);
     container2.add(Box::new(button1));
     container2.add(Box::new(textinput1));
 
-    let mut container3 = Container::new("container3")
-        .direction(Direction::Vertical)
-        .alignment(Alignment::Stretched);
+    let mut container3 = Container::new("container3");
+    container3.set_direction(Direction::Vertical);
+    container3.set_alignment(Alignment::Stretched);
     container3.add(Box::new(combo1));
     container3.add(Box::new(container2));
 
-    let mut container4 = Container::new("container4")
-        .direction(Direction::Horizontal);
+    let mut container4 = Container::new("container4");
+    container4.set_direction(Direction::Horizontal);
     container4.add(Box::new(container1));
     container4.add(Box::new(container3));
 
-    let mut container5 = Container::new("container5")
-        .direction(Direction::Horizontal)
-        .alignment(Alignment::Center);
+    let mut container5 = Container::new("container5");
+    container5.set_direction(Direction::Horizontal);
+    container5.set_alignment(Alignment::Center);
     container5.add(Box::new(range1));
     container5.add(Box::new(progressbar1));
     container5.add(Box::new(label1));
 
-    let mut container6 = Container::new("container6")
-        .direction(Direction::Vertical);
+    let mut container6 = Container::new("container6");
+    container6.set_direction(Direction::Vertical);
     container6.add(Box::new(container4));
     container6.add(Box::new(container5));
 
-    let custom2 = Custom::new("custom2").template(r#"<h2 style="margin: 0;">This is Tab 2</h2>"#);
+    let mut label2 = Label::new("label2");
+    label2.set_text("This is Tab 2.");
 
     let tabs_listener = MyTabsListener::new(Rc::clone(&rpanes));
 
-    let mut tabs1 = Tabs::new("tabs1")
-        .selected(0)
-        .listener(Box::new(tabs_listener));
-    tabs1.add(("Onglet 1", Box::new(container6)));
-    tabs1.add(("Onglet 2", Box::new(custom2)));
+    let mut tabs1 = Tabs::new("tabs1");
+    tabs1.set_selected(0);
+    tabs1.set_listener(Box::new(tabs_listener));
+    tabs1.add("Onglet 1", Box::new(container6));
+    tabs1.add("Onglet 2", Box::new(label2));
+
+    let mut quitter = MenuFunction::new("Quitter");
+    quitter.set_shortcut("Ctrl-Q");
 
     let mut fichier = MenuItem::new("Fichier");
-    fichier.add(MenuFunction::new("Quitter").shortcut("Ctrl-Q"));
+    fichier.add(quitter);
+
+    let mut onglet1 = MenuFunction::new("Onglet 1");
+    onglet1.set_shortcut("Ctrl-1");
+
+    let mut onglet2 = MenuFunction::new("Onglet 2");
+    onglet2.set_shortcut("Ctrl-2");
 
     let mut onglets = MenuItem::new("Onglets");
-    onglets.add(MenuFunction::new("Onglet 1").shortcut("Ctrl-1"));
-    onglets.add(MenuFunction::new("Onglet 2").shortcut("Ctrl-2"));
+    onglets.add(onglet1);
+    onglets.add(onglet2);
 
     let menubar_listener = MyMenuBarListener::new(Rc::clone(&rpanes));
 
-    let mut menu_bar = MenuBar::new()
-        .listener(Box::new(menubar_listener));
+    let mut menu_bar = MenuBar::new();
+    menu_bar.set_listener(Box::new(menubar_listener));
     menu_bar.add(fichier);
     menu_bar.add(onglets);
 

@@ -11,6 +11,48 @@ pub struct ImageState {
     stretched: bool,
 }
 
+impl ImageState {
+    pub fn data(&self) -> &str {
+        &self.data
+    }
+
+    pub fn extension(&self) -> &str {
+        &self.extension
+    }
+
+    pub fn background_color(&self) -> &str {
+        &self.background_color
+    }
+
+    pub fn keep_ratio_aspect(&self) -> bool {
+        self.keep_ratio_aspect
+    }
+
+    pub fn stretched(&self) -> bool {
+        self.stretched
+    }
+
+    pub fn set_data(&mut self, data: &str) {
+        self.data = data.to_string();
+    }
+
+    pub fn set_extension(&mut self, extension: &str) {
+        self.extension = extension.to_string();
+    }
+
+    pub fn set_background_color(&mut self, background_color: &str) {
+        self.background_color = background_color.to_string();
+    }
+
+    pub fn set_keep_ratio_aspect(&mut self, keep_ratio_aspect: bool) {
+        self.keep_ratio_aspect = keep_ratio_aspect;
+    }
+
+    pub fn set_stretched(&mut self, stretched: bool) {
+        self.stretched = stretched;
+    }
+}
+
 pub trait ImageListener {
     fn on_update(&self, state: &mut ImageState);
 }
@@ -27,8 +69,8 @@ impl Image {
         Self { 
             name: name.to_string(),
             state : ImageState {
-                data: pixmap.data(),
-                extension: pixmap.extension(),
+                data: pixmap.data().to_string(),
+                extension: pixmap.extension().to_string(),
                 background_color: "black".to_string(),
                 keep_ratio_aspect: false,
                 stretched: false,
@@ -42,8 +84,8 @@ impl Image {
         Self {
             name: name.to_string(),
             state : ImageState {
-                data: pixmap.data(),
-                extension: pixmap.extension(),
+                data: pixmap.data().to_string(),
+                extension: pixmap.extension().to_string(),
                 background_color: "black".to_string(),
                 keep_ratio_aspect: false,
                 stretched: false,
@@ -52,69 +94,35 @@ impl Image {
         }
     }
 
-    pub fn keep_ratio_aspect(self) -> Self {
-        Self {
-            name: self.name,
-            state : ImageState {
-                data: self.state.data,
-                extension: self.state.extension,
-                background_color: self.state.background_color,
-                keep_ratio_aspect: true,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_background_color(&mut self, background_color: &str) {
+        self.state.set_background_color(background_color);
     }
 
-    pub fn background_color(self, background_color: &str) -> Self {
-        Self { 
-            name: self.name,
-            state : ImageState {
-                data: self.state.data,
-                extension: self.state.extension,
-                background_color: background_color.to_string(),
-                keep_ratio_aspect: self.state.keep_ratio_aspect,
-                stretched: self.state.stretched,
-            },
-            listener: self.listener,
-        }
+    pub fn set_keep_ratio_aspect(&mut self) {
+        self.state.set_keep_ratio_aspect(true);
     }
 
-    pub fn stretched(self) -> Self {
-        Self { 
-            name: self.name,
-            state : ImageState {
-                data: self.state.data,
-                extension: self.state.extension,
-                background_color: self.state.background_color,
-                keep_ratio_aspect: self.state.keep_ratio_aspect,
-                stretched: true,
-            },
-            listener: self.listener,
-        }
+    pub fn set_stretched(&mut self) {
+        self.state.set_stretched(true);
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn ImageListener>) -> Self {
-        Self {
-            name: self.name,
-            state: self.state,
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn ImageListener>) {
+        self.listener = Some(listener);
     }
 }
 
 impl Widget for Image {
     fn eval(&self) -> String {
-        let ratio = if self.state.keep_ratio_aspect { "" } else { r#"width="100%" height="100%""# };
-        let stretched = if self.state.stretched { "stretched" } else { "" };
+        let ratio = if self.state.keep_ratio_aspect() { "" } else { r#"width="100%" height="100%""# };
+        let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
             r#"<div class="image {}" style="background-color:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
             stretched, 
-            self.state.background_color, 
+            self.state.background_color(), 
             ratio, 
-            self.state.extension, 
-            self.state.data,
+            self.state.extension(), 
+            self.state.data(),
         )
     }
 
