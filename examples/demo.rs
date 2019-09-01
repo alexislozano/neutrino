@@ -61,7 +61,7 @@ fn main() {
 
     let mut container1 = Container::new("container1");
     container1.set_direction(Direction::Vertical);
-    container1.set_alignment(Alignment::Stretched);
+    container1.set_stretched();
     container1.add(Box::new(checkbox1));
     container1.add(Box::new(radio1));
 
@@ -72,7 +72,7 @@ fn main() {
 
     let mut container3 = Container::new("container3");
     container3.set_direction(Direction::Vertical);
-    container3.set_alignment(Alignment::Stretched);
+    container3.set_stretched();
     container3.add(Box::new(combo1));
     container3.add(Box::new(container2));
 
@@ -136,7 +136,7 @@ fn main() {
         .child(Box::new(tabs1))
         .menubar(menu_bar)
         .listener(Box::new(app_listener))
-        .theme(Theme::Adwaita);
+        .theme(Theme::Default);
 
     App::run(window);
 }

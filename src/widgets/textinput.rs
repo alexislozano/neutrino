@@ -1,6 +1,15 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
+/// # The state of a TextInput
+/// 
+/// ## Fields
+/// 
+/// ```text
+/// value: String
+/// size: u32
+/// stretched: bool
+/// ```
 pub struct TextInputState {
     value: String,
     size: u32,
@@ -8,58 +17,126 @@ pub struct TextInputState {
 }
 
 impl TextInputState {
+    /// Get the value
     pub fn value(&self) -> &str {
         &self.value
     }
 
+    /// Get the size
     pub fn size(&self) -> u32 {
         self.size
     }
 
+    /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
     }
 
+    /// Set the value
     pub fn set_value(&mut self, value: &str) {
         self.value = value.to_string();
     }
 
+    /// Set the size
     pub fn set_size(&mut self, size: u32) {
         self.size = size;
     }
 
+    /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
     }
 }
 
+/// # The listener of a TextInput
 pub trait TextInputListener {
+    /// Function triggered on update event
     fn on_update(&self, state: &mut TextInputState);
+    
+    /// Function triggered on change event
     fn on_change(&self, state: &TextInputState);
 }
 
-/// # TextInput
-///
-/// A zone where text can be written.
+/// # A zone where text can be written.
 ///
 /// ## Fields
 /// 
 /// ```text
-/// pub struct TextInput {
-///     name: String,
-///     value: String,
-///     listener: Option<Box<dyn Listener>>,
-///     observer: Option<Box<dyn Observer>>,
-/// }
+/// name: String
+/// state: TextInputState
+/// listener: Option<Box<dyn TextInputListener>>
+/// ```
+/// 
+/// ## Default values
+///
+/// ```text
+/// name: name.to_string()
+/// state:
+///     value: "TextInput".to_string()
+///     size: 10
+///     stretched: false
+/// listener: None
 /// ```
 ///
 /// ## Example
 ///
-/// ```text
-/// let my_textinput = TextInput::new("my_textinput")
-///     .value("Hey")
-///     .listener(Box::new(my_listener))
-///     .observer(Box::new(my_observer));
+/// ```
+/// use std::cell::RefCell;
+/// use std::rc::Rc;
+/// 
+/// use neutrino::widgets::textinput::{TextInput, TextInputListener, TextInputState};
+/// use neutrino::utils::theme::Theme;
+/// use neutrino::{App, Window};
+/// 
+/// 
+/// struct Person {
+///     name: String,
+/// }
+/// 
+/// impl Person {
+///     fn new() -> Self {
+///         Self { name: "Ferris".to_string() }
+///     }
+/// 
+///     fn name(&self) -> &str {
+///         &self.name
+///     }
+/// 
+///     fn set_name(&mut self, name: &str) {
+///         self.name = name.to_string();
+///     }
+/// }
+/// 
+/// 
+/// struct MyTextInputListener {
+///     person: Rc<RefCell<Person>>,
+/// }
+/// 
+/// impl MyTextInputListener {
+///    pub fn new(person: Rc<RefCell<Person>>) -> Self {
+///        Self { person }
+///    }
+/// }
+/// 
+/// impl TextInputListener for MyTextInputListener {
+///     fn on_change(&self, state: &TextInputState) {
+///         self.person.borrow_mut().set_name(&state.value());
+///     }
+/// 
+///     fn on_update(&self, state: &mut TextInputState) {
+///         state.set_value(&self.person.borrow().name());
+///     }
+/// }
+/// 
+/// 
+/// fn main() {
+///     let person = Rc::new(RefCell::new(Person::new()));
+/// 
+///     let my_listener = MyTextInputListener::new(Rc::clone(&person));
+/// 
+///     let mut my_textinput = TextInput::new("my_textinput");
+///     my_textinput.set_listener(Box::new(my_listener));
+/// }
 /// ```
 pub struct TextInput {
     name: String,
@@ -69,15 +146,6 @@ pub struct TextInput {
 
 impl TextInput {
     /// Create a TextInput
-    ///
-    /// # Default values
-    ///
-    /// ```text
-    /// name: name.to_string(),
-    /// value: "TextInput".to_string(),
-    /// listener: None,
-    /// observer: None,
-    /// ```
     pub fn new(name: &str) -> Self {
         Self {
             name: name.to_string(),
@@ -100,7 +168,7 @@ impl TextInput {
         self.state.set_size(size);
     }
 
-    /// Set the stretched flag
+    /// Set the stretched flag to true
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
     }
@@ -112,19 +180,6 @@ impl TextInput {
 }
 
 impl Widget for TextInput {
-    /// Return the HTML representation
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// change -> value
-    /// ```
-    ///
-    /// # Styling
-    ///
-    /// ```text
-    /// class = textinput
-    /// ```
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
@@ -137,15 +192,6 @@ impl Widget for TextInput {
         )
     }
 
-    /// Trigger changes depending on the event
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// update -> self.on_update()
-    /// click -> self.value = value
-    ///          self.listener.on_click(value)
-    /// ```
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => self.on_update(),

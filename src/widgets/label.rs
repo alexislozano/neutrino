@@ -1,55 +1,119 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
+/// # The state of a Label
+/// 
+/// ## Fields
+/// 
+/// ```text
+/// text: String
+/// stretched: bool
+/// ``` 
 pub struct LabelState {
     text: String,
     stretched: bool,
 }
 
 impl LabelState {
+    /// Get the text
     pub fn text(&self) -> &str {
         &self.text
     }
 
+    /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
     }
     
+    /// Set the text
     pub fn set_text(&mut self, text: &str) {
         self.text = text.to_string();
     }
 
+    /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
     }
 }
 
+/// # The listener of a Label
 pub trait LabelListener {
+    /// Function triggered on update event
     fn on_update(&self, state: &mut LabelState);
 }
 
-/// # Label
-///
-/// A label.
+/// # An element able to display text
 ///
 /// ## Fields
 /// 
 /// ```text
-/// pub struct Label {
-///     name: String,
-///     text: String,
-///     listener: Option<Box<dyn Listener>>,
-///     observer: Option<Box<dyn Observer>>,
-/// }
+/// name: String
+/// state: LabelState
+/// listener: Option<Box<dyn LabelListener>>
+/// ```
+///
+/// ## Default values
+/// 
+/// ```text
+/// name: name.to_string()
+/// state:
+///     text: "Label".to_string()
+///     stretched: false,
+/// listener: None
 /// ```
 ///
 /// ## Example
 ///
-/// ```text
-/// let my_label = Label::new("my_label")
-///     .text("Text")
-///     .listener(Box::new(my_listener))
-///     .observer(Box::new(my_observer));
+/// ```
+/// use std::cell::RefCell;
+/// use std::rc::Rc;
+/// 
+/// use neutrino::widgets::label::{Label, LabelListener, LabelState};
+/// use neutrino::utils::theme::Theme;
+/// use neutrino::{App, Window};
+/// 
+/// 
+/// struct Paragraph {
+///     text: String,
+/// }
+/// 
+/// impl Paragraph {
+///     fn new() -> Self {
+///         Self { text: "".to_string() }
+///     }
+/// 
+///     fn text(&self) -> &str {
+///         &self.text
+///     }
+/// }
+/// 
+/// 
+/// struct MyLabelListener {
+///     paragraph: Rc<RefCell<Paragraph>>,
+/// }
+/// 
+/// impl MyLabelListener {
+///    pub fn new(paragraph: Rc<RefCell<Paragraph>>) -> Self {
+///        Self { paragraph }
+///    }
+/// }
+/// 
+/// impl LabelListener for MyLabelListener {
+///     fn on_update(&self, state: &mut LabelState) { 
+///         state.set_text(self.paragraph.borrow().text());
+///     }
+/// }
+/// 
+/// 
+/// fn main() {
+///     let paragraph = Rc::new(RefCell::new(Paragraph::new()));
+/// 
+///     let my_listener = MyLabelListener::new(Rc::clone(&paragraph));
+/// 
+///     let mut my_label = Label::new("my_label");
+///     my_label.set_text("Hello world!");
+///     my_label.set_listener(Box::new(my_listener));
+/// }
 /// ```
 pub struct Label {
     name: String,
@@ -59,15 +123,6 @@ pub struct Label {
 
 impl Label {
     /// Create a Label
-    ///
-    /// # Default values
-    ///
-    /// ```text
-    /// name: name.to_string(),
-    /// text: "Label".to_string(),
-    /// listener: None,
-    /// observer: None,
-    /// ```
     pub fn new(name: &str) -> Self {
         Self {
             name: name.to_string(),
@@ -84,6 +139,7 @@ impl Label {
         self.state.set_text(text);
     }
 
+    /// Set the stretched flag to true
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
     }
@@ -95,19 +151,6 @@ impl Label {
 }
 
 impl Widget for Label {
-    /// Return the HTML representation
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// click -> ""
-    /// ```
-    ///
-    /// # Styling
-    ///
-    /// ```text
-    /// class = label
-    /// ```
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
@@ -116,18 +159,15 @@ impl Widget for Label {
             self.state.text()
         )
     }
-
-    /// Trigger changes depending on the event
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// update -> self.on_update()
-    /// click -> self.listener.on_click()
-    /// ```
+    
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => self.on_update(),
+            Event::Change { source, value } => {
+                if source == &self.name {
+                    self.on_change(value)
+                }
+            },
             _ => (),
         }
     }

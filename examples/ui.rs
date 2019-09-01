@@ -1,5 +1,5 @@
 use neutrino::widgets::button::Button;
-use neutrino::widgets::container::{Container, Direction, Position, Alignment};
+use neutrino::widgets::container::{Container, Direction, Position};
 use neutrino::widgets::tabs::Tabs;
 use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
@@ -10,7 +10,7 @@ fn main() {
     let mut ui1 = Container::new("ui1");
     ui1.set_direction(Direction::Vertical);
     ui1.set_position(Position::Between);
-    ui1.set_alignment(Alignment::Stretched);
+    ui1.set_stretched();
 
     let mut tl1 = Button::new("tl");
     tl1.set_text("TL");
@@ -45,7 +45,7 @@ fn main() {
     let mut ui2 = Container::new("ui2");
     ui2.set_direction(Direction::Horizontal);
     ui2.set_position(Position::Between);
-    ui2.set_alignment(Alignment::Stretched);
+    ui2.set_stretched();
 
     let mut tl2 = Button::new("tl");
     tl2.set_text("TL");
@@ -80,7 +80,7 @@ fn main() {
     let mut ui3 = Container::new("ui3");
     ui3.set_direction(Direction::Vertical);
     ui3.set_position(Position::Between);
-    ui3.set_alignment(Alignment::Stretched);
+    ui3.set_stretched();
 
     let mut b3 = Button::new("button3");
     b3.set_text("Button");
@@ -91,11 +91,11 @@ fn main() {
     let mut ui4 = Container::new("ui4");
     ui4.set_direction(Direction::Vertical);
     ui4.set_position(Position::End);
-    ui4.set_alignment(Alignment::Stretched);
+    ui4.set_stretched();
 
     let mut t4 = Container::new("t4");
     t4.set_direction(Direction::Horizontal);
-    t4.set_alignment(Alignment::Stretched);
+    t4.set_stretched();
 
     let mut b4 = Button::new("button4");
     b4.set_text("Button");

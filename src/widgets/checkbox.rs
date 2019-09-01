@@ -1,6 +1,15 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
+/// # The state of a CheckBox
+///
+/// ## Fields
+/// 
+/// ```text
+/// text: String
+/// checked: bool
+/// stretched: bool
+/// ```
 pub struct CheckBoxState {
     text: String,
     checked: bool,
@@ -13,12 +22,12 @@ impl CheckBoxState {
         &self.text
     }
 
-    /// Get the text
+    /// Get the checked flag
     pub fn checked(&self) -> bool {
         self.checked
     }
 
-    /// Get the text
+    /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
     }
@@ -39,35 +48,96 @@ impl CheckBoxState {
     }
 }
 
+/// # The listener of a Checkbox
 pub trait CheckBoxListener {
+    /// Function triggered on change event
     fn on_change(&self, state: &CheckBoxState);
+
+    /// Function triggered on update event
     fn on_update(&self, state: &mut CheckBoxState);
 }
 
-/// # Checkbox
-///
-/// A togglable checkbox with a label.
+/// # A togglable checkbox with a label
 ///
 /// ## Fields
+/// 
+/// ```text
+/// name: String
+/// state: CheckBoxState
+/// listener: Option<Box<dyn CheckBoxListener>>
+/// ```
+///
+/// ## Default values
 ///
 /// ```text
-/// pub struct CheckBox {
-///     name: String,
-///     checked: bool,
-///     text: String,
-///     listener: Option<Box<dyn Listener>>,
-///     observer: Option<Box<dyn Observer>>,
-/// }
+/// name: name.to_string()
+/// state:
+///     text: "CheckBox".to_string()
+///     checked: false
+///     stretched: false
+/// listener: None
 /// ```
 ///
 /// ## Example
 ///
-/// ```text
-/// let my_checkbox = CheckBox::new("my_checkbox")
-///     .text("Toggle me !")
-///     .checked(true)
-///     .listener(Box::new(my_listener))
-///     .observer(Box::new(my_observer));
+/// ```
+/// use std::cell::RefCell;
+/// use std::rc::Rc;
+/// 
+/// use neutrino::widgets::checkbox::{CheckBox, CheckBoxListener, CheckBoxState};
+/// use neutrino::utils::theme::Theme;
+/// use neutrino::{App, Window};
+/// 
+/// 
+/// struct Switch {
+///     value: bool,
+/// }
+/// 
+/// impl Switch {
+///     fn new() -> Self {
+///         Self { value: false }
+///     }
+/// 
+///     fn value(&self) -> bool {
+///         self.value
+///     }
+/// 
+///     fn toggle(&mut self) {
+///         self.value = !self.value;
+///     } 
+/// }
+/// 
+/// 
+/// struct MyCheckBoxListener {
+///     switch: Rc<RefCell<Switch>>,
+/// }
+/// 
+/// impl MyCheckBoxListener {
+///    pub fn new(switch: Rc<RefCell<Switch>>) -> Self {
+///        Self { switch }
+///    }
+/// }
+/// 
+/// impl CheckBoxListener for MyCheckBoxListener {
+///     fn on_change(&self, _state: &CheckBoxState) {
+///         self.switch.borrow_mut().toggle();
+///     }
+/// 
+///     fn on_update(&self, state: &mut CheckBoxState) {
+///         state.set_checked(self.switch.borrow().value());
+///     }
+/// }
+/// 
+/// 
+/// fn main() {
+///     let switch = Rc::new(RefCell::new(Switch::new()));
+/// 
+///     let my_listener = MyCheckBoxListener::new(Rc::clone(&switch));
+/// 
+///     let mut my_checkbox = CheckBox::new("my_checkbox");
+///     my_checkbox.set_text("Toggle me !");
+///     my_checkbox.set_listener(Box::new(my_listener));
+/// }
 /// ```
 pub struct CheckBox {
     name: String,
@@ -77,16 +147,6 @@ pub struct CheckBox {
 
 impl CheckBox {
     /// Create a CheckBox
-    ///
-    /// # Default values
-    ///
-    /// ```text
-    /// name: name.to_string(),
-    /// checked: false,
-    /// text: "CheckBox".to_string(),
-    /// listener: None,
-    /// observer: None,
-    /// ```
     pub fn new(name: &str) -> Self {
         Self {
             name: name.to_string(),
@@ -99,17 +159,17 @@ impl CheckBox {
         }
     }
 
-    /// Set the label
+    /// Set the text
     pub fn set_text(&mut self, text: &str) {
         self.state.set_text(text);
     }
 
-    /// Set the checked flag
+    /// Set the checked flag to true
     pub fn set_checked(&mut self) {
         self.state.set_checked(true);
     }
 
-    /// Set the stretched flag
+    /// Set the stretched flag to true
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
     }
@@ -121,21 +181,6 @@ impl CheckBox {
 }
 
 impl Widget for CheckBox {
-    /// Return the HTML representation
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// click -> ""
-    /// ```
-    ///
-    /// # Styling
-    ///
-    /// ```text
-    /// class = checkbox
-    /// class = checkbox-outer [checked]
-    /// class = checkbox-inner [checked]
-    /// ```
     fn eval(&self) -> String {
         let checked = if self.state.checked() { "checked" } else { "" };
         let stretched = if self.state.stretched() { "checked" } else { "" };
@@ -149,15 +194,6 @@ impl Widget for CheckBox {
         )
     }
 
-    /// Trigger changes depending on the event
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// update -> self.on_update()
-    /// click -> self.checked = != self.checked
-    ///          self.listener.on_click()
-    /// ```
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => self.on_update(),

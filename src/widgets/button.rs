@@ -22,12 +22,12 @@ impl ButtonState {
         &self.text
     }
 
-    /// Get the text
+    /// Get the disabled flag
     pub fn disabled(&self) -> bool {
         self.disabled
     }
 
-    /// Get the text
+    /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
     }
@@ -50,7 +50,10 @@ impl ButtonState {
 
 /// # The listener of a Button
 pub trait ButtonListener {
+    /// Function triggered on change event
     fn on_change(&self, state: &ButtonState);
+
+    /// Function triggered on update event
     fn on_update(&self, state: &mut ButtonState);
 }
 
@@ -64,7 +67,6 @@ pub trait ButtonListener {
 /// listener: Option<Box<dyn ButtonListener>>
 /// ```
 /// 
-///
 /// ## Default values
 ///
 /// ```text
@@ -112,7 +114,7 @@ pub trait ButtonListener {
 /// 
 /// impl MyButtonListener {
 ///    pub fn new(counter: Rc<RefCell<Counter>>) -> Self {
-///        Self { counter: counter }
+///        Self { counter }
 ///    }
 /// }
 /// 
@@ -162,12 +164,12 @@ impl Button {
         self.state.set_text(text);
     }
 
-    /// Set the disabled flag
+    /// Set the disabled flag to true
     pub fn set_disabled(&mut self) {
         self.state.set_disabled(true);
     }
 
-    /// Set the stretched flag
+    /// Set the stretched flag to true
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
     }
