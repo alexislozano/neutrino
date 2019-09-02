@@ -185,7 +185,8 @@ impl Widget for Button {
         let disabled = if self.state.disabled() { "disabled" } else { "" };
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
-            r#"<div onmousedown="{}" class="button {} {}">{}</div>"#,
+            r#"<div id="{}" onmousedown="{}" class="button {} {}">{}</div>"#,
+            self.name,
             Event::change_js(&self.name, "''"),
             disabled,
             stretched,

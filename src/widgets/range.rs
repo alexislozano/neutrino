@@ -202,7 +202,8 @@ impl Widget for Range {
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
-            r#"<div class="range {}"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
+            r#"<div id="{}" class="range {}"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
+            self.name,
             stretched,
             Event::change_js(&self.name, "value"), 
             self.state.min(), 

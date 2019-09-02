@@ -208,7 +208,8 @@ impl Widget for Tabs {
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         let mut s = format!(
-            r#"<div class="tabs {}"><div class="tab-titles">"#,
+            r#"<div id="{}" class="tabs {}"><div class="tab-titles">"#,
+            self.name,
             stretched
         );
         for (i, title) in self.state.titles.iter().enumerate() {

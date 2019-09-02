@@ -183,7 +183,8 @@ impl Widget for TextInput {
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
-            r#"<div class="textinput {}"><input size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
+            r#"<div id="{}" class="textinput {}"><input size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
+            self.name,
             stretched,
             self.state.size(),
             self.state.size(),

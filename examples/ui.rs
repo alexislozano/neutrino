@@ -12,18 +12,18 @@ fn main() {
     ui1.set_position(Position::Between);
     ui1.set_stretched();
 
-    let mut tl1 = Button::new("tl");
+    let mut tl1 = Button::new("tl1");
     tl1.set_text("TL");
     tl1.set_stretched();
 
-    let mut tr1 = Button::new("tr");
+    let mut tr1 = Button::new("tr1");
     tr1.set_text("TR");
     tr1.set_stretched();
     
-    let mut bl1 = Button::new("br");
+    let mut bl1 = Button::new("br1");
     bl1.set_text("BL");
     
-    let mut br1 = Button::new("br");
+    let mut br1 = Button::new("br1");
     br1.set_text("BR");
 
     let mut t1 = Container::new("t1");
@@ -47,18 +47,18 @@ fn main() {
     ui2.set_position(Position::Between);
     ui2.set_stretched();
 
-    let mut tl2 = Button::new("tl");
+    let mut tl2 = Button::new("tl2");
     tl2.set_text("TL");
     tl2.set_stretched();
     
-    let mut bl2 = Button::new("br");
+    let mut bl2 = Button::new("br2");
     bl2.set_text("BL");
     bl2.set_stretched();
     
-    let mut tr2 = Button::new("tr");
+    let mut tr2 = Button::new("tr2");
     tr2.set_text("TR");
     
-    let mut br2 = Button::new("br");
+    let mut br2 = Button::new("br2");
     br2.set_text("BR");
 
     let mut l2 = Container::new("l2");
@@ -124,6 +124,20 @@ fn main() {
     window.set_resizable();
     window.set_child(Box::new(root));
     window.set_theme(Theme::Adwaita);
+
+    let css = r#"
+        #tl1 {
+            background: cyan;
+        }
+
+        #tl2 {
+            background: lightcoral;
+            color: white;
+            border-color: indianred;
+        }
+    "#;
+
+    window.set_custom_css(css);
 
     App::run(window);
 }

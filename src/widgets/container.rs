@@ -217,7 +217,8 @@ impl Widget for Container {
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         let mut s = format!(
-            r#"<div class="container {} {} {} {}">"#, 
+            r#"<div id="{}" class="container {} {} {} {}">"#, 
+            self.name,
             self.state.position().css(),
             self.state.direction().css(),
             self.state.alignment().css(),

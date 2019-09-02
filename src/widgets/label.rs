@@ -154,7 +154,8 @@ impl Widget for Label {
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
-            r#"<div class="label {}">{}</div>"#,
+            r#"<div id="{}" class="label {}">{}</div>"#,
+            self.name,
             stretched,
             self.state.text()
         )

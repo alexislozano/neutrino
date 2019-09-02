@@ -185,7 +185,8 @@ impl Widget for CheckBox {
         let checked = if self.state.checked() { "checked" } else { "" };
         let stretched = if self.state.stretched() { "checked" } else { "" };
         format!(
-            r#"<div class="checkbox {}" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
+            r#"<div id="{}" class="checkbox {}" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
+            self.name,
             stretched,
             Event::change_js(&self.name, "''"), 
             checked, 

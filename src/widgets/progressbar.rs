@@ -191,7 +191,8 @@ impl Widget for ProgressBar {
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
-            r#"<div class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
+            r#"<div id="{}" class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
+            self.name,
             stretched, 
             (self.state.value() - self.state.min()) as f64 / 
             (self.state.max() - self.state.min()) as f64 *

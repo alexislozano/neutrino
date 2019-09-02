@@ -206,7 +206,8 @@ impl Widget for Radio {
             };
             s.push_str(
                 &format!(
-                    r#"<div class="radio {}" onmousedown="{}"><div class="radio-outer {}"><div class="radio-inner {}"></div></div><label>{}</label></div>"#, 
+                    r#"<div id="{}" class="radio {}" onmousedown="{}"><div class="radio-outer {}"><div class="radio-inner {}"></div></div><label>{}</label></div>"#, 
+                    self.name,
                     stretched,
                     Event::change_js(&self.name, &format!("'{}'", i)), 
                     selected, 

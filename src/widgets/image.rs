@@ -226,7 +226,8 @@ impl Widget for Image {
         let ratio = if self.state.keep_ratio_aspect() { "" } else { r#"width="100%" height="100%""# };
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
-            r#"<div class="image {}" style="background-color:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
+            r#"<div id="{}" class="image {}" style="background-color:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
+            self.name,
             stretched, 
             self.state.background_color(), 
             ratio, 
