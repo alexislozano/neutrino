@@ -8,12 +8,12 @@ fn main() {
     image1.set_keep_ratio_aspect();
     image1.set_background_color("fuschia");
 
-    let window = Window::new()
-        .title("Image")
-        .size(320, 240)
-        .resizable(true)
-        .child(Box::new(image1))
-        .theme(Theme::Breeze);
+    let mut window = Window::new();
+    window.set_title("Image");
+    window.set_size(320, 240);
+    window.set_resizable();
+    window.set_child(Box::new(image1));
+    window.set_theme(Theme::Breeze);
 
     App::run(window);
 }

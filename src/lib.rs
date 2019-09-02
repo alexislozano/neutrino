@@ -10,9 +10,7 @@ use widgets::menubar::MenuBar;
 
 use json;
 
-/// # App
-///
-/// An abstract application.
+/// # An abstract application
 ///
 /// ## Example
 ///
@@ -94,34 +92,48 @@ impl App {
     }
 }
 
+/// # The listener of a Window
 pub trait WindowListener {
+    /// Function triggered on key event
     fn on_key(&self, _key: Key);
 }
 
-/// # Window
-///
-/// A window containing the widgets.
+/// # A window containing the widgets
 ///
 /// ## Fields
 ///
 /// ```text
-/// pub struct Window {
-///     title: String,
-///     width: i32,
-///     height: i32,
-///     resizable: bool,
-///     theme: Theme,
-///     child: Option<Box<dyn Widget>>,
+/// title: String
+/// width: i32
+/// height: i32
+/// resizable: bool
+/// theme: Theme
+/// child: Option<Box<dyn Widget>>
+/// menubar: Option<MenuBar>
+/// listener: Option<Box<dyn WindowListener>>
 /// }
+/// ```
+/// 
+/// # Default values
+///
+/// ```text
+/// title: "Untitled".to_string(),
+/// width: 640,
+/// height: 480,
+/// resizable: false,
+/// theme: Theme::Default,
+/// child: None,
+/// menubar: None
+/// listener: None
 /// ```
 ///
 /// ## Example
 ///
 /// ```text
-/// let my_window = Window::new(my_widget)
-///     .title("Title")
-///     .size(800, 600)
-///     .resizable(true);
+/// let mut my_window = Window::new();
+/// my_window.set_title("Title");
+/// my_window.set_size(800, 600);
+/// my_window.set_resizable();
 /// ```
 pub struct Window {
     title: String,
@@ -136,23 +148,12 @@ pub struct Window {
 
 impl Window {
     /// Create a Window
-    ///
-    /// # Default values
-    ///
-    /// ```text
-    /// title: "Untitled".to_string(),
-    /// width: 640,
-    /// height: 480,
-    /// resizable: true,
-    /// theme: None,
-    /// child: None,
-    /// ```
     pub fn new() -> Self {
         Self {
             title: "Untitled".to_string(),
             width: 640,
             height: 480,
-            resizable: true,
+            resizable: false,
             theme: Theme::Default,
             child: None,
             menubar: None,
@@ -160,100 +161,40 @@ impl Window {
         }
     }
 
-    pub fn child(self, widget: Box<dyn Widget>) -> Self {
-        Self {
-            title: self.title,
-            width: self.width,
-            height: self.height,
-            resizable: self.resizable,
-            theme: self.theme,
-            child: Some(widget),
-            menubar: self.menubar,
-            listener: self.listener,
-        }
+    /// Set the child
+    pub fn set_child(&mut self, widget: Box<dyn Widget>) {
+        self.child = Some(widget);
     }
 
-    pub fn menubar(self, menubar: MenuBar) -> Self {
-        Self {
-            title: self.title,
-            width: self.width,
-            height: self.height,
-            resizable: self.resizable,
-            theme: self.theme,
-            child: self.child,
-            menubar: Some(menubar),
-            listener: self.listener,
-        }
+    /// Set the menubar
+    pub fn set_menubar(&mut self, menubar: MenuBar) {
+        self.menubar = Some(menubar);
     }
 
     /// Set the title
-    pub fn title(self, title: &str) -> Self {
-        Self {
-            title: title.to_string(),
-            width: self.width,
-            height: self.height,
-            resizable: self.resizable,
-            theme: self.theme,
-            child: self.child,
-            menubar: self.menubar,
-            listener: self.listener,
-        }
+    pub fn set_title(&mut self, title: &str) {
+        self.title = title.to_string();
     }
 
-    /// Set the size
-    pub fn size(self, width: i32, height: i32) -> Self {
-        Self {
-            title: self.title,
-            width: width,
-            height: height,
-            resizable: self.resizable,
-            theme: self.theme,
-            child: self.child,
-            menubar: self.menubar,
-            listener: self.listener,
-        }
+    /// Set the size (width and height)
+    pub fn set_size(&mut self, width: i32, height: i32) {
+        self.width = width;
+        self.height = height;
     }
 
-    /// Set the resizable flag
-    pub fn resizable(self, resizable: bool) -> Self {
-        Self {
-            title: self.title,
-            width: self.width,
-            height: self.height,
-            resizable: resizable,
-            theme: self.theme,
-            child: self.child,
-            menubar: self.menubar,
-            listener: self.listener,
-        }
+    /// Set the resizable flag to true
+    pub fn set_resizable(&mut self) {
+        self.resizable = true;
     }
 
     /// Set the theme
-    pub fn theme(self, theme: Theme) -> Self {
-        Self {
-            title: self.title,
-            width: self.width,
-            height: self.height,
-            resizable: self.resizable,
-            theme: theme,
-            child: self.child,
-            menubar: self.menubar,
-            listener: self.listener,
-        }
+    pub fn set_theme(&mut self, theme: Theme) {
+        self.theme = theme;
     }
 
     /// Set the listener
-    pub fn listener(self, listener: Box<dyn WindowListener>) -> Self {
-        Self {
-            title: self.title,
-            width: self.width,
-            height: self.height,
-            resizable: self.resizable,
-            theme: self.theme,
-            child: self.child,
-            menubar: self.menubar,
-            listener: Some(listener),
-        }
+    pub fn set_listener(&mut self, listener: Box<dyn WindowListener>) {
+        self.listener = Some(listener);
     }
 
     /// Render the menubar and widget tree

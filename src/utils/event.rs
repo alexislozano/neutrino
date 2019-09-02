@@ -1,6 +1,4 @@
-/// # Event
-/// 
-/// Rust equivalent of Javascript events.
+/// # An equivalent of Javascript events
 #[derive(Debug)]
 pub enum Event {
     Undefined,
@@ -10,6 +8,7 @@ pub enum Event {
 }
 
 impl Event {
+    /// Return an one-line function sending a change event from javascript
     pub fn change_js(source: &str, value: &str) -> String {
         format!(
             r#"(function(){{ invoke( {{ type: 'Change', source: '{}', value: {} }} ); event.stopPropagation(); }})()"#,
@@ -17,18 +16,20 @@ impl Event {
         )
     }
 
+    /// Return an one-line function sending a key event from javascript
     pub fn key_js() -> String {
         r#"(function() { if (event.ctrlKey && event.key !== 'Control') { invoke( { type: 'Key', key: event.key } ); } event.stopPropagation(); } )()"#.to_string()
     }
 
+    /// Return an one-line function sending a undefined event from javascript
     pub fn undefined_js() -> String {
         r#"(function() { invoke( { type: 'Undefined' } ); event.stopPropagation(); } )()"#.to_string()
     }
 }
 
-/// # Key
+/// # An enum holding a keyboard key
 /// 
-/// An enum holding a keyboard key.
+/// The key event is triggered with `Ctrl + Key`.
 #[derive(Debug, Clone, Copy)]
 pub enum Key {
     A,
@@ -70,6 +71,7 @@ pub enum Key {
 }
 
 impl Key {
+    /// Return the Key corresponding with the detected keystroke
     pub fn new(key: &str) -> Option<Self> {
         match key {
             "a" | "A" => Some(Key::A),

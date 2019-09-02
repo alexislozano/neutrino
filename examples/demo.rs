@@ -129,14 +129,14 @@ fn main() {
 
     let app_listener = MyWindowListener::new(Rc::clone(&rpanes));
 
-    let window = Window::new()
-        .title("Demo")
-        .size(440, 260)
-        .resizable(true)
-        .child(Box::new(tabs1))
-        .menubar(menu_bar)
-        .listener(Box::new(app_listener))
-        .theme(Theme::Default);
+    let mut window = Window::new();
+    window.set_title("Demo");
+    window.set_size(440, 260);
+    window.set_resizable();
+    window.set_child(Box::new(tabs1));
+    window.set_menubar(menu_bar);
+    window.set_listener(Box::new(app_listener));
+    window.set_theme(Theme::Default);
 
     App::run(window);
 }

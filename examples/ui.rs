@@ -118,12 +118,12 @@ fn main() {
     root.add(Box::new(tabs));
     root.add(Box::new(ui4));
 
-    let window = Window::new()
-        .title("Custom")
-        .size(800, 600)
-        .resizable(true)
-        .child(Box::new(root))
-        .theme(Theme::Adwaita);
+    let mut window = Window::new();
+    window.set_title("Custom");
+    window.set_size(800, 600);
+    window.set_resizable();
+    window.set_child(Box::new(root));
+    window.set_theme(Theme::Adwaita);
 
     App::run(window);
 }

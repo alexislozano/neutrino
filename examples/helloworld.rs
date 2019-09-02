@@ -8,12 +8,12 @@ fn main() {
     button.set_text("Hello World!");
     button.set_stretched();
 
-    let window = Window::new()
-        .title("Hello World")
-        .size(800, 600)
-        .resizable(true)
-        .child(Box::new(button))
-        .theme(Theme::Adwaita);
+    let mut window = Window::new();
+    window.set_title("Hello World");
+    window.set_size(800, 600);
+    window.set_resizable();
+    window.set_child(Box::new(button));
+    window.set_theme(Theme::Adwaita);
 
     App::run(window);
 }

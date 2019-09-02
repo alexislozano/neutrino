@@ -51,12 +51,12 @@ fn main() {
     container.add(Box::new(progressbar1));
     container.add(Box::new(button2));
 
-    let window = Window::new()
-        .title("Counter")
-        .size(320, 240)
-        .resizable(true)
-        .child(Box::new(container))
-        .theme(Theme::Breeze);
+    let mut window = Window::new();
+    window.set_title("Counter");
+    window.set_size(320, 240);
+    window.set_resizable();
+    window.set_child(Box::new(container));
+    window.set_theme(Theme::Breeze);
 
     App::run(window);
 }

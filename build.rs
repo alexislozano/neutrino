@@ -30,10 +30,12 @@ fn scss(name: &str, out_dir: &str) {
 fn themes(out_dir: &str) {
 
     let mut enum_data = r#"
+        /// # A theme
         pub enum Theme {
     "#.to_string();
     let mut impl_data = r#"
         impl Theme {
+            /// Get a string containing the CSS defining the theme 
             pub fn css(&self) -> &str {
                 match self {
     "#.to_string();
@@ -74,7 +76,10 @@ fn icons(out_dir: &str) {
             let path = dir.unwrap().path();
             let dirstem = path.clone().file_stem().unwrap().to_str().unwrap().to_string();
 
-            enum_data.push_str(&format!(r#"pub enum {}Icon {{"#, dirstem));
+            enum_data.push_str(&format!(r#"
+                /// # The {} icon set
+                pub enum {}Icon {{
+            "#, &dirstem, &dirstem));
             impl_data.push_str(&format!(r#"impl Icon for {}Icon {{"#, dirstem));
 
             let mut impl_function_data = r#"fn data(&self) -> String { 
