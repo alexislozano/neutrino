@@ -6,17 +6,31 @@ use crate::widgets::widget::Widget;
 /// ## Fields
 /// 
 /// ```text
-/// value: u8
+/// min: i32
+/// max: i32
+/// value: i32
 /// stretched: bool
 /// ```
 pub struct ProgressBarState {
-    value: u8,
+    min: i32,
+    max: i32,
+    value: i32,
     stretched: bool,
 }
 
 impl ProgressBarState {
+    /// Get the min
+    pub fn min(&self) -> i32 {
+        self.min
+    }
+
+    /// Get the max
+    pub fn max(&self) -> i32 {
+        self.max
+    }
+
     /// Get the value
-    pub fn value(&self) -> u8 {
+    pub fn value(&self) -> i32 {
         self.value
     }
 
@@ -25,13 +39,19 @@ impl ProgressBarState {
         self.stretched
     }
 
-    /// Set the value between 0 and 100
-    pub fn set_value(&mut self, value: u8) {
-        self.value = if value > 100 {
-            100
-        } else {
-            value
-        };
+    /// Set the min
+    pub fn set_min(&mut self, min: i32) {
+        self.min = min;
+    }
+
+    /// Set the max
+    pub fn set_max(&mut self, max: i32) {
+        self.max = max;
+    }
+
+    /// Set the value
+    pub fn set_value(&mut self, value: i32) {
+        self.value = value;
     }
 
     /// Set the stretched flqg
@@ -46,7 +66,7 @@ pub trait ProgressBarListener {
     fn on_update(&self, state: &mut ProgressBarState);
 }
 
-/// # A progress bar able to display numbers from 0 to 100
+/// # A progress bar
 ///
 /// ## Fields
 /// 
@@ -61,6 +81,8 @@ pub trait ProgressBarListener {
 /// ```text
 /// name: name.to_string()
 /// state:
+///     min: 0
+///     max: 100
 ///     value: 0
 ///     stretched: false
 /// listener: None
@@ -78,7 +100,7 @@ pub trait ProgressBarListener {
 /// 
 /// 
 /// struct Counter {
-///     value: u8,
+///     value: i32,
 /// }
 /// 
 /// impl Counter {
@@ -86,7 +108,7 @@ pub trait ProgressBarListener {
 ///         Self { value: 0 }
 ///     }
 /// 
-///     fn value(&self) -> u8 {
+///     fn value(&self) -> i32 {
 ///         self.value
 ///     }
 /// }
@@ -130,6 +152,8 @@ impl ProgressBar {
         Self {
             name: name.to_string(),
             state: ProgressBarState {
+                min: 0,
+                max: 100,
                 value: 0,
                 stretched: false,
             },
@@ -137,8 +161,18 @@ impl ProgressBar {
         }
     }
 
+    // Set the min
+    pub fn set_min(&mut self, min: i32) {
+        self.state.set_min(min);
+    }
+
+    // Set the max
+    pub fn set_max(&mut self, max: i32) {
+        self.state.set_max(max);
+    }
+
     // Set the value
-    pub fn set_value(&mut self, value: u8) {
+    pub fn set_value(&mut self, value: i32) {
         self.state.set_value(value);
     }
 
@@ -158,8 +192,10 @@ impl Widget for ProgressBar {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
             r#"<div class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
-            stretched,
-            self.state.value()
+            stretched, 
+            (self.state.value() - self.state.min()) as f64 / 
+            (self.state.max() - self.state.min()) as f64 *
+            100.0, 
         )
     }
 

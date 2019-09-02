@@ -81,7 +81,7 @@ impl ProgressBarListener for ProgressBar1Listener {
         } else if value > 100 {
             100
         } else {
-            value as u8
+            value
         };
         state.set_value(new_value);        
     }

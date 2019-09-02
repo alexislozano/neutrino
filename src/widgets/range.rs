@@ -69,7 +69,7 @@ pub trait RangeListener {
     fn on_change(&self, state: &RangeState);
 }
 
-/// # A progress bar whith a handle able to display any range of numbers
+/// # A progress bar with a handle
 ///
 /// ## Fields
 /// 
