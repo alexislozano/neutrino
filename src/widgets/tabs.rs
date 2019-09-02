@@ -1,64 +1,166 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
+/// # The state of a Tabs
+/// 
+/// ## Fields
+/// 
+/// ```text
+/// titles: Vec<String>
+/// children: Vec<Box<dyn Widget>>
+/// selected: u32
+/// stretched: bool
+/// ```
 pub struct TabsState {
-    children: Vec<(String, Box<dyn Widget>)>,
+    titles: Vec<String>,
+    children: Vec<Box<dyn Widget>>,
     selected: u32,
     stretched: bool,
 }
 
 impl TabsState {
-    
+    /// Get the titles
+    pub fn titles(&self) -> &Vec<String> {
+        &self.titles
+    }
+
+    /// Get the children
+    pub fn children(&self) -> &Vec<Box<dyn Widget>> {
+        &self.children
+    }
+
+    /// Get the selected index
     pub fn selected(&self) -> u32 {
         self.selected
     }
 
+    /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
     }
 
+    /// Set the titles
+    pub fn set_titles(&mut self, titles: Vec<&str>) {
+        self.titles = titles.iter().map(|t| 
+            t.to_string()
+        ).collect::<Vec<String>>();
+    }
+
+    /// Set the children
+    pub fn set_children(&mut self, children: Vec<Box<dyn Widget>>) {
+        self.children = children;
+    }
+
+    /// Set the selected index
     pub fn set_selected(&mut self, selected: u32) {
         self.selected = selected;
     }
 
+    /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
     }
 
-    pub fn add(&mut self, name: &str, child: Box<dyn Widget>) {
-        self.children.push((name.to_string(), child));
+    /// Add a tab
+    fn add(&mut self, name: &str, child: Box<dyn Widget>) {
+        self.titles.push(name.to_string());
+        self.children.push(child);
     }
 }
 
+/// # The listener of a Tabs
 pub trait TabsListener {
+    /// Function triggered on update event
     fn on_update(&self, state: &mut TabsState);
+
+    /// Function triggered on change event
     fn on_change(&self, state: &TabsState);
 }
 
-/// # Tabs
-///
-/// A list of tabs.
+/// # A list of tabs
 ///
 /// ## Fields
 ///
 /// ```text
-/// pub struct Tabs {
-///     name: String,
-///     children: Vec<(String, Box<dyn Widget>)>,
-///     selected: u32,
-///     listener: Option<Box<dyn Listener>>,
-///     observer: Option<Box<dyn Observer>>,
-/// }
+/// name: String
+/// state: TabsState    
+/// listener: Option<Box<dyn TabsListener>>
 /// ```
 ///
 /// ## Example
 ///
-/// ```text
-/// let my_tabs = Tabs::new("my_tabs")
-///     .children(vec![("Cake", cake_tab), ("Pie", pie_tab)])
-///     .selected(0)
-///     .listener(Box::new(my_listener))
-///     .observer(Box::new(my_observer));
+/// ```
+/// use std::cell::RefCell;
+/// use std::rc::Rc;
+/// 
+/// use neutrino::widgets::tabs::{Tabs, TabsListener, TabsState};
+/// use neutrino::widgets::label::Label;
+/// use neutrino::utils::theme::Theme;
+/// use neutrino::{App, Window};
+/// 
+/// 
+/// struct Dessert {
+///     index: u32,
+///     value: String,
+/// }
+/// 
+/// impl Dessert {
+///     fn new() -> Self {
+///         Self { index: 0, value: "Cake".to_string() }
+///     }
+/// 
+///     fn index(&self) -> u32 {
+///         self.index
+///     }
+/// 
+///     fn value(&self) -> &str {
+///         &self.value
+///     }
+/// 
+///     fn set(&mut self, index: u32, value: &str) {
+///         self.index = index;
+///         self.value = value.to_string();
+///     } 
+/// }
+/// 
+/// 
+/// struct MyTabsListener {
+///     dessert: Rc<RefCell<Dessert>>,
+/// }
+/// 
+/// impl MyTabsListener {
+///    pub fn new(dessert: Rc<RefCell<Dessert>>) -> Self {
+///        Self { dessert }
+///    }
+/// }
+/// 
+/// impl TabsListener for MyTabsListener {
+///     fn on_change(&self, state: &TabsState) {
+///         let index = state.selected();
+///         self.dessert.borrow_mut().set(
+///             index,
+///             &state.titles()[index as usize]
+///         );
+///     }
+/// 
+///     fn on_update(&self, state: &mut TabsState) {
+///         state.set_selected(self.dessert.borrow().index());
+///     }
+/// }
+/// 
+/// 
+/// fn main() {
+///     let dessert = Rc::new(RefCell::new(Dessert::new()));
+/// 
+///     let my_listener = MyTabsListener::new(Rc::clone(&dessert));
+/// 
+///     let mut my_label = Label::new("my_label");
+///     my_label.set_text("World!");
+/// 
+///     let mut my_tabs = Tabs::new("my_tabs");
+///     my_tabs.add("Hello", Box::new(my_label));
+///     my_tabs.set_listener(Box::new(my_listener));
+/// }
 /// ```
 pub struct Tabs {
     name: String,
@@ -68,20 +170,11 @@ pub struct Tabs {
 
 impl Tabs {
     /// Create a Tabs
-    ///
-    /// # Default values
-    ///
-    /// ```text
-    /// name: name.to_string(),
-    /// children: vec![],
-    /// selected: 0,
-    /// listener: None,
-    /// observer: None,
-    /// ```
     pub fn new(name: &str) -> Self {
         Self {
             name: name.to_string(),
             state: TabsState {
+                titles: vec![],
                 children: vec![],
                 selected: 0,
                 stretched: false,
@@ -90,11 +183,12 @@ impl Tabs {
         }
     }
 
-    // Set the index of the selected tab
+    /// Set the selected index
     pub fn set_selected(&mut self, selected: u32) {
         self.state.set_selected(selected);
     }
 
+    /// Set the stretched flag to true
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
     }
@@ -111,29 +205,13 @@ impl Tabs {
 }
 
 impl Widget for Tabs {
-    /// Return the HTML representation
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// click -> index
-    /// ```
-    ///
-    /// # Styling
-    ///
-    /// ```text
-    /// class = tabs
-    /// class = tab-titles
-    /// class = tab-title [selected]
-    /// class = tab
-    /// ```
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         let mut s = format!(
             r#"<div class="tabs {}"><div class="tab-titles">"#,
             stretched
         );
-        for (i, child) in self.state.children.iter().enumerate() {
+        for (i, title) in self.state.titles.iter().enumerate() {
             let selected = if self.state.selected() == i as u32 {
                 "selected"
             } else {
@@ -143,26 +221,17 @@ impl Widget for Tabs {
                 r#"<div class="tab-title {}" onmousedown="{}">{}</div>"#,
                 selected,
                 Event::change_js(&self.name, &format!("'{}'", i)),
-                child.0
+                title
             ));
         }
         s.push_str(&format!(
             r#"</div><div class="tab">{}</div>"#,
-            self.state.children[self.state.selected() as usize].1.eval()
+            self.state.children[self.state.selected() as usize].eval()
         ));
         s.push_str("</div>");
         s
     }
 
-    /// Trigger changes depending on the event
-    ///
-    /// # Events
-    ///
-    /// ```text
-    /// update -> self.on_update()
-    /// click -> self.selected = index of the selected tab
-    ///          self.listener.on_click()
-    /// ```
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => self.on_update(),
@@ -170,10 +239,10 @@ impl Widget for Tabs {
                 if source == &self.name {
                     self.on_change(value);
                 } else {
-                    self.state.children[self.state.selected as usize].1.trigger(event);
+                    self.state.children[self.state.selected as usize].trigger(event);
                 };
             },
-            _ => self.state.children[self.state.selected as usize].1.trigger(event),
+            _ => self.state.children[self.state.selected as usize].trigger(event),
         }
     }
 
