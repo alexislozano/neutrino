@@ -37,9 +37,10 @@ impl App {
             </html>
             "#,
             styles = format!(
-                "{}\n{}\n",
+                "{}\n{}\n{}\n",
                 inline_style(include_str!(concat!(env!("OUT_DIR"), "/app.css"))),
                 inline_style(&window.theme.css()),
+                inline_style(&window.custom_css),
             ),
             scripts = format!(
                 "{}\n{}\n",
@@ -108,21 +109,22 @@ pub trait WindowListener {
 /// height: i32
 /// resizable: bool
 /// theme: Theme
+/// custom_css: String
 /// child: Option<Box<dyn Widget>>
 /// menubar: Option<MenuBar>
 /// listener: Option<Box<dyn WindowListener>>
-/// }
 /// ```
 /// 
 /// # Default values
 ///
 /// ```text
 /// title: "Untitled".to_string(),
-/// width: 640,
-/// height: 480,
-/// resizable: false,
-/// theme: Theme::Default,
-/// child: None,
+/// width: 640
+/// height: 480
+/// resizable: false
+/// theme: Theme::Default
+/// custom_css: "".to_string()
+/// child: None
 /// menubar: None
 /// listener: None
 /// ```
@@ -141,6 +143,7 @@ pub struct Window {
     height: i32,
     resizable: bool,
     theme: Theme,
+    custom_css: String,
     child: Option<Box<dyn Widget>>,
     menubar: Option<MenuBar>,
     listener: Option<Box<dyn WindowListener>>,
@@ -155,6 +158,7 @@ impl Window {
             height: 480,
             resizable: false,
             theme: Theme::Default,
+            custom_css: "".to_string(),
             child: None,
             menubar: None,
             listener: None,
@@ -190,6 +194,11 @@ impl Window {
     /// Set the theme
     pub fn set_theme(&mut self, theme: Theme) {
         self.theme = theme;
+    }
+
+    /// Set the custom CSS
+    pub fn set_custom_css(&mut self, css: &str) {
+        self.custom_css = css.to_string();
     }
 
     /// Set the listener

@@ -1,3 +1,6 @@
+// MENUBAR HEIGHT
+$menubar-height: 26px;
+
 // COLORS
 $primary-color: #3584e4;
 $dprimary-color: #185fb4;
@@ -17,279 +20,280 @@ $widget-margin: 6px;
 $checkbox-path: polygon(50% 55%, 100% 10%, 100% 40%, 50% 85%, 14% 43%, 29% 29%);
 
 #app {
-
     font-family: 'Cantarell', sans-serif;
     font-size: 14px;
     background-color: $background-color;
+}
 
-    .label {
-        margin: $widget-margin;
+.label {
+    margin: $widget-margin;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.button {
+    padding: 7px;
+    margin: $widget-margin;
+    border: 1px solid $mgrey-color;
+    border-radius: 4px;
+    background: $button-gradient;
+    color: black;
+    outline: 0;
+    
+    &.disabled {
+        border-color: $mgrey-color;
+        background: $lgrey-color;
+        color: $dgrey-color;
+        transition: border-color 300ms, background-color 300ms, color 300ms;
+    }
+}
+
+.progressbar {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    margin-left: $widget-margin;
+    margin-right: $widget-margin;
+    height: 4px;
+    background-color: $lgrey-color;
+    border: 1px solid $mgrey-color;
+    border-radius: 2px;
+    position: relative;
+
+    .inner-progressbar {
+        position: relative;
+        top: -1px;
+        left: -1px;
+        background-color: $primary-color;
+        border: 1px solid $dprimary-color;
+        height: 4px;
+        border-radius: 2px;
+        
+    }
+}
+
+.textinput {
+    margin: $widget-margin;
+
+    input {
+        border: 1px solid $mgrey-color;
+        border-radius: 4px; 
+        margin: 0;
+        padding: 7px;
         font-size: inherit;
         font-family: inherit;
+        outline: 0;
+
+        &:focus {
+            border-color: $primary-color;
+        }
+    }
+}
+
+.checkbox {
+    margin: $widget-margin;
+
+    label {
+        margin-left: $widget-margin;
     }
 
-    .button {
+    .checkbox-outer {
+        height: 14px;
+        width: 14px;
+        background-color: white;
+        border: 1px solid $mgrey-color;
+        border-radius: 2px;
+
+        .checkbox-inner {
+            height: 14px;
+            width: 14px;
+            background-color: white;
+        
+            &.checked {
+                clip-path: $checkbox-path;
+                -webkit-clip-path: $checkbox-path;
+                background-color: black;
+            }
+        }
+    }
+}
+
+.radio {
+    margin: $widget-margin;
+
+    label {
+        margin-left: $widget-margin;
+    }
+
+    .radio-outer {
+        height: 14px;
+        width: 14px;
+        background-color: white;
+        border: 1px solid $mgrey-color;
+        border-radius: 50%;
+
+        .radio-inner {
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background-color: white;
+
+            &.selected {
+                background-color: black;
+            }
+        }
+    }
+}
+
+.combo {
+    margin: $widget-margin;
+
+    .combo-button {
         padding: 7px;
-        margin: $widget-margin;
         border: 1px solid $mgrey-color;
         border-radius: 4px;
-        background: $button-gradient;
         color: black;
         outline: 0;
-        
-        &.disabled {
-            border-color: $mgrey-color;
-            background: $lgrey-color;
-            color: $dgrey-color;
-            transition: border-color 300ms, background-color 300ms, color 300ms;
+        background: $button-gradient;
+
+        &.opened {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        div {
+            margin-left: 10px;
+            height: 18px;
+            width: 18px;
         }
     }
 
-    .progressbar {
-        margin-top: 14px;
-        margin-bottom: 14px;
-        margin-left: $widget-margin;
-        margin-right: $widget-margin;
+    .combo-choices {
+        box-shadow: 0 0 2px lighten(black, 50%);
+        
+        .combo-choice {
+            background-color: white;
+            padding: 6px;
+
+            &:hover {
+                background-color: $primary-color;
+                color: white;
+            }
+        }
+    }
+}
+
+.range {
+    margin-left: $widget-margin;
+    margin-right: $widget-margin;
+    height: 32px;
+
+    .inner-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        outline: none;
         height: 4px;
         background-color: $lgrey-color;
         border: 1px solid $mgrey-color;
         border-radius: 2px;
-        position: relative;
 
-        .inner-progressbar {
-            position: relative;
-            top: -1px;
-            left: -1px;
-            background-color: $primary-color;
-            border: 1px solid $dprimary-color;
-            height: 4px;
-            border-radius: 2px;
-            
-        }
-    }
-
-    .textinput {
-        margin: $widget-margin;
-
-        input {
-            border: 1px solid $mgrey-color;
-            border-radius: 4px; 
-            margin: 0;
-            padding: 7px;
-            font-size: inherit;
-            font-family: inherit;
-            outline: 0;
-
-            &:focus {
-                border-color: $primary-color;
-            }
-        }
-    }
-
-    .checkbox {
-        margin: $widget-margin;
-
-        label {
-            margin-left: $widget-margin;
-        }
-
-        .checkbox-outer {
-            height: 14px;
-            width: 14px;
-            background-color: white;
-            border: 1px solid $mgrey-color;
-            border-radius: 2px;
-
-            .checkbox-inner {
-                height: 14px;
-                width: 14px;
-                background-color: white;
-            
-                &.checked {
-                    clip-path: $checkbox-path;
-                    -webkit-clip-path: $checkbox-path;
-                    background-color: black;
-                }
-            }
-        }
-    }
-
-    .radio {
-        margin: $widget-margin;
-
-        label {
-            margin-left: $widget-margin;
-        }
-
-        .radio-outer {
-            height: 14px;
-            width: 14px;
-            background-color: white;
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: $button-gradient;
             border: 1px solid $mgrey-color;
             border-radius: 50%;
+        }
+    }
+}
 
-            .radio-inner {
-                height: 6px;
-                width: 6px;
-                border-radius: 50%;
-                background-color: white;
+.tabs {
+    padding: $widget-margin;
 
-                &.selected {
-                    background-color: black;
-                }
+    .tab-titles {
+        background-color: $lgrey-color;
+        border: 1px solid $mgrey-color;
+        border-bottom: none;
+        font-weight: bold;
+
+        .tab-title {
+            margin-bottom: -1px;
+            color: lighten(black, 60%);
+            height: 36px;
+            padding-left: 13px;
+            padding-right: 13px;
+            border-bottom: 1px solid $mgrey-color;
+            border-top: 1px solid $lgrey-color;
+
+            &.selected {
+                color: lighten(black, 10%);
+                border-bottom: 3px solid $primary-color;
+                border-top: 3px solid $lgrey-color;
             }
         }
     }
 
-    .combo {
-        margin: $widget-margin;
+    .tab {
+        border: 1px solid $mgrey-color;
+        border-radius: 2px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        background-color: white;
+    }
+}
 
-        .combo-button {
-            padding: 7px;
-            border: 1px solid $mgrey-color;
-            border-radius: 4px;
-            color: black;
-            outline: 0;
-            background: $button-gradient;
+#app {
+    .menubar + * {
+        top: $menubar-height;
+    }
+}
 
-            &.opened {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-            }
+.menubar {
+    height: $menubar-height;
+    background-color: $background-color;
+    border-bottom: 1px solid $lgrey-color;
 
-            div {
-                margin-left: 10px;
-                height: 18px;
-                width: 18px;
+    .menuitem {
+        
+        .menuitem-title {
+            box-sizing: border-box;
+            padding-left: 11px;
+            padding-right: 11px;
+
+            &.selected {
+                color: $dprimary-color;
+                border-top: 3px solid $background-color;
+                border-bottom: 3px solid $primary-color;
             }
         }
 
-        .combo-choices {
+        .menufunctions {
+            background-color: white;
             box-shadow: 0 0 2px lighten(black, 50%);
-            
-            .combo-choice {
-                background-color: white;
-                padding: 6px;
+
+            .menufunction {
+                padding-top: 6px;
+                padding-bottom: 6px;
+                padding-left: 11px;
+                padding-right: 11px;
+                width: 140px;
+
+                .shortcut {
+                    color: $dgrey-color;
+                }
 
                 &:hover {
                     background-color: $primary-color;
                     color: white;
-                }
-            }
-        }
-    }
-
-    .range {
-        margin-left: $widget-margin;
-        margin-right: $widget-margin;
-        height: 32px;
-
-        .inner-range {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            outline: none;
-            height: 4px;
-            background-color: $lgrey-color;
-            border: 1px solid $mgrey-color;
-            border-radius: 2px;
-
-            &::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 18px;
-                height: 18px;
-                background: $button-gradient;
-                border: 1px solid $mgrey-color;
-                border-radius: 50%;
-            }
-        }
-    }
-
-    .tabs {
-        padding: $widget-margin;
-
-        .tab-titles {
-            background-color: $lgrey-color;
-            border: 1px solid $mgrey-color;
-            border-bottom: none;
-            font-weight: bold;
-
-            .tab-title {
-                margin-bottom: -1px;
-                color: lighten(black, 60%);
-                height: 36px;
-                padding-left: 13px;
-                padding-right: 13px;
-                border-bottom: 1px solid $mgrey-color;
-                border-top: 1px solid $lgrey-color;
-
-                &.selected {
-                    color: lighten(black, 10%);
-                    border-bottom: 3px solid $primary-color;
-                    border-top: 3px solid $lgrey-color;
-                }
-            }
-        }
-
-        .tab {
-            border: 1px solid $mgrey-color;
-            border-radius: 2px;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            background-color: white;
-        }
-    }
-    
-    .menubar {
-        height: 26px;
-        background-color: $background-color;
-        border-bottom: 1px solid $lgrey-color;
-
-        + * {
-            top: 26px;
-        }
-
-        .menuitem {
-            
-            .menuitem-title {
-                box-sizing: border-box;
-                padding-left: 11px;
-                padding-right: 11px;
-
-                &.selected {
-                    color: $dprimary-color;
-                    border-top: 3px solid $background-color;
-                    border-bottom: 3px solid $primary-color;
-                }
-            }
-
-            .menufunctions {
-                background-color: white;
-                box-shadow: 0 0 2px lighten(black, 50%);
-    
-                .menufunction {
-                    padding-top: 6px;
-                    padding-bottom: 6px;
-                    padding-left: 11px;
-                    padding-right: 11px;
-                    width: 140px;
 
                     .shortcut {
-                        color: $dgrey-color;
-                    }
-
-                    &:hover {
-                        background-color: $primary-color;
                         color: white;
-
-                        .shortcut {
-                            color: white;
-                        }
                     }
-
-                    
                 }
+
+                
             }
         }
     }

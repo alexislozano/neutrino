@@ -1,238 +1,238 @@
 body {
     margin: 0;
+}
 
-    #app {
-        position: relative;
-        height: 100vh;
-        width: 100%;
-        overflow: hidden;
+#app {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
 
-        > * {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
+    > * {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
+}
 
-    .stretched {
-        flex-grow: 1;
+.stretched {
+    flex-grow: 1;
+}
+
+.container {
+    display: flex;
+    box-sizing: border-box;
+
+    &.direction-horizontal {
+        flex-direction: row;
     }
-
-    .container {
-        display: flex;
-        box-sizing: border-box;
-
-        &.direction-horizontal {
-            flex-direction: row;
-        }
-        
-        &.direction-vertical {
-            flex-direction: column;
-        }
-        
-        &.position-start {
-            justify-content: flex-start;
-        }
     
-        &.position-end {
-            justify-content: flex-end;
-        }
-    
-        &.position-center {
-            justify-content: center;
-        }
-    
-        &.position-between {
-            justify-content: space-between;
-        }
-    
-        &.position-around {
-            justify-content: space-around;
-        }
-        
-        &.alignment-center {
-            align-items: center;
-        }
-    
-        &.alignment-start {
-            align-items: flex-start;
-        }
-    
-        &.alignment-end {
-            align-items: flex-end;
-        }
-    }
-
-    .image {
-        width: 100%;
-        height: 100%;
-        display: flex;
+    &.direction-vertical {
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: black;
-
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
+    }
+    
+    &.position-start {
+        justify-content: flex-start;
     }
 
-    .button {
+    &.position-end {
+        justify-content: flex-end;
+    }
+
+    &.position-center {
+        justify-content: center;
+    }
+
+    &.position-between {
+        justify-content: space-between;
+    }
+
+    &.position-around {
+        justify-content: space-around;
+    }
+    
+    &.alignment-center {
+        align-items: center;
+    }
+
+    &.alignment-start {
+        align-items: flex-start;
+    }
+
+    &.alignment-end {
+        align-items: flex-end;
+    }
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+.button {
+    white-space: nowrap;
+    font-size: inherit;
+    font-family: inherit;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: default;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progressbar {
+    min-width: 100px;
+    box-sizing: border-box;
+
+    .inner-progressbar {
+        box-sizing: border-box;
+    }
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+
+    label {
         white-space: nowrap;
+    }
+
+    .checkbox-outer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.radio {
+    display: flex;
+    align-items: center;
+
+    label {
+        white-space: nowrap;
+    }
+
+    .radio-outer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.combo {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: default;
+
+    .combo-button {
         font-size: inherit;
         font-family: inherit;
         user-select: none;
         -webkit-user-select: none;
-        cursor: default;
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
+        position: relative;
+        z-index: 11;
     }
 
-    .progressbar {
-        min-width: 100px;
+    .combo-choices {
+        position: absolute;
+        z-index: 10;
+        top: 100%;
+        box-sizing: border-box;
+        white-space: nowrap;
+        min-width: 100%;
+    }
+}
+
+.range {
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+
+    .inner-range {
         box-sizing: border-box;
 
-        .inner-progressbar {
-            box-sizing: border-box;
+        &::-webkit-slider-thumb {
+            cursor: pointer;
+        }
+        
+        &::-moz-range-thumb {
+            cursor: pointer;
         }
     }
+}
 
-    .checkbox {
-        display: flex;
-        align-items: center;
+.tabs {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 
-        label {
-            white-space: nowrap;
-        }
-
-        .checkbox-outer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    }
-
-    .radio {
-        display: flex;
-        align-items: center;
-
-        label {
-            white-space: nowrap;
-        }
-
-        .radio-outer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    }
-
-    .combo {
-        display: flex;
-        flex-direction: column;
-        position: relative;
+    .tab-titles {
         cursor: default;
+        display: flex;
+        z-index: 2;
 
-        .combo-button {
-            font-size: inherit;
-            font-family: inherit;
-            user-select: none;
-            -webkit-user-select: none;
+        .tab-title {
+            box-sizing: border-box;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            position: relative;
-            z-index: 11;
+        }
+    }
+
+    .tab {
+        flex-grow: 1;
+        height: 1%;
+        
+        > * {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+.menubar {
+    display: flex;
+    position: relative;
+    width: 100%;
+    cursor: default;
+
+    .menuitem {
+
+        .menuitem-title {
+            height: 100%;
+            display: flex;
+            align-items: center;
         }
 
-        .combo-choices {
+        .menufunctions {
+            display: flex;
+            flex-direction: column;
             position: absolute;
-            z-index: 10;
             top: 100%;
-            box-sizing: border-box;
-            white-space: nowrap;
-            min-width: 100%;
-        }
-    }
+            z-index: 100;
 
-    .range {
-        min-width: 100px;
-        display: flex;
-        align-items: center;
-
-        .inner-range {
-            box-sizing: border-box;
-
-            &::-webkit-slider-thumb {
-                cursor: pointer;
-            }
-            
-            &::-moz-range-thumb {
-                cursor: pointer;
-            }
-        }
-    }
-
-    .tabs {
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-
-        .tab-titles {
-            cursor: default;
-            display: flex;
-            z-index: 2;
-
-            .tab-title {
-                box-sizing: border-box;
+            .menufunction {
                 display: flex;
-                align-items: center;
-            }
-        }
+                justify-content: space-between;
 
-        .tab {
-            flex-grow: 1;
-            height: 1%;
-            
-            > * {
-                width: 100%;
-                height: 100%;
-            }
-        }
-    }
-    
-    .menubar {
-        display: flex;
-        position: relative;
-        width: 100%;
-        cursor: default;
-
-        .menuitem {
-
-            .menuitem-title {
-                height: 100%;
-                display: flex;
-                align-items: center;
-            }
-
-            .menufunctions {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                z-index: 100;
-    
-                .menufunction {
-                    display: flex;
-                    justify-content: space-between;
-
-                    span {
-                        white-space: nowrap;
-                    }
+                span {
+                    white-space: nowrap;
                 }
             }
         }

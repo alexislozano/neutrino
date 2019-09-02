@@ -138,5 +138,16 @@ fn main() {
     window.set_listener(Box::new(app_listener));
     window.set_theme(Theme::Default);
 
+    let css = r#"
+        .button {
+            background-color: cyan;
+        }
+        .combo .combo-button {
+            background-color: lime;
+        }
+    "#;
+
+    window.set_custom_css(css);
+
     App::run(window);
 }

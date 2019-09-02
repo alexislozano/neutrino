@@ -1,227 +1,231 @@
-#app {
+// MENUBAR HEIGHT
+$menubar-height: 30px;
 
+#app {
     font-family: sans-serif;
     font-size: 13px;
     background-color: white;
+}
 
-    .label {
-        margin: 6px;
+.label {
+    margin: 6px;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.button {
+    margin: 6px;
+    border: 1px solid black;
+    background: white;
+    color: black;
+    outline: 0;
+    padding: 6px;
+
+    &.disabled {
+        background: black;
+        color: white;
+    }
+}
+
+.progressbar {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 6px;
+    margin-right: 6px;
+    height: 10px;
+    background-color: white;
+    border: 1px solid black;
+
+    .inner-progressbar {
+        background-color: black;
+        height: 100%;
+    }
+}
+
+.textinput {
+    margin: 6px;
+
+    input {
+        border: 1px solid black;
+        background: white;
+        margin: 0;
+        padding: 6px;
         font-size: inherit;
         font-family: inherit;
+        outline: 0;
+    }
+}
+
+.checkbox {
+    margin: 6px;
+
+    label {
+        margin-left: 6px;
     }
 
-    .button {
-        margin: 6px;
+    .checkbox-outer {
+        height: 14px;
+        width: 14px;
+        background-color: white;
+        border: 1px solid black;
+
+        .checkbox-inner {
+            height: 10px;
+            width: 10px;
+            background-color: white;
+        
+            &.checked {
+                background-color: black;
+            }
+        }
+    }
+}
+
+.radio {
+    margin: 6px;
+
+    label {
+        margin-left: 6px;
+    }
+
+    .radio-outer {
+        height: 14px;
+        width: 14px;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 50%;
+
+        .radio-inner {
+            height: 10px;
+            width: 10px;
+            background-color: white;
+            border-radius: 50%;
+
+            &.selected {
+                background-color: black;
+            }
+        }
+    }
+}
+
+.combo {
+    margin: 6px;
+
+    .combo-button {
         border: 1px solid black;
         background: white;
         color: black;
         outline: 0;
         padding: 6px;
 
-        &.disabled {
-            background: black;
-            color: white;
+        div {
+            margin-left: 10px;
+            height: 18px;
+            width: 18px;
         }
     }
 
-    .progressbar {
-        margin-top: 8px;
-        margin-bottom: 8px;
-        margin-left: 6px;
-        margin-right: 6px;
+    .combo-choices {
+        border: 1px solid black;
+        border-top: 0;
+
+        .combo-choice {
+            background: white;
+            padding: 6px;
+
+            &:hover {
+                background-color: black;
+                color: white;
+            }
+        }
+    }
+}
+
+.range {
+    margin: 6px;
+
+    .inner-range {
+        -webkit-appearance: none;
+        appearance: none;
         height: 10px;
+        width: 100%;
         background-color: white;
         border: 1px solid black;
+        outline: none;
 
-        .inner-progressbar {
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 10px;
+            background: black;
+        }
+    }
+}
+
+.tabs {
+    padding: 6px;
+
+    .tab-titles {
+
+        .tab-title {
+            color: white;
             background-color: black;
-            height: 100%;
-        }
-    }
-
-    .textinput {
-        margin: 6px;
-
-        input {
+            height: 28px;
+            padding-left: 13px;
+            padding-right: 13px;
             border: 1px solid black;
-            background: white;
-            margin: 0;
-            padding: 6px;
-            font-size: inherit;
-            font-family: inherit;
-            outline: 0;
+
+            &.selected {
+                color: black;
+                background-color: white;
+                border-bottom-color: white;
+            }
         }
     }
 
-    .checkbox {
-        margin: 6px;
+    .tab {
+        border: 1px solid black;
+        background: white;
+    }
+}
 
-        label {
-            margin-left: 6px;
+#app {
+    .menubar + * {
+        top: $menubar-height;
+    }
+}
+
+.menubar {
+    height: $menubar-height;
+    background-color: white;
+
+    .menuitem {
+        
+        .menuitem-title {
+            padding-left: 11px;
+            padding-right: 11px;
+
+            &.selected {
+                color: white;
+                background-color: black;
+            }
         }
 
-        .checkbox-outer {
-            height: 14px;
-            width: 14px;
+        .menufunctions {
             background-color: white;
             border: 1px solid black;
 
-            .checkbox-inner {
-                height: 10px;
-                width: 10px;
-                background-color: white;
-            
-                &.checked {
-                    background-color: black;
-                }
-            }
-        }
-    }
-
-    .radio {
-        margin: 6px;
-
-        label {
-            margin-left: 6px;
-        }
-
-        .radio-outer {
-            height: 14px;
-            width: 14px;
-            background-color: white;
-            border: 1px solid black;
-            border-radius: 50%;
-
-            .radio-inner {
-                height: 10px;
-                width: 10px;
-                background-color: white;
-                border-radius: 50%;
-
-                &.selected {
-                    background-color: black;
-                }
-            }
-        }
-    }
-
-    .combo {
-        margin: 6px;
-
-        .combo-button {
-            border: 1px solid black;
-            background: white;
-            color: black;
-            outline: 0;
-            padding: 6px;
-
-            div {
-                margin-left: 10px;
-                height: 18px;
-                width: 18px;
-            }
-        }
-
-        .combo-choices {
-            border: 1px solid black;
-            border-top: 0;
-
-            .combo-choice {
-                background: white;
-                padding: 6px;
+            .menufunction {
+                padding-top: 6px;
+                padding-bottom: 6px;
+                padding-left: 11px;
+                padding-right: 11px;
+                width: 140px;
 
                 &:hover {
                     background-color: black;
                     color: white;
-                }
-            }
-        }
-    }
-
-    .range {
-        margin: 6px;
-
-        .inner-range {
-            -webkit-appearance: none;
-            appearance: none;
-            height: 10px;
-            width: 100%;
-            background-color: white;
-            border: 1px solid black;
-            outline: none;
-
-            &::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 16px;
-                height: 10px;
-                background: black;
-            }
-        }
-    }
-
-    .tabs {
-        padding: 6px;
-
-        .tab-titles {
-
-            .tab-title {
-                color: white;
-                background-color: black;
-                height: 28px;
-                padding-left: 13px;
-                padding-right: 13px;
-                border: 1px solid black;
-
-                &.selected {
-                    color: black;
-                    background-color: white;
-                    border-bottom-color: white;
-                }
-            }
-        }
-
-        .tab {
-            border: 1px solid black;
-            background: white;
-        }
-    }
-    
-    .menubar {
-        height: 30px;
-        background-color: white;
-
-        + * {
-            top: 30px;
-        }
-
-        .menuitem {
-            
-            .menuitem-title {
-                padding-left: 11px;
-                padding-right: 11px;
-
-                &.selected {
-                    color: white;
-                    background-color: black;
-                }
-            }
-
-            .menufunctions {
-                background-color: white;
-                border: 1px solid black;
-    
-                .menufunction {
-                    padding-top: 6px;
-                    padding-bottom: 6px;
-                    padding-left: 11px;
-                    padding-right: 11px;
-                    width: 140px;
-
-                    &:hover {
-                        background-color: black;
-                        color: white;
-                    }
                 }
             }
         }
