@@ -1,5 +1,7 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::utils::pixmap::Pixmap;
+use crate::utils::icon::Icon;
 
 /// # The state of a Button
 ///
@@ -11,16 +13,27 @@ use crate::widgets::widget::Widget;
 /// stretched: bool
 /// ```
 pub struct ButtonState {
-    text: String,
+    text: Option<String>,
+    icon_data: Option<String>,
+    icon_extension: Option<String>,
     disabled: bool,
     stretched: bool,
 }
 
 impl ButtonState {
     /// Get the text
-    pub fn text(&self) -> &str {
-        &self.text
+    pub fn text(&self) -> Option<&str> {
+        self.text.as_ref().map(String::as_ref)
     }
+
+    // Get the icon
+    pub fn icon(&self) -> Option<Pixmap> {
+        match (&self.icon_data, &self.icon_extension) {
+            (Some(data), Some(extension)) => Some(Pixmap::new(data, extension)),
+            _ => None,
+        }
+    }
+
 
     /// Get the disabled flag
     pub fn disabled(&self) -> bool {
@@ -34,7 +47,14 @@ impl ButtonState {
 
     /// Set the text
     pub fn set_text(&mut self, text: &str) {
-        self.text = text.to_string();
+        self.text = Some(text.to_string());
+    }
+
+    /// Set the icon
+    pub fn set_icon(&mut self, icon: Box<dyn Icon>) {
+        let pixmap = Pixmap::from_icon(icon);
+        self.icon_data = Some(pixmap.data().to_string());
+        self.icon_extension = Some(pixmap.extension().to_string());
     }
 
     /// Set the disabled flag
@@ -151,7 +171,9 @@ impl Button {
         Self {
             name: name.to_string(),
             state: ButtonState {
-                text: "Button".to_string(),
+                text: None,
+                icon_data: None,
+                icon_extension: None,
                 disabled: false,
                 stretched: false,
             },
@@ -162,6 +184,11 @@ impl Button {
     /// Set the text
     pub fn set_text(&mut self, text: &str) {
         self.state.set_text(text);
+    }
+
+    /// Set the icon
+    pub fn set_icon(&mut self, icon: Box<dyn Icon>) {
+        self.state.set_icon(icon);
     }
 
     /// Set the disabled flag to true
@@ -184,14 +211,43 @@ impl Widget for Button {
     fn eval(&self) -> String {
         let disabled = if self.state.disabled() { "disabled" } else { "" };
         let stretched = if self.state.stretched() { "stretched" } else { "" };
-        format!(
-            r#"<div id="{}" onmousedown="{}" class="button {} {}">{}</div>"#,
-            self.name,
-            Event::change_js(&self.name, "''"),
-            disabled,
-            stretched,
-            self.state.text()
-        )
+        match (self.state.text(), self.state.icon()) {
+            (Some(text), Some(icon)) => format!(
+                r#"<div id="{}" onmousedown="{}" class="button {} {}"><img src="data:image/{};base64,{}" /><span>{}</span></div>"#,
+                self.name,
+                Event::change_js(&self.name, "''"),
+                disabled,
+                stretched,
+                icon.extension(),
+                icon.data(),
+                text,
+            ),
+            (Some(text), None) => format!(
+                r#"<div id="{}" onmousedown="{}" class="button {} {}">{}</div>"#,
+                self.name,
+                Event::change_js(&self.name, "''"),
+                disabled,
+                stretched,
+                text,
+            ),
+            (None, Some(icon)) => format!(
+                r#"<div id="{}" onmousedown="{}" class="button {} {}"><img src="data:image/{};base64,{}" /></div>"#,
+                self.name,
+                Event::change_js(&self.name, "''"),
+                disabled,
+                stretched,
+                icon.extension(),
+                icon.data(),
+            ),
+            (None, None) => format!(
+                r#"<div id="{}" onmousedown="{}" class="button {} {}">{}</div>"#,
+                self.name,
+                Event::change_js(&self.name, "''"),
+                disabled,
+                stretched,
+                "No text",
+            ),
+        }
     }
 
     fn trigger(&mut self, event: &Event) {

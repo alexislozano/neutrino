@@ -46,6 +46,16 @@ $checkbox-path: polygon(50% 55%, 100% 10%, 100% 40%, 50% 85%, 14% 43%, 29% 29%);
         color: $dgrey-color;
         transition: border-color 300ms, background-color 300ms, color 300ms;
     }
+
+    img {
+        height: 18px;
+        width: 18px;
+
+        + span {
+            margin-left: 10px;
+        }
+        
+    }
 }
 
 .progressbar {
@@ -160,7 +170,7 @@ $checkbox-path: polygon(50% 55%, 100% 10%, 100% 40%, 50% 85%, 14% 43%, 29% 29%);
             border-bottom-right-radius: 0;
         }
 
-        div {
+        img {
             margin-left: 10px;
             height: 18px;
             width: 18px;

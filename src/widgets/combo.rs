@@ -20,8 +20,8 @@ pub struct ComboState {
     selected: u32,
     opened: bool,
     stretched: bool,
-    arrow_data: Option<String>,
-    arrow_extension: Option<String>,
+    icon_data: Option<String>,
+    icon_extension: Option<String>,
 }
 
 impl ComboState {
@@ -45,9 +45,9 @@ impl ComboState {
         self.stretched
     }
 
-    /// Get the arrow
-    pub fn arrow(&self) -> Option<Pixmap> {
-        match (&self.arrow_data, &self.arrow_extension) {
+    /// Get the icon
+    pub fn icon(&self) -> Option<Pixmap> {
+        match (&self.icon_data, &self.icon_extension) {
             (Some(data), Some(extension)) => Some(Pixmap::new(data, extension)),
             _ => None,
         }
@@ -75,18 +75,11 @@ impl ComboState {
         self.stretched = stretched;
     }
 
-    /// Set the arrow from a path
-    pub fn set_arrow_from_path(&mut self, path: &str) {
-        let pixmap = Pixmap::from_path(path);
-        self.arrow_data = Some(pixmap.data().to_string());
-        self.arrow_extension = Some(pixmap.extension().to_string());
-    }
-
-    /// Set the arrow from an icon
-    pub fn set_arrow_from_icon(&mut self, icon: Box<dyn Icon>) {
+    /// Set the icon
+    pub fn set_icon(&mut self, icon: Box<dyn Icon>) {
         let pixmap = Pixmap::from_icon(icon);
-        self.arrow_data = Some(pixmap.data().to_string());
-        self.arrow_extension = Some(pixmap.extension().to_string());
+        self.icon_data = Some(pixmap.data().to_string());
+        self.icon_extension = Some(pixmap.extension().to_string());
     }
 }
 
@@ -118,8 +111,8 @@ pub trait ComboListener {
 ///     selected: 0,
 ///     opened: false,
 ///     stretched: false,
-///     arrow_data: None,
-///     arrow_extension: None
+///     icon_data: None,
+///     icon_extension: None
 /// listener: None
 /// ```
 ///
@@ -210,8 +203,8 @@ impl Combo {
                 selected: 0,
                 opened: false,
                 stretched: false,
-                arrow_data: None,
-                arrow_extension: None,
+                icon_data: None,
+                icon_extension: None,
             },
             listener: None,
         }
@@ -237,14 +230,9 @@ impl Combo {
         self.state.set_stretched(true);
     }
 
-    /// Set the arrow from a path
-    pub fn set_arrow_from_path(&mut self, path: &str) {
-        self.state.set_arrow_from_path(path);
-    }
-
-    /// Set the arrow from an icon
-    pub fn set_arrow_from_icon(&mut self, icon: Box<dyn Icon>) {
-        self.state.set_arrow_from_icon(icon);
+    /// Set the icon
+    pub fn set_icon(&mut self, icon: Box<dyn Icon>) {
+        self.state.set_icon(icon);
     }
 
     /// Set the listener
@@ -257,17 +245,17 @@ impl Widget for Combo {
     fn eval(&self) -> String {
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         let opened = if self.state.opened() { "opened" } else { "" };
-        let mut s = match self.state.arrow() {
-            Some(arrow) => {
+        let mut s = match self.state.icon() {
+            Some(icon) => {
                 format!(
-                    r#"<div id="{}" class="combo {}"><div onmousedown="{}" class="combo-button {}">{}<div><img src="data:image/{};base64,{}" /></div></div>"#,
+                    r#"<div id="{}" class="combo {}"><div onmousedown="{}" class="combo-button {}">{}<img src="data:image/{};base64,{}" /></div>"#,
                     self.name,
                     stretched,
                     Event::change_js(&self.name, "'-1'"),
                     opened,
                     self.state.choices()[self.state.selected() as usize],
-                    arrow.extension(),
-                    arrow.data(),
+                    icon.extension(),
+                    icon.data(),
                 )
             },
             None => {

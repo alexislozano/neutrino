@@ -25,6 +25,16 @@ $menubar-height: 30px;
         background: black;
         color: white;
     }
+
+    img {
+        height: 18px;
+        width: 18px;
+
+        + span {
+            margin-left: 10px;
+        }
+        
+    }
 }
 
 .progressbar {
@@ -118,7 +128,7 @@ $menubar-height: 30px;
         outline: 0;
         padding: 6px;
 
-        div {
+        img {
             margin-left: 10px;
             height: 18px;
             width: 18px;

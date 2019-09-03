@@ -32,6 +32,7 @@ fn main() {
     let mut button1 = Button::new("button1");
     button1.set_text("Bouton à pousser");
     button1.set_stretched();
+    button1.set_icon(Box::new(BreezeIcon::Check));
 
     let mut progressbar1 = ProgressBar::new("progressbar1");
     progressbar1.set_value(70);
@@ -51,7 +52,7 @@ fn main() {
     let mut combo1 = Combo::new("combo1");
     combo1.set_choices(vec!["Combo Box", "Jumbo Fox"]);
     combo1.set_selected(0);
-    combo1.set_arrow_from_icon(Box::new(BreezeIcon::Down));
+    combo1.set_icon(Box::new(BreezeIcon::Down));
 
     let mut range1 = Range::new("range1");
     range1.set_min(0);
@@ -67,6 +68,7 @@ fn main() {
 
     let mut container2 = Container::new("container2");
     container2.set_direction(Direction::Horizontal);
+    container2.set_alignment(Alignment::Center);
     container2.add(Box::new(button1));
     container2.add(Box::new(textinput1));
 
