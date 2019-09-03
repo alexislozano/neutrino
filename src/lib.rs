@@ -90,6 +90,7 @@ impl App {
             .unwrap();
 
         webview.run().unwrap();
+        std::process::exit(0);
     }
 }
 
