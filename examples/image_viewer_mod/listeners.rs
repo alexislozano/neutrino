@@ -70,7 +70,7 @@ pub struct MyMenuBarListener {
 
 impl MyMenuBarListener {
     pub fn new(images: Rc<RefCell<Images>>) -> Self {
-        Self { images: images }
+        Self { images }
     }
 }
 
@@ -98,7 +98,7 @@ pub struct MyWindowListener {
 
 impl MyWindowListener {
     pub fn new(images: Rc<RefCell<Images>>) -> Self {
-        Self { images: images }
+        Self { images }
     }
 }
 

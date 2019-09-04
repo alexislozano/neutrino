@@ -198,8 +198,8 @@ impl Widget for ProgressBar {
             r#"<div id="{}" class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
             self.name,
             stretched,
-            (self.state.value() - self.state.min()) as f64 /
-            (self.state.max() - self.state.min()) as f64 *
+            f64::from(self.state.value() - self.state.min()) /
+            f64::from(self.state.max() - self.state.min()) *
             100.0,
         )
     }

@@ -191,7 +191,7 @@ impl MenuBar {
 
     /// Function triggered on MenuItem change event
     fn on_item_change(&mut self, value: &str) {
-        let values = value.split(";").collect::<Vec<&str>>();
+        let values = value.split(';').collect::<Vec<&str>>();
         let e = values[0];
         let index = values[1].parse::<u32>().unwrap();
         self.state

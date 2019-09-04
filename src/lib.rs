@@ -107,7 +107,7 @@ impl App {
                         "Update" => Event::Update,
                         "Key" => match Key::new(value["key"].as_str().unwrap())
                         {
-                            Some(key) => Event::Key { key: key },
+                            Some(key) => Event::Key { key },
                             None => Event::Undefined,
                         },
                         "Change" => Event::Change {
@@ -279,8 +279,8 @@ impl Window {
             (Some(menubar), Some(child)) => {
                 format!("{}{}", menubar.eval(), child.eval())
             }
-            (None, Some(child)) => format!("{}", child.eval()),
-            (Some(menubar), None) => format!("{}", menubar.eval()),
+            (None, Some(child)) => child.eval().to_string(),
+            (Some(menubar), None) => menubar.eval().to_string(),
             (None, None) => "".to_string(),
         }
     }
@@ -288,10 +288,7 @@ impl Window {
     /// Trigger the events in the widget tree
     fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Change {
-                source: _,
-                value: _,
-            }
+            Event::Change { .. }
             | Event::Update
             | Event::Undefined => {
                 match (&mut self.menubar, &mut self.child) {

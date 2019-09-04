@@ -14,7 +14,7 @@ pub struct MyWindowListener {
 
 impl MyWindowListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        Self { panes: panes }
+        Self { panes }
     }
 }
 
@@ -35,13 +35,13 @@ pub struct MyTabsListener {
 
 impl MyTabsListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        Self { panes: panes }
+        Self { panes }
     }
 }
 
 impl TabsListener for MyTabsListener {
     fn on_update(&self, state: &mut TabsState) {
-        state.set_selected(self.panes.borrow().value() as u32);
+        state.set_selected(u32::from(self.panes.borrow().value()));
     }
 
     fn on_change(&self, state: &TabsState) {
@@ -55,7 +55,7 @@ pub struct MyMenuBarListener {
 
 impl MyMenuBarListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        Self { panes: panes }
+        Self { panes }
     }
 }
 
