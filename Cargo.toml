@@ -1,12 +1,14 @@
 [package]
 name = "neutrino"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Alexis Lozano <alexis.pascal.lozano@gmail.com>"]
 edition = "2018"
 build = "build.rs"
 description = "A GUI frontend in Rust based on web-view"
 repository = "https://github.com/alexislozano/neutrino/"
 license = "MIT"
+categories = ["gui"]
+keywords = ["gui", "desktop", "web", "mvc"]
 
 [dependencies]
 web-view = "0.4.1"
