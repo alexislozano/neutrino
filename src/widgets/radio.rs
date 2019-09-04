@@ -2,9 +2,9 @@ use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
 /// # The state of a Radio
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// choices: Vec<String>
 /// selected: u32,
@@ -34,9 +34,10 @@ impl RadioState {
 
     /// Set the choices
     pub fn set_choices(&mut self, choices: Vec<&str>) {
-        self.choices = choices.iter().map(
-            |c| c.to_string()
-        ).collect::<Vec<String>>();
+        self.choices = choices
+            .iter()
+            .map(|c| c.to_string())
+            .collect::<Vec<String>>();
     }
 
     /// Set the selected index
@@ -60,17 +61,17 @@ pub trait RadioListener {
 }
 
 /// # A list of radio buttons
-/// 
+///
 /// Only one can be selected at a time.
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// state: RadioState
 /// listener: Option<Box<dyn RadioListener>>
 /// ```
-/// 
+///
 /// ## Default values
 ///
 /// ```text
@@ -87,47 +88,47 @@ pub trait RadioListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::radio::{Radio, RadioListener, RadioState};
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Dessert {
 ///     index: u32,
 ///     value: String,
 /// }
-/// 
+///
 /// impl Dessert {
 ///     fn new() -> Self {
 ///         Self { index: 0, value: "Cake".to_string() }
 ///     }
-/// 
+///
 ///     fn index(&self) -> u32 {
 ///         self.index
 ///     }
-/// 
+///
 ///     fn value(&self) -> &str {
 ///         &self.value
 ///     }
-/// 
+///
 ///     fn set(&mut self, index: u32, value: &str) {
 ///         self.index = index;
 ///         self.value = value.to_string();
-///     } 
+///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyRadioListener {
 ///     dessert: Rc<RefCell<Dessert>>,
 /// }
-/// 
+///
 /// impl MyRadioListener {
 ///    pub fn new(dessert: Rc<RefCell<Dessert>>) -> Self {
 ///        Self { dessert }
 ///    }
 /// }
-/// 
+///
 /// impl RadioListener for MyRadioListener {
 ///     fn on_change(&self, state: &RadioState) {
 ///         let index = state.selected();
@@ -136,18 +137,18 @@ pub trait RadioListener {
 ///             &state.choices()[index as usize]
 ///         );
 ///     }
-/// 
+///
 ///     fn on_update(&self, state: &mut RadioState) {
 ///         state.set_selected(self.dessert.borrow().index());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let dessert = Rc::new(RefCell::new(Dessert::new()));
-/// 
+///
 ///     let my_listener = MyRadioListener::new(Rc::clone(&dessert));
-/// 
+///
 ///     let mut my_radio = Radio::new("my_radio");
 ///     my_radio.set_choices(vec!["Cake", "Ice Cream", "Pie"]);
 ///     my_radio.set_listener(Box::new(my_listener));
@@ -196,7 +197,11 @@ impl Radio {
 
 impl Widget for Radio {
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         let mut s = "".to_string();
         for (i, choice) in self.state.choices().iter().enumerate() {
             let selected = if self.state.selected() == i as u32 {
@@ -210,8 +215,8 @@ impl Widget for Radio {
                     self.name,
                     stretched,
                     Event::change_js(&self.name, &format!("'{}'", i)), 
-                    selected, 
-                    selected, 
+                    selected,
+                    selected,
                     choice
                 )
             );
@@ -226,7 +231,7 @@ impl Widget for Radio {
                 if source == &self.name {
                     self.on_change(value);
                 }
-            },
+            }
             _ => (),
         }
     }

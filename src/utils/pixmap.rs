@@ -1,15 +1,15 @@
-use std::path::Path;
-use std::fs;
-use base64::encode;
 use crate::utils::icon::Icon;
+use base64::encode;
+use std::fs;
+use std::path::Path;
 
 /// # A model for an image
-/// 
+///
 /// As a webview does not have access to the local file system, the given images
 /// are encoded into text (Base64) to be displayed.
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// data: String
 /// extension: String
@@ -22,7 +22,10 @@ pub struct Pixmap {
 impl Pixmap {
     /// Create a Pixmap from text data
     pub fn new(data: &str, extension: &str) -> Self {
-        Pixmap { data: data.to_string(), extension: extension.to_string() }
+        Pixmap {
+            data: data.to_string(),
+            extension: extension.to_string(),
+        }
     }
 
     /// Create a Pixmap from a file path
@@ -48,7 +51,7 @@ impl Pixmap {
     /// Get the data
     pub fn data(&self) -> &str {
         &self.data
-    } 
+    }
 
     /// Get the extension
     pub fn extension(&self) -> &str {
@@ -56,5 +59,5 @@ impl Pixmap {
             "svg" => "svg+xml",
             ext => ext,
         }
-    } 
+    }
 }

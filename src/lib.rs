@@ -1,35 +1,35 @@
 //! # Preamble
-//! 
-//! [Docs](https://docs.rs/neutrino) | 
-//! [Repo](https://github.com/alexislozano/neutrino) | 
-//! [Wiki](https://github.com/alexislozano/neutrino/wiki) | 
-//! [Crate](https://crates.io/crates/neutrino)
-//! 
-//! Neutrino is a MVC GUI framework written in Rust. It lets users create GUI 
-//! applications by positioning widgets on a window and by handling events. 
-//! Neutrino is based on the [web-view](https://crates.io/crates/web-view) crate
-//! provided by Boscop. As such, Neutrino renders the application using web 
-//! technologies as HTML and CSS. 
 //!
-//! As it is based on web-view, Neutrino does not embed a whole web browser. So 
-//! don't worry, due to the very lightweight footprint of web-view, you won't 
+//! [Docs](https://docs.rs/neutrino) |
+//! [Repo](https://github.com/alexislozano/neutrino) |
+//! [Wiki](https://github.com/alexislozano/neutrino/wiki) |
+//! [Crate](https://crates.io/crates/neutrino)
+//!
+//! Neutrino is a MVC GUI framework written in Rust. It lets users create GUI
+//! applications by positioning widgets on a window and by handling events.
+//! Neutrino is based on the [web-view](https://crates.io/crates/web-view) crate
+//! provided by Boscop. As such, Neutrino renders the application using web
+//! technologies as HTML and CSS.
+//!
+//! As it is based on web-view, Neutrino does not embed a whole web browser. So
+//! don't worry, due to the very lightweight footprint of web-view, you won't
 //! have to buy more memory for your computer.
-//! 
+//!
 //! # Install
-//! 
+//!
 //! In order to use Neutrino, you will have to use cargo. Just add the following
-//! line to your `Cargo.toml` and you'll be done : 
-//! 
+//! line to your `Cargo.toml` and you'll be done :
+//!
 //! ```text
 //! neutrino = "<last_version>"
 //! ```
-//! 
+//!
 //! # Examples
-//! 
+//!
 //! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/image_viewer/3.png)
-//! 
+//!
 //! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/3.png)
-//! 
+//!
 //! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/4.png)
 
 use web_view::*;
@@ -39,8 +39,8 @@ pub mod widgets;
 
 use utils::event::{Event, Key};
 use utils::theme::Theme;
-use widgets::widget::Widget;
 use widgets::menubar::MenuBar;
+use widgets::widget::Widget;
 
 use json;
 
@@ -72,7 +72,10 @@ impl App {
             "#,
             styles = format!(
                 "{}\n{}\n{}\n",
-                inline_style(include_str!(concat!(env!("OUT_DIR"), "/app.css"))),
+                inline_style(include_str!(concat!(
+                    env!("OUT_DIR"),
+                    "/app.css"
+                ))),
                 inline_style(&window.theme.css()),
                 inline_style(&window.custom_css),
             ),
@@ -102,13 +105,17 @@ impl App {
                 let event: Event = match json::parse(arg) {
                     Ok(value) => match value["type"].as_str().unwrap() {
                         "Update" => Event::Update,
-                        "Key" => match Key::new(value["key"].as_str().unwrap()) {
+                        "Key" => match Key::new(value["key"].as_str().unwrap())
+                        {
                             Some(key) => Event::Key { key: key },
                             None => Event::Undefined,
                         },
-                        "Change" => Event::Change { 
-                            source: value["source"].as_str().unwrap().to_string(), 
-                            value: value["value"].as_str().unwrap().to_string(), 
+                        "Change" => Event::Change {
+                            source: value["source"]
+                                .as_str()
+                                .unwrap()
+                                .to_string(),
+                            value: value["value"].as_str().unwrap().to_string(),
                         },
                         _ => Event::Undefined,
                     },
@@ -117,7 +124,7 @@ impl App {
                 window.trigger(&event);
                 match event {
                     Event::Undefined => (),
-                    _ => window.trigger(&Event::Update)
+                    _ => window.trigger(&Event::Update),
                 };
                 window.render(webview)
             })
@@ -151,7 +158,7 @@ pub trait WindowListener {
 /// menubar: Option<MenuBar>
 /// listener: Option<Box<dyn WindowListener>>
 /// ```
-/// 
+///
 /// # Default values
 ///
 /// ```text
@@ -171,13 +178,13 @@ pub trait WindowListener {
 ///
 /// ```
 /// use neutrino::{Window, App};
-/// 
+///
 /// fn main() {
 ///     let mut my_window = Window::new();
 ///     my_window.set_title("Title");
 ///     my_window.set_size(800, 600);
 ///     my_window.set_resizable();
-/// 
+///
 ///     // App::run(window);
 /// }
 /// ```
@@ -269,7 +276,9 @@ impl Window {
     /// Return the HTML representation of the menubar and the widget tree
     fn eval(&self) -> String {
         match (&self.menubar, &self.child) {
-            (Some(menubar), Some(child)) => format!("{}{}", menubar.eval(), child.eval()),
+            (Some(menubar), Some(child)) => {
+                format!("{}{}", menubar.eval(), child.eval())
+            }
             (None, Some(child)) => format!("{}", child.eval()),
             (Some(menubar), None) => format!("{}", menubar.eval()),
             (None, None) => "".to_string(),
@@ -279,17 +288,22 @@ impl Window {
     /// Trigger the events in the widget tree
     fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Change { source: _, value: _ } | Event::Update | Event::Undefined => {
+            Event::Change {
+                source: _,
+                value: _,
+            }
+            | Event::Update
+            | Event::Undefined => {
                 match (&mut self.menubar, &mut self.child) {
                     (Some(menubar), Some(child)) => {
                         menubar.trigger(event);
                         child.trigger(event);
-                    },
+                    }
                     (None, Some(child)) => child.trigger(event),
                     (Some(menubar), None) => menubar.trigger(event),
                     (None, None) => (),
                 };
-            },
+            }
             Event::Key { key } => {
                 match &self.listener {
                     None => (),
@@ -301,12 +315,12 @@ impl Window {
                     (Some(menubar), Some(child)) => {
                         menubar.trigger(event);
                         child.trigger(event);
-                    },
+                    }
                     (None, Some(child)) => child.trigger(event),
                     (Some(menubar), None) => menubar.trigger(event),
                     (None, None) => (),
                 };
-            },
+            }
         }
     }
 }

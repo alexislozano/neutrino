@@ -1,12 +1,12 @@
 use crate::utils::event::Event;
-use crate::widgets::widget::Widget;
-use crate::utils::pixmap::Pixmap;
 use crate::utils::icon::Icon;
+use crate::utils::pixmap::Pixmap;
+use crate::widgets::widget::Widget;
 
 /// # The state of a Button
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// text: String
 /// disabled: bool
@@ -33,7 +33,6 @@ impl ButtonState {
             _ => None,
         }
     }
-
 
     /// Get the disabled flag
     pub fn disabled(&self) -> bool {
@@ -80,13 +79,13 @@ pub trait ButtonListener {
 /// # A clickable button with a label
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// state: ButtonState
 /// listener: Option<Box<dyn ButtonListener>>
 /// ```
-/// 
+///
 /// ## Default values
 ///
 /// ```text
@@ -103,57 +102,57 @@ pub trait ButtonListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::button::{Button, ButtonListener, ButtonState};
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Counter {
 ///     value: u8,
 /// }
-/// 
+///
 /// impl Counter {
 ///     fn new() -> Self {
 ///         Self { value: 0 }
 ///     }
-/// 
+///
 ///     fn value(&self) -> u8 {
 ///         self.value
 ///     }
-/// 
+///
 ///     fn increment(&mut self) {
 ///         self.value += 1;
-///     } 
+///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyButtonListener {
 ///     counter: Rc<RefCell<Counter>>,
 /// }
-/// 
+///
 /// impl MyButtonListener {
 ///    pub fn new(counter: Rc<RefCell<Counter>>) -> Self {
 ///        Self { counter }
 ///    }
 /// }
-/// 
+///
 /// impl ButtonListener for MyButtonListener {
 ///     fn on_change(&self, _state: &ButtonState) {
 ///         self.counter.borrow_mut().increment();
 ///     }
-/// 
+///
 ///     fn on_update(&self, state: &mut ButtonState) {
 ///         state.set_text(&self.counter.borrow().value().to_string());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let counter = Rc::new(RefCell::new(Counter::new()));
-/// 
+///
 ///     let my_listener = MyButtonListener::new(Rc::clone(&counter));
-/// 
+///
 ///     let mut my_button = Button::new("my_button");
 ///     my_button.set_text("Click me !");
 ///     my_button.set_listener(Box::new(my_listener));
@@ -209,8 +208,16 @@ impl Button {
 
 impl Widget for Button {
     fn eval(&self) -> String {
-        let disabled = if self.state.disabled() { "disabled" } else { "" };
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let disabled = if self.state.disabled() {
+            "disabled"
+        } else {
+            ""
+        };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         match (self.state.text(), self.state.icon()) {
             (Some(text), Some(icon)) => format!(
                 r#"<div id="{}" onmousedown="{}" class="button {} {}"><img src="data:image/{};base64,{}" /><span>{}</span></div>"#,
@@ -257,7 +264,7 @@ impl Widget for Button {
                 if source == &self.name && !self.state.disabled() {
                     self.on_change(value)
                 }
-            },
+            }
             _ => (),
         }
     }

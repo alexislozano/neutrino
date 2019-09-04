@@ -2,9 +2,9 @@ use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
 /// # The state of a ProgressBar
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// min: i32
 /// max: i32
@@ -34,7 +34,7 @@ impl ProgressBarState {
         self.value
     }
 
-    /// Get the stretched flag 
+    /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
     }
@@ -69,13 +69,13 @@ pub trait ProgressBarListener {
 /// # A progress bar
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// state: ProgressBarState
 /// listener: Option<Box<dyn ProgressBarListener>>
 /// ```
-/// 
+///
 /// ## Default values
 ///
 /// ```text
@@ -93,49 +93,49 @@ pub trait ProgressBarListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::progressbar::{ProgressBar, ProgressBarListener, ProgressBarState};
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Counter {
 ///     value: i32,
 /// }
-/// 
+///
 /// impl Counter {
 ///     fn new() -> Self {
 ///         Self { value: 0 }
 ///     }
-/// 
+///
 ///     fn value(&self) -> i32 {
 ///         self.value
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyProgressBarListener {
 ///     counter: Rc<RefCell<Counter>>,
 /// }
-/// 
+///
 /// impl MyProgressBarListener {
 ///    pub fn new(counter: Rc<RefCell<Counter>>) -> Self {
 ///        Self { counter }
 ///    }
 /// }
-/// 
+///
 /// impl ProgressBarListener for MyProgressBarListener {
 ///     fn on_update(&self, state: &mut ProgressBarState) {
 ///         state.set_value(self.counter.borrow().value());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let counter = Rc::new(RefCell::new(Counter::new()));
-/// 
+///
 ///     let my_listener = MyProgressBarListener::new(Rc::clone(&counter));
-/// 
+///
 ///     let mut my_progressbar = ProgressBar::new("my_progressbar");
 ///     my_progressbar.set_listener(Box::new(my_listener));
 /// }
@@ -189,14 +189,18 @@ impl ProgressBar {
 
 impl Widget for ProgressBar {
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         format!(
             r#"<div id="{}" class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
             self.name,
-            stretched, 
-            (self.state.value() - self.state.min()) as f64 / 
+            stretched,
+            (self.state.value() - self.state.min()) as f64 /
             (self.state.max() - self.state.min()) as f64 *
-            100.0, 
+            100.0,
         )
     }
 
@@ -207,7 +211,7 @@ impl Widget for ProgressBar {
                 if source == &self.name {
                     self.on_change(value)
                 }
-            },
+            }
             _ => (),
         }
     }

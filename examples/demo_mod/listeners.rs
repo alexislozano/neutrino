@@ -1,13 +1,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use neutrino::WindowListener;
-use neutrino::widgets::tabs::{TabsListener, TabsState};
-use neutrino::widgets::menubar::{MenuBarListener, MenuBarState};
 use neutrino::utils::event::Key;
+use neutrino::widgets::menubar::{MenuBarListener, MenuBarState};
+use neutrino::widgets::tabs::{TabsListener, TabsState};
+use neutrino::WindowListener;
 
 use super::models::Panes;
-
 
 pub struct MyWindowListener {
     panes: Rc<RefCell<Panes>>,
@@ -15,9 +14,7 @@ pub struct MyWindowListener {
 
 impl MyWindowListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        Self {
-            panes: panes,
-        }
+        Self { panes: panes }
     }
 }
 
@@ -38,9 +35,7 @@ pub struct MyTabsListener {
 
 impl MyTabsListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        Self {
-            panes: panes,
-        }
+        Self { panes: panes }
     }
 }
 
@@ -60,9 +55,7 @@ pub struct MyMenuBarListener {
 
 impl MyMenuBarListener {
     pub fn new(panes: Rc<RefCell<Panes>>) -> Self {
-        Self {
-            panes: panes,
-        }
+        Self { panes: panes }
     }
 }
 
@@ -77,13 +70,13 @@ impl MenuBarListener for MyMenuBarListener {
                     match state.selected_function() {
                         None => (),
                         Some(selected_function) => {
-                            self.panes.borrow_mut().set_value(
-                                selected_function as u8
-                            );
+                            self.panes
+                                .borrow_mut()
+                                .set_value(selected_function as u8);
                         }
                     }
                 }
             }
-        } 
+        }
     }
 }

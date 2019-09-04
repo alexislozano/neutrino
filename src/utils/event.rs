@@ -18,17 +18,19 @@ impl Event {
 
     /// Return an one-line function sending a key event from javascript
     pub fn key_js() -> String {
-        r#"(function() { if (event.ctrlKey && event.key !== 'Control') { invoke( { type: 'Key', key: event.key } ); } event.stopPropagation(); } )()"#.to_string()
+        r#"(function() { if (event.ctrlKey && event.key !== 'Control') { invoke( { type: 'Key', key: event.key } ); } event.stopPropagation(); } )()"#
+            .to_string()
     }
 
     /// Return an one-line function sending a undefined event from javascript
     pub fn undefined_js() -> String {
-        r#"(function() { invoke( { type: 'Undefined' } ); event.stopPropagation(); } )()"#.to_string()
+        r#"(function() { invoke( { type: 'Undefined' } ); event.stopPropagation(); } )()"#
+            .to_string()
     }
 }
 
 /// # An enum holding a keyboard key
-/// 
+///
 /// The key event is triggered with `Ctrl + Key`.
 #[derive(Debug, Clone, Copy)]
 pub enum Key {
@@ -118,7 +120,7 @@ impl Key {
             "ArrowRight" => Some(Key::Right),
             "ArrowUp" => Some(Key::Up),
             "ArrowDown" => Some(Key::Down),
-            _ => None
+            _ => None,
         }
     }
 }

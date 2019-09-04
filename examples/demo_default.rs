@@ -1,21 +1,23 @@
+use neutrino::utils::icon::BreezeIcon;
+use neutrino::utils::theme::Theme;
 use neutrino::widgets::button::Button;
 use neutrino::widgets::checkbox::CheckBox;
 use neutrino::widgets::combo::Combo;
-use neutrino::widgets::container::{Container, Direction, Alignment};
+use neutrino::widgets::container::{Alignment, Container, Direction};
 use neutrino::widgets::label::Label;
+use neutrino::widgets::menubar::{MenuBar, MenuFunction, MenuItem};
 use neutrino::widgets::progressbar::ProgressBar;
 use neutrino::widgets::radio::Radio;
 use neutrino::widgets::range::Range;
 use neutrino::widgets::tabs::Tabs;
 use neutrino::widgets::textinput::TextInput;
-use neutrino::widgets::menubar::{MenuBar, MenuItem, MenuFunction};
-use neutrino::utils::icon::BreezeIcon;
-use neutrino::utils::theme::Theme;
 use neutrino::{App, Window};
 
 mod demo_mod;
 
-use demo_mod::listeners::{MyWindowListener, MyTabsListener, MyMenuBarListener};
+use demo_mod::listeners::{
+    MyMenuBarListener, MyTabsListener, MyWindowListener,
+};
 use demo_mod::models::Panes;
 
 use std::cell::RefCell;

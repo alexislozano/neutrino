@@ -1,8 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use neutrino::{App, Window};
 use neutrino::widgets::button::{Button, ButtonListener, ButtonState};
+use neutrino::{App, Window};
 
 struct Counter {
     value: u8,
@@ -23,7 +23,7 @@ impl Counter {
 }
 
 struct MyButtonListener {
-    counter: Rc<RefCell<Counter>>
+    counter: Rc<RefCell<Counter>>,
 }
 
 impl MyButtonListener {

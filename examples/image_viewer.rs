@@ -1,16 +1,19 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use neutrino::{App, Window};
-use neutrino::widgets::image::Image;
+use neutrino::utils::icon::BreezeIcon;
 use neutrino::widgets::button::Button;
 use neutrino::widgets::container::{Container, Direction};
-use neutrino::utils::icon::BreezeIcon;
-use neutrino::widgets::menubar::{MenuBar, MenuItem, MenuFunction};
+use neutrino::widgets::image::Image;
+use neutrino::widgets::menubar::{MenuBar, MenuFunction, MenuItem};
+use neutrino::{App, Window};
 
 mod image_viewer_mod;
+use image_viewer_mod::listeners::{
+    MyImageListener, MyMenuBarListener, MyNextButtonListener,
+    MyPrevButtonListener, MyWindowListener,
+};
 use image_viewer_mod::models::Images;
-use image_viewer_mod::listeners::{MyImageListener, MyPrevButtonListener, MyNextButtonListener, MyMenuBarListener, MyWindowListener};
 
 fn main() {
     let images = Rc::new(RefCell::new(Images::new()));

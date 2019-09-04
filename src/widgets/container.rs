@@ -4,7 +4,7 @@ use crate::widgets::widget::Widget;
 /// # The state of a Container
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// children: Vec<Box<dyn Widget>>
 /// direction: Direction
@@ -85,7 +85,7 @@ pub trait ContainerListener {
 /// # A container for other widgets
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// state: ContainerState
@@ -109,39 +109,39 @@ pub trait ContainerListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::container::{Container, ContainerListener, ContainerState};
 /// use neutrino::widgets::label::Label;
 /// use neutrino::widgets::widget::Widget;
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Quotes {
 ///     values: Vec<String>,
 /// }
-/// 
+///
 /// impl Quotes {
 ///     fn new() -> Self {
 ///         Self { values: vec![] }
 ///     }
-/// 
+///
 ///     fn values(&self) -> &Vec<String> {
 ///         &self.values
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyContainerListener {
 ///     quotes: Rc<RefCell<Quotes>>,
 /// }
-/// 
+///
 /// impl MyContainerListener {
 ///    pub fn new(quotes: Rc<RefCell<Quotes>>) -> Self {
 ///        Self { quotes }
 ///    }
 /// }
-/// 
+///
 /// impl ContainerListener for MyContainerListener {
 ///     fn on_update(&self, state: &mut ContainerState) {
 ///         let labels = self.quotes.borrow().values().iter().enumerate().map(|(i, q)| {
@@ -154,20 +154,20 @@ pub trait ContainerListener {
 ///         state.set_children(labels);
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let quotes = Rc::new(RefCell::new(Quotes::new()));
-/// 
+///
 ///     let my_listener = MyContainerListener::new(Rc::clone(&quotes));
-/// 
+///
 ///     let mut my_container = Container::new("my_container");
 /// }
 /// ```
 pub struct Container {
     name: String,
     state: ContainerState,
-    listener: Option<Box<dyn ContainerListener>>
+    listener: Option<Box<dyn ContainerListener>>,
 }
 
 impl Container {
@@ -201,7 +201,7 @@ impl Container {
         self.state.set_alignment(alignment);
     }
 
-    /// Set the stretched flag to true. Alignment needs to be set to 
+    /// Set the stretched flag to true. Alignment needs to be set to
     /// Alignment::None (default) for the Container to stretch.
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
@@ -215,9 +215,13 @@ impl Container {
 
 impl Widget for Container {
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         let mut s = format!(
-            r#"<div id="{}" class="container {} {} {} {}">"#, 
+            r#"<div id="{}" class="container {} {} {} {}">"#,
             self.name,
             self.state.position().css(),
             self.state.direction().css(),
@@ -238,7 +242,7 @@ impl Widget for Container {
                 if source == &self.name {
                     self.on_change(value)
                 }
-            },
+            }
             _ => (),
         }
         for widget in self.state.children.iter_mut() {
@@ -258,7 +262,6 @@ impl Widget for Container {
     fn on_change(&mut self, _value: &str) {}
 }
 
-
 /// # The direction of a Container
 pub enum Direction {
     Horizontal,
@@ -276,15 +279,15 @@ impl Direction {
 }
 
 /// # The position of the elements inside of a Container
-/// 
+///
 /// The position is defined on the direction axis.
-/// 
+///
 /// ## Example
-/// 
+///
 /// ```text
 /// Direction::Horizontal
 /// Position::Start
-/// 
+///
 /// +-----------------------------+
 /// | +--------+ +--------+       |
 /// | | widget | | widget |       |
@@ -313,15 +316,15 @@ impl Position {
 }
 
 /// # The alignment of a Container
-/// 
+///
 /// The alignment is defined on the perpendicular axis of the direction axis.
-/// 
+///
 /// ## Example
-/// 
+///
 /// ```text
 /// Direction::Vertical
 /// Alignement::Center
-/// 
+///
 /// +----------------------+
 /// |      +--------+      |
 /// |      | widget |      |

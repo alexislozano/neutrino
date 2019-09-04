@@ -2,9 +2,9 @@ use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
 /// # The state of a Tabs
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// titles: Vec<String>
 /// children: Vec<Box<dyn Widget>>
@@ -41,9 +41,10 @@ impl TabsState {
 
     /// Set the titles
     pub fn set_titles(&mut self, titles: Vec<&str>) {
-        self.titles = titles.iter().map(|t| 
-            t.to_string()
-        ).collect::<Vec<String>>();
+        self.titles = titles
+            .iter()
+            .map(|t| t.to_string())
+            .collect::<Vec<String>>();
     }
 
     /// Set the children
@@ -92,48 +93,48 @@ pub trait TabsListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::tabs::{Tabs, TabsListener, TabsState};
 /// use neutrino::widgets::label::Label;
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Dessert {
 ///     index: u32,
 ///     value: String,
 /// }
-/// 
+///
 /// impl Dessert {
 ///     fn new() -> Self {
 ///         Self { index: 0, value: "Cake".to_string() }
 ///     }
-/// 
+///
 ///     fn index(&self) -> u32 {
 ///         self.index
 ///     }
-/// 
+///
 ///     fn value(&self) -> &str {
 ///         &self.value
 ///     }
-/// 
+///
 ///     fn set(&mut self, index: u32, value: &str) {
 ///         self.index = index;
 ///         self.value = value.to_string();
-///     } 
+///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyTabsListener {
 ///     dessert: Rc<RefCell<Dessert>>,
 /// }
-/// 
+///
 /// impl MyTabsListener {
 ///    pub fn new(dessert: Rc<RefCell<Dessert>>) -> Self {
 ///        Self { dessert }
 ///    }
 /// }
-/// 
+///
 /// impl TabsListener for MyTabsListener {
 ///     fn on_change(&self, state: &TabsState) {
 ///         let index = state.selected();
@@ -142,21 +143,21 @@ pub trait TabsListener {
 ///             &state.titles()[index as usize]
 ///         );
 ///     }
-/// 
+///
 ///     fn on_update(&self, state: &mut TabsState) {
 ///         state.set_selected(self.dessert.borrow().index());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let dessert = Rc::new(RefCell::new(Dessert::new()));
-/// 
+///
 ///     let my_listener = MyTabsListener::new(Rc::clone(&dessert));
-/// 
+///
 ///     let mut my_label = Label::new("my_label");
 ///     my_label.set_text("World!");
-/// 
+///
 ///     let mut my_tabs = Tabs::new("my_tabs");
 ///     my_tabs.add("Hello", Box::new(my_label));
 ///     my_tabs.set_listener(Box::new(my_listener));
@@ -206,11 +207,14 @@ impl Tabs {
 
 impl Widget for Tabs {
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         let mut s = format!(
             r#"<div id="{}" class="tabs {}"><div class="tab-titles">"#,
-            self.name,
-            stretched
+            self.name, stretched
         );
         for (i, title) in self.state.titles.iter().enumerate() {
             let selected = if self.state.selected() == i as u32 {
@@ -240,10 +244,13 @@ impl Widget for Tabs {
                 if source == &self.name {
                     self.on_change(value);
                 } else {
-                    self.state.children[self.state.selected as usize].trigger(event);
+                    self.state.children[self.state.selected as usize]
+                        .trigger(event);
                 };
-            },
-            _ => self.state.children[self.state.selected as usize].trigger(event),
+            }
+            _ => {
+                self.state.children[self.state.selected as usize].trigger(event)
+            }
         }
     }
 

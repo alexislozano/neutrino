@@ -1,5 +1,5 @@
-use neutrino::{App, Window};
 use neutrino::widgets::label::Label;
+use neutrino::{App, Window};
 
 fn main() {
     let mut label = Label::new("my_label");

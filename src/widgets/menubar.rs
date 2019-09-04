@@ -1,9 +1,9 @@
 use crate::utils::event::Event;
 
 /// # The state of a MenuBar
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// selected_item: Option<u32>
 /// selected_function: Option<u32
@@ -42,17 +42,17 @@ pub trait MenuBarListener {
 }
 
 /// # A MenuBar
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// items: Vec<MenuItem>
 /// state: MenuBarState
 /// listener: Option<Box<dyn MenuBarListener>>
 /// ```
-/// 
+///
 /// ## Default values
-/// 
+///
 /// ```text
 /// items: vec![]
 /// state:
@@ -60,43 +60,43 @@ pub trait MenuBarListener {
 ///     selected_function: None
 /// listener: None
 /// ```
-/// 
+///
 /// ## Example
-/// 
+///
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::menubar::{MenuBar, MenuBarState, MenuBarListener, MenuItem, MenuFunction};
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct DocumentList {
 ///     values: Vec<String>,
 /// }
-/// 
+///
 /// impl DocumentList {
 ///     fn new() -> Self {
 ///         Self { values: vec![] }
 ///     }
-/// 
+///
 ///     fn add(&mut self, document: &str) {
 ///         self.values.push(document.to_string());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyMenuBarListener {
 ///     document_list: Rc<RefCell<DocumentList>>,
 /// }
-/// 
+///
 /// impl MyMenuBarListener {
 ///    pub fn new(document_list: Rc<RefCell<DocumentList>>) -> Self {
 ///        Self { document_list }
 ///    }
 /// }
-/// 
+///
 /// impl MenuBarListener for MyMenuBarListener {
 ///     fn on_change(&self, state: &MenuBarState) {
 ///         match state.selected_item() {
@@ -108,11 +108,11 @@ pub trait MenuBarListener {
 ///                     );
 ///                 }
 ///             }
-///         } 
+///         }
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let document_list = Rc::new(RefCell::new(DocumentList::new()));
 ///     
@@ -157,14 +157,14 @@ impl MenuBar {
     pub fn add(&mut self, item: MenuItem) {
         self.items.push(item);
     }
-    
+
     /// Return the HTML representation of the widget
     pub fn eval(&self) -> String {
         let mut s = r#"<div class="menubar">"#.to_string();
         for (i, item) in self.items.iter().enumerate() {
             let selected_item = match self.state.selected_item {
                 None => false,
-                Some(selected_item) => selected_item == i as u32
+                Some(selected_item) => selected_item == i as u32,
             };
             s.push_str(&item.eval(i, selected_item));
         }
@@ -178,13 +178,13 @@ impl MenuBar {
             Event::Update => (),
             Event::Change { source, value } => {
                 if *source == "menuitem" {
-                    self.on_item_change(value);    
+                    self.on_item_change(value);
                 } else if *source == "menufunction" {
                     self.on_function_change(value);
                 } else {
                     self.state.set_selected_item(None);
                 }
-            },
+            }
             _ => self.state.set_selected_item(None),
         }
     }
@@ -194,21 +194,23 @@ impl MenuBar {
         let values = value.split(";").collect::<Vec<&str>>();
         let e = values[0];
         let index = values[1].parse::<u32>().unwrap();
-        self.state.set_selected_item(match self.state.selected_item() {
-            Some(_) => match e {
-                "click" => None,
-                _ => Some(index),
-            },
-            None => match e {
-                "click" => Some(index),
-                _ => None,
-            }
-        });
+        self.state
+            .set_selected_item(match self.state.selected_item() {
+                Some(_) => match e {
+                    "click" => None,
+                    _ => Some(index),
+                },
+                None => match e {
+                    "click" => Some(index),
+                    _ => None,
+                },
+            });
     }
 
     /// Function triggered on MenuFunction change event
     fn on_function_change(&mut self, value: &str) {
-        self.state.set_selected_function(Some(value.parse::<u32>().unwrap()));
+        self.state
+            .set_selected_function(Some(value.parse::<u32>().unwrap()));
         match &self.listener {
             None => (),
             Some(listener) => {
@@ -220,16 +222,16 @@ impl MenuBar {
 }
 
 /// # An item of a MenuBar
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// functions: Vec<MenuFunction>
 /// ```
-/// 
+///
 /// ## Default values
-/// 
+///
 /// ```text
 /// name: name.to_string()
 /// functions: vec![]
@@ -252,17 +254,13 @@ impl MenuItem {
     pub fn add(&mut self, function: MenuFunction) {
         self.functions.push(function);
     }
-    
+
     /// Return the HTML representation of the widget
     fn eval(&self, index: usize, selected: bool) -> String {
-        let selected_str = if selected {
-            "selected"
-        } else {
-            ""
-        };
+        let selected_str = if selected { "selected" } else { "" };
         let mut s = format!(
             r#"<div class="menuitem"><div class="menuitem-title {}" onmousedown="{}" onmouseover="{}">{}</div>"#,
-            selected_str, 
+            selected_str,
             Event::change_js("menuitem", &format!("'click;{}'", index)), 
             Event::change_js("menuitem", &format!("'over;{}'", index)), 
             self.name
@@ -272,7 +270,7 @@ impl MenuItem {
             for (i, function) in self.functions.iter().enumerate() {
                 s.push_str(&function.eval(i));
             }
-            s.push_str(r#"</div>"#);   
+            s.push_str(r#"</div>"#);
         }
         s.push_str(r#"</div>"#);
         s
@@ -280,16 +278,16 @@ impl MenuItem {
 }
 
 /// # A function of a MenuItem
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// shortcut: Option<String>
 /// ```
-/// 
+///
 /// ## Default values
-/// 
+///
 /// ```text
 /// name: name.to_string()
 /// shortcut: None

@@ -4,7 +4,7 @@ pub trait Icon {
     fn data(&self) -> String;
 
     /// Get the extension
-    fn extension(&self) -> String; 
+    fn extension(&self) -> String;
 }
 
 include!(concat!(env!("OUT_DIR"), "/icons/enum.rs"));

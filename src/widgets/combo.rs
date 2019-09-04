@@ -1,12 +1,12 @@
 use crate::utils::event::Event;
-use crate::widgets::widget::Widget;
-use crate::utils::pixmap::Pixmap;
 use crate::utils::icon::Icon;
+use crate::utils::pixmap::Pixmap;
+use crate::widgets::widget::Widget;
 
 /// # The state of a Combo
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// choices: Vec<String>
 /// selected: u32
@@ -29,7 +29,7 @@ impl ComboState {
     pub fn choices(&self) -> &Vec<String> {
         &self.choices
     }
-    
+
     /// Get the selected flag
     pub fn selected(&self) -> u32 {
         self.selected
@@ -40,7 +40,7 @@ impl ComboState {
         self.opened
     }
 
-    /// Get the stretched flag 
+    /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
     }
@@ -55,9 +55,10 @@ impl ComboState {
 
     /// Set the choices
     pub fn set_choices(&mut self, choices: Vec<&str>) {
-        self.choices = choices.iter().map(
-            |c| c.to_string()
-        ).collect::<Vec<String>>();
+        self.choices = choices
+            .iter()
+            .map(|c| c.to_string())
+            .collect::<Vec<String>>();
     }
 
     /// Set the selected flag
@@ -95,7 +96,7 @@ pub trait ComboListener {
 /// # A collapsible list of strings
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// state: ComboState
@@ -121,47 +122,47 @@ pub trait ComboListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::combo::{Combo, ComboListener, ComboState};
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Dessert {
 ///     index: u32,
 ///     value: String,
 /// }
-/// 
+///
 /// impl Dessert {
 ///     fn new() -> Self {
 ///         Self { index: 0, value: "Cake".to_string() }
 ///     }
-/// 
+///
 ///     fn index(&self) -> u32 {
 ///         self.index
 ///     }
-/// 
+///
 ///     fn value(&self) -> &str {
 ///         &self.value
 ///     }
-/// 
+///
 ///     fn set(&mut self, index: u32, value: &str) {
 ///         self.index = index;
 ///         self.value = value.to_string();
-///     } 
+///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyComboListener {
 ///     dessert: Rc<RefCell<Dessert>>,
 /// }
-/// 
+///
 /// impl MyComboListener {
 ///    pub fn new(dessert: Rc<RefCell<Dessert>>) -> Self {
 ///        Self { dessert }
 ///    }
 /// }
-/// 
+///
 /// impl ComboListener for MyComboListener {
 ///     fn on_change(&self, state: &ComboState) {
 ///         let index = state.selected();
@@ -170,18 +171,18 @@ pub trait ComboListener {
 ///             &state.choices()[index as usize]
 ///         );
 ///     }
-/// 
+///
 ///     fn on_update(&self, state: &mut ComboState) {
 ///         state.set_selected(self.dessert.borrow().index());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let dessert = Rc::new(RefCell::new(Dessert::new()));
-/// 
+///
 ///     let my_listener = MyComboListener::new(Rc::clone(&dessert));
-/// 
+///
 ///     let mut my_combo = Combo::new("my_combo");
 ///     my_combo.set_choices(vec!["Cake", "Ice Cream", "Pie"]);
 ///     my_combo.set_listener(Box::new(my_listener));
@@ -216,7 +217,7 @@ impl Combo {
     }
 
     /// Set the index of the selected choice
-    pub fn set_selected(&mut self, selected: u32){
+    pub fn set_selected(&mut self, selected: u32) {
         self.state.set_selected(selected);
     }
 
@@ -243,7 +244,11 @@ impl Combo {
 
 impl Widget for Combo {
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         let opened = if self.state.opened() { "opened" } else { "" };
         let mut s = match self.state.icon() {
             Some(icon) => {
@@ -292,7 +297,7 @@ impl Widget for Combo {
                 } else {
                     self.state.set_opened(false);
                 }
-            },
+            }
             _ => self.state.set_opened(false),
         }
     }

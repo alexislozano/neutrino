@@ -1,12 +1,12 @@
-use crate::widgets::widget::Widget;
 use crate::utils::event::Event;
 use crate::utils::icon::Icon;
 use crate::utils::pixmap::Pixmap;
+use crate::widgets::widget::Widget;
 
 /// # The state of an Image
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// data: String
 /// extension: String
@@ -83,7 +83,7 @@ pub trait ImageListener {
 /// # An element able to display images from icons and path
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// state: ImageState
@@ -93,8 +93,8 @@ pub trait ImageListener {
 /// ## Default values
 ///
 /// The variable `pixmap` is built in both constructors from the given Icon or
-/// path. 
-/// 
+/// path.
+///
 /// ```text
 /// name: name.to_string()
 /// state:
@@ -111,52 +111,52 @@ pub trait ImageListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::image::{Image, ImageListener, ImageState};
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::utils::pixmap::Pixmap;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Painting {
 ///     path: String,
 /// }
-/// 
+///
 /// impl Painting {
 ///     fn new(path: &str) -> Self {
 ///         Self { path: path.to_string() }
 ///     }
-/// 
+///
 ///     fn path(&self) -> &str {
 ///         &self.path
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyImageListener {
 ///     painting: Rc<RefCell<Painting>>,
 /// }
-/// 
+///
 /// impl MyImageListener {
 ///    pub fn new(painting: Rc<RefCell<Painting>>) -> Self {
 ///        Self { painting }
 ///    }
 /// }
-/// 
+///
 /// impl ImageListener for MyImageListener {
 ///     fn on_update(&self, state: &mut ImageState) {
-///         let pixmap = Pixmap::from_path(self.painting.borrow().path()); 
+///         let pixmap = Pixmap::from_path(self.painting.borrow().path());
 ///         state.set_data(pixmap.data());
 ///         state.set_extension(pixmap.extension());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let painting = Rc::new(RefCell::new(Painting::new("/home/neutrino/le_radeau_de_la_meduse.jpg")));
-/// 
+///
 ///     let my_listener = MyImageListener::new(Rc::clone(&painting));
-/// 
+///
 ///     let mut my_image = Image::from_path("my_image", "/home/neutrino/le_radeau_de_la_meduse.jpg");
 ///     my_image.set_listener(Box::new(my_listener));
 /// }
@@ -171,9 +171,9 @@ impl Image {
     /// Create an image from a path
     pub fn from_path(name: &str, path: &str) -> Self {
         let pixmap = Pixmap::from_path(path);
-        Self { 
+        Self {
             name: name.to_string(),
-            state : ImageState {
+            state: ImageState {
                 data: pixmap.data().to_string(),
                 extension: pixmap.extension().to_string(),
                 background: "black".to_string(),
@@ -181,7 +181,7 @@ impl Image {
                 stretched: false,
             },
             listener: None,
-        } 
+        }
     }
 
     /// Create an image from an icon
@@ -189,7 +189,7 @@ impl Image {
         let pixmap = Pixmap::from_icon(icon);
         Self {
             name: name.to_string(),
-            state : ImageState {
+            state: ImageState {
                 data: pixmap.data().to_string(),
                 extension: pixmap.extension().to_string(),
                 background: "black".to_string(),
@@ -223,15 +223,23 @@ impl Image {
 
 impl Widget for Image {
     fn eval(&self) -> String {
-        let ratio = if self.state.keep_ratio_aspect() { "" } else { r#"width="100%" height="100%""# };
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let ratio = if self.state.keep_ratio_aspect() {
+            ""
+        } else {
+            r#"width="100%" height="100%""#
+        };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         format!(
             r#"<div id="{}" class="image {}" style="background:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
             self.name,
-            stretched, 
-            self.state.background(), 
-            ratio, 
-            self.state.extension(), 
+            stretched,
+            self.state.background(),
+            ratio,
+            self.state.extension(),
             self.state.data(),
         )
     }
@@ -243,7 +251,7 @@ impl Widget for Image {
                 if source == &self.name {
                     self.on_change(value)
                 }
-            },
+            }
             _ => (),
         }
     }

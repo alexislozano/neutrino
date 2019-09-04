@@ -1,12 +1,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use neutrino::utils::pixmap::Pixmap;
-use neutrino::widgets::image::{ImageListener, ImageState};
-use neutrino::widgets::button::{ButtonState, ButtonListener};
-use neutrino::widgets::menubar::{MenuBarState, MenuBarListener};
-use neutrino::WindowListener;
 use neutrino::utils::event::Key;
+use neutrino::utils::pixmap::Pixmap;
+use neutrino::widgets::button::{ButtonListener, ButtonState};
+use neutrino::widgets::image::{ImageListener, ImageState};
+use neutrino::widgets::menubar::{MenuBarListener, MenuBarState};
+use neutrino::WindowListener;
 
 use super::models::Images;
 
@@ -64,16 +64,13 @@ impl ButtonListener for MyNextButtonListener {
     }
 }
 
-
 pub struct MyMenuBarListener {
     images: Rc<RefCell<Images>>,
 }
 
 impl MyMenuBarListener {
     pub fn new(images: Rc<RefCell<Images>>) -> Self {
-        Self {
-            images: images,
-        }
+        Self { images: images }
     }
 }
 
@@ -81,19 +78,17 @@ impl MenuBarListener for MyMenuBarListener {
     fn on_change(&self, state: &MenuBarState) {
         match state.selected_item() {
             None => (),
-            Some(_selected_item) => {
-                match state.selected_function() {
-                    None => (),
-                    Some(selected_function) => {
-                        if selected_function == 0 {
-                            self.images.borrow_mut().previous();
-                        } else {
-                            self.images.borrow_mut().next();
-                        }
+            Some(_selected_item) => match state.selected_function() {
+                None => (),
+                Some(selected_function) => {
+                    if selected_function == 0 {
+                        self.images.borrow_mut().previous();
+                    } else {
+                        self.images.borrow_mut().next();
                     }
                 }
-            }
-        } 
+            },
+        }
     }
 }
 
@@ -103,9 +98,7 @@ pub struct MyWindowListener {
 
 impl MyWindowListener {
     pub fn new(images: Rc<RefCell<Images>>) -> Self {
-        Self {
-            images: images,
-        }
+        Self { images: images }
     }
 }
 

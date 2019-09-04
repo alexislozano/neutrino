@@ -2,13 +2,13 @@ use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
 /// # The state of a Label
-/// 
+///
 /// ## Fields
-/// 
+///
 /// ```text
 /// text: String
 /// stretched: bool
-/// ``` 
+/// ```
 pub struct LabelState {
     text: String,
     stretched: bool,
@@ -24,7 +24,7 @@ impl LabelState {
     pub fn stretched(&self) -> bool {
         self.stretched
     }
-    
+
     /// Set the text
     pub fn set_text(&mut self, text: &str) {
         self.text = text.to_string();
@@ -45,7 +45,7 @@ pub trait LabelListener {
 /// # An element able to display text
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// state: LabelState
@@ -53,7 +53,7 @@ pub trait LabelListener {
 /// ```
 ///
 /// ## Default values
-/// 
+///
 /// ```text
 /// name: name.to_string()
 /// state:
@@ -67,49 +67,49 @@ pub trait LabelListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::label::{Label, LabelListener, LabelState};
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Paragraph {
 ///     text: String,
 /// }
-/// 
+///
 /// impl Paragraph {
 ///     fn new() -> Self {
 ///         Self { text: "".to_string() }
 ///     }
-/// 
+///
 ///     fn text(&self) -> &str {
 ///         &self.text
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyLabelListener {
 ///     paragraph: Rc<RefCell<Paragraph>>,
 /// }
-/// 
+///
 /// impl MyLabelListener {
 ///    pub fn new(paragraph: Rc<RefCell<Paragraph>>) -> Self {
 ///        Self { paragraph }
 ///    }
 /// }
-/// 
+///
 /// impl LabelListener for MyLabelListener {
-///     fn on_update(&self, state: &mut LabelState) { 
+///     fn on_update(&self, state: &mut LabelState) {
 ///         state.set_text(self.paragraph.borrow().text());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let paragraph = Rc::new(RefCell::new(Paragraph::new()));
-/// 
+///
 ///     let my_listener = MyLabelListener::new(Rc::clone(&paragraph));
-/// 
+///
 ///     let mut my_label = Label::new("my_label");
 ///     my_label.set_text("Hello world!");
 ///     my_label.set_listener(Box::new(my_listener));
@@ -126,7 +126,7 @@ impl Label {
     pub fn new(name: &str) -> Self {
         Self {
             name: name.to_string(),
-            state: LabelState { 
+            state: LabelState {
                 text: "Label".to_string(),
                 stretched: false,
             },
@@ -152,7 +152,11 @@ impl Label {
 
 impl Widget for Label {
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         format!(
             r#"<div id="{}" class="label {}">{}</div>"#,
             self.name,
@@ -160,7 +164,7 @@ impl Widget for Label {
             self.state.text()
         )
     }
-    
+
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => self.on_update(),
@@ -168,7 +172,7 @@ impl Widget for Label {
                 if source == &self.name {
                     self.on_change(value)
                 }
-            },
+            }
             _ => (),
         }
     }

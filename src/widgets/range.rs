@@ -2,9 +2,9 @@ use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 
 /// # The state of a Range
-/// 
+///
 ///  ## Fields
-/// 
+///
 /// ```text
 /// min: i32
 /// max: i32
@@ -72,13 +72,13 @@ pub trait RangeListener {
 /// # A progress bar with a handle
 ///
 /// ## Fields
-/// 
+///
 /// ```text
 /// name: String
 /// state: RangeState
 /// listener: Option<Box<dyn RangeListener>>
 /// ```
-/// 
+///
 /// ## Default values
 ///
 /// ```text
@@ -96,57 +96,57 @@ pub trait RangeListener {
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
-/// 
+///
 /// use neutrino::widgets::range::{Range, RangeListener, RangeState};
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
-/// 
-/// 
+///
+///
 /// struct Counter {
 ///     value: i32,
 /// }
-/// 
+///
 /// impl Counter {
 ///     fn new() -> Self {
 ///         Self { value: 0 }
 ///     }
-/// 
+///
 ///     fn value(&self) -> i32 {
 ///         self.value
 ///     }
-/// 
+///
 ///     fn set_value(&mut self, value: i32) {
 ///         self.value = value;
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// struct MyRangeListener {
 ///     counter: Rc<RefCell<Counter>>,
 /// }
-/// 
+///
 /// impl MyRangeListener {
 ///    pub fn new(counter: Rc<RefCell<Counter>>) -> Self {
 ///        Self { counter }
 ///    }
 /// }
-/// 
+///
 /// impl RangeListener for MyRangeListener {
 ///     fn on_change(&self, state: &RangeState) {
 ///         self.counter.borrow_mut().set_value(state.value());
 ///     }
-/// 
+///
 ///     fn on_update(&self, state: &mut RangeState) {
 ///         state.set_value(self.counter.borrow().value());
 ///     }
 /// }
-/// 
-/// 
+///
+///
 /// fn main() {
 ///     let counter = Rc::new(RefCell::new(Counter::new()));
-/// 
+///
 ///     let my_listener = MyRangeListener::new(Rc::clone(&counter));
-/// 
+///
 ///     let mut my_range = Range::new("my_range");
 ///     my_range.set_listener(Box::new(my_listener));
 /// }
@@ -200,14 +200,18 @@ impl Range {
 
 impl Widget for Range {
     fn eval(&self) -> String {
-        let stretched = if self.state.stretched() { "stretched" } else { "" };
+        let stretched = if self.state.stretched() {
+            "stretched"
+        } else {
+            ""
+        };
         format!(
             r#"<div id="{}" class="range {}"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
             self.name,
             stretched,
             Event::change_js(&self.name, "value"), 
-            self.state.min(), 
-            self.state.max(), 
+            self.state.min(),
+            self.state.max(),
             self.state.value(),
         )
     }
@@ -219,7 +223,7 @@ impl Widget for Range {
                 if source == &self.name {
                     self.on_change(value);
                 }
-            },
+            }
             _ => (),
         }
     }
