@@ -68,6 +68,10 @@ pub enum Key {
     Num7,
     Num8,
     Num9,
+    Left,
+    Right,
+    Up,
+    Down,
 }
 
 impl Key {
@@ -110,6 +114,10 @@ impl Key {
             "7" => Some(Key::Num7),
             "8" => Some(Key::Num8),
             "9" => Some(Key::Num9),
+            "ArrowLeft" => Some(Key::Left),
+            "ArrowRight" => Some(Key::Right),
+            "ArrowUp" => Some(Key::Up),
+            "ArrowDown" => Some(Key::Down),
             _ => None
         }
     }

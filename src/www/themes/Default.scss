@@ -209,6 +209,7 @@ $menubar-height: 30px;
 .menubar {
     height: $menubar-height;
     background-color: white;
+    border-bottom: 1px solid black;
 
     .menuitem {
         

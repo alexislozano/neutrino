@@ -10,14 +10,14 @@ use crate::utils::pixmap::Pixmap;
 /// ```text
 /// data: String
 /// extension: String
-/// background_color: String
+/// background: String
 /// keep_ratio_aspect: bool
 /// stretched: bool
 /// ```
 pub struct ImageState {
     data: String,
     extension: String,
-    background_color: String,
+    background: String,
     keep_ratio_aspect: bool,
     stretched: bool,
 }
@@ -34,8 +34,8 @@ impl ImageState {
     }
 
     /// Get the background color
-    pub fn background_color(&self) -> &str {
-        &self.background_color
+    pub fn background(&self) -> &str {
+        &self.background
     }
 
     /// Get the keep_ratio_aspect flag
@@ -59,8 +59,8 @@ impl ImageState {
     }
 
     /// Set the background color
-    pub fn set_background_color(&mut self, background_color: &str) {
-        self.background_color = background_color.to_string();
+    pub fn set_background(&mut self, background: &str) {
+        self.background = background.to_string();
     }
 
     /// Set the keep_ratio_aspect flag
@@ -100,7 +100,7 @@ pub trait ImageListener {
 /// state:
 ///     data: pixmap.data().to_string(),
 ///     extension: pixmap.extension().to_string(),
-///     background_color: "black".to_string(),
+///     background: "black".to_string(),
 ///     keep_ratio_aspect: false,
 ///     stretched: false,
 /// listener: None
@@ -176,7 +176,7 @@ impl Image {
             state : ImageState {
                 data: pixmap.data().to_string(),
                 extension: pixmap.extension().to_string(),
-                background_color: "black".to_string(),
+                background: "black".to_string(),
                 keep_ratio_aspect: false,
                 stretched: false,
             },
@@ -192,7 +192,7 @@ impl Image {
             state : ImageState {
                 data: pixmap.data().to_string(),
                 extension: pixmap.extension().to_string(),
-                background_color: "black".to_string(),
+                background: "black".to_string(),
                 keep_ratio_aspect: false,
                 stretched: false,
             },
@@ -201,8 +201,8 @@ impl Image {
     }
 
     /// Set the background color
-    pub fn set_background_color(&mut self, background_color: &str) {
-        self.state.set_background_color(background_color);
+    pub fn set_background(&mut self, background: &str) {
+        self.state.set_background(background);
     }
 
     /// Set the keep_ratio_aspect flag to true
@@ -226,10 +226,10 @@ impl Widget for Image {
         let ratio = if self.state.keep_ratio_aspect() { "" } else { r#"width="100%" height="100%""# };
         let stretched = if self.state.stretched() { "stretched" } else { "" };
         format!(
-            r#"<div id="{}" class="image {}" style="background-color:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
+            r#"<div id="{}" class="image {}" style="background:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
             self.name,
             stretched, 
-            self.state.background_color(), 
+            self.state.background(), 
             ratio, 
             self.state.extension(), 
             self.state.data(),

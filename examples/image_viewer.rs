@@ -6,10 +6,11 @@ use neutrino::widgets::image::Image;
 use neutrino::widgets::button::Button;
 use neutrino::widgets::container::{Container, Direction};
 use neutrino::utils::icon::BreezeIcon;
+use neutrino::widgets::menubar::{MenuBar, MenuItem, MenuFunction};
 
 mod image_viewer_mod;
 use image_viewer_mod::models::Images;
-use image_viewer_mod::listeners::{MyImageListener, MyPrevButtonListener, MyNextButtonListener};
+use image_viewer_mod::listeners::{MyImageListener, MyPrevButtonListener, MyNextButtonListener, MyMenuBarListener, MyWindowListener};
 
 fn main() {
     let images = Rc::new(RefCell::new(Images::new()));
@@ -38,10 +39,30 @@ fn main() {
     root.add(Box::new(image));
     root.add(Box::new(button_next));
 
+    let mut prev_function = MenuFunction::new("Previous");
+    prev_function.set_shortcut("Ctrl+Left");
+
+    let mut next_function = MenuFunction::new("Next");
+    next_function.set_shortcut("Ctrl+Right");
+
+    let mut menuitem = MenuItem::new("File");
+    menuitem.add(prev_function);
+    menuitem.add(next_function);
+
+    let menubar_listener = MyMenuBarListener::new(Rc::clone(&images));
+
+    let mut menubar = MenuBar::new();
+    menubar.add(menuitem);
+    menubar.set_listener(Box::new(menubar_listener));
+
+    let window_listener = MyWindowListener::new(Rc::clone(&images));
+
     let mut window = Window::new();
     window.set_title("Image viewer");
     window.set_size(640, 480);
     window.set_child(Box::new(root));
+    window.set_menubar(menubar);
+    window.set_listener(Box::new(window_listener));
 
     App::run(window);
 }

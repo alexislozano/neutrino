@@ -4,6 +4,9 @@ use std::rc::Rc;
 use neutrino::utils::pixmap::Pixmap;
 use neutrino::widgets::image::{ImageListener, ImageState};
 use neutrino::widgets::button::{ButtonState, ButtonListener};
+use neutrino::widgets::menubar::{MenuBarState, MenuBarListener};
+use neutrino::WindowListener;
+use neutrino::utils::event::Key;
 
 use super::models::Images;
 
@@ -58,5 +61,60 @@ impl ButtonListener for MyNextButtonListener {
 
     fn on_change(&self, _state: &ButtonState) {
         self.images.borrow_mut().next();
+    }
+}
+
+
+pub struct MyMenuBarListener {
+    images: Rc<RefCell<Images>>,
+}
+
+impl MyMenuBarListener {
+    pub fn new(images: Rc<RefCell<Images>>) -> Self {
+        Self {
+            images: images,
+        }
+    }
+}
+
+impl MenuBarListener for MyMenuBarListener {
+    fn on_change(&self, state: &MenuBarState) {
+        match state.selected_item() {
+            None => (),
+            Some(_selected_item) => {
+                match state.selected_function() {
+                    None => (),
+                    Some(selected_function) => {
+                        if selected_function == 0 {
+                            self.images.borrow_mut().previous();
+                        } else {
+                            self.images.borrow_mut().next();
+                        }
+                    }
+                }
+            }
+        } 
+    }
+}
+
+pub struct MyWindowListener {
+    images: Rc<RefCell<Images>>,
+}
+
+impl MyWindowListener {
+    pub fn new(images: Rc<RefCell<Images>>) -> Self {
+        Self {
+            images: images,
+        }
+    }
+}
+
+impl WindowListener for MyWindowListener {
+    fn on_key(&self, key: Key) {
+        match key {
+            Key::Left => self.images.borrow_mut().previous(),
+            Key::Right => self.images.borrow_mut().next(),
+            _ => (),
+        }
     }
 }

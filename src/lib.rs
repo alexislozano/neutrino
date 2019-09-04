@@ -55,6 +55,7 @@ impl App {
         let width = window.width;
         let height = window.height;
         let resizable = window.resizable;
+        let debug = window.debug;
 
         let webview = web_view::builder()
             .title(title)
@@ -62,7 +63,7 @@ impl App {
             .size(width, height)
             .resizable(resizable)
             .user_data("")
-            .debug(true)
+            .debug(debug)
             .invoke_handler(|webview, arg| {
                 let event: Event = match json::parse(arg) {
                     Ok(value) => match value["type"].as_str().unwrap() {
@@ -109,6 +110,7 @@ pub trait WindowListener {
 /// width: i32
 /// height: i32
 /// resizable: bool
+/// debug: bool
 /// theme: Theme
 /// custom_css: String
 /// child: Option<Box<dyn Widget>>
@@ -123,6 +125,7 @@ pub trait WindowListener {
 /// width: 640
 /// height: 480
 /// resizable: false
+/// debug: false
 /// theme: Theme::Default
 /// custom_css: "".to_string()
 /// child: None
@@ -132,17 +135,24 @@ pub trait WindowListener {
 ///
 /// ## Example
 ///
-/// ```text
-/// let mut my_window = Window::new();
-/// my_window.set_title("Title");
-/// my_window.set_size(800, 600);
-/// my_window.set_resizable();
+/// ```
+/// use neutrino::{Window, App};
+/// 
+/// fn main() {
+///     let mut my_window = Window::new();
+///     my_window.set_title("Title");
+///     my_window.set_size(800, 600);
+///     my_window.set_resizable();
+/// 
+///     // App::run(window);
+/// }
 /// ```
 pub struct Window {
     title: String,
     width: i32,
     height: i32,
     resizable: bool,
+    debug: bool,
     theme: Theme,
     custom_css: String,
     child: Option<Box<dyn Widget>>,
@@ -158,6 +168,7 @@ impl Window {
             width: 640,
             height: 480,
             resizable: false,
+            debug: false,
             theme: Theme::Default,
             custom_css: "".to_string(),
             child: None,
@@ -190,6 +201,11 @@ impl Window {
     /// Set the resizable flag to true
     pub fn set_resizable(&mut self) {
         self.resizable = true;
+    }
+
+    /// Set the debug flag to true
+    pub fn set_debug(&mut self) {
+        self.debug = true;
     }
 
     /// Set the theme

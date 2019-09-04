@@ -7,9 +7,9 @@ impl Images {
     pub fn new() -> Self {
         Self {
             paths: vec![
-                "/home/alexis/Images/autumn.jpg".to_string(),
-                "/home/alexis/Images/leaf.jpg".to_string(),
-                "/home/alexis/Images/snow.jpg".to_string(),
+                "/home/alexis/Téléchargements/Images/autumn.jpg".to_string(),
+                "/home/alexis/Téléchargements/Images/leaf.jpg".to_string(),
+                "/home/alexis/Téléchargements/Images/snow.jpg".to_string(),
             ],
             selected: 0,
         }
