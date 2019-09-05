@@ -11,20 +11,20 @@ impl Event {
     /// Return an one-line function sending a change event from javascript
     pub fn change_js(source: &str, value: &str) -> String {
         format!(
-            r#"(function(){{ invoke( {{ type: 'Change', source: '{}', value: {} }} ); event.stopPropagation(); }})()"#,
+            r#"(function(){{ emit( {{ type: 'Change', source: '{}', value: {} }} ); event.stopPropagation(); }})()"#,
             source, value
         )
     }
 
     /// Return an one-line function sending a key event from javascript
     pub fn key_js() -> String {
-        r#"(function() { if (event.ctrlKey && event.key !== 'Control') { invoke( { type: 'Key', key: event.key } ); } event.stopPropagation(); } )()"#
+        r#"(function() { if (event.ctrlKey && event.key !== 'Control') { emit( { type: 'Key', key: event.key } ); } event.stopPropagation(); } )()"#
             .to_string()
     }
 
     /// Return an one-line function sending a undefined event from javascript
     pub fn undefined_js() -> String {
-        r#"(function() { invoke( { type: 'Undefined' } ); event.stopPropagation(); } )()"#
+        r#"(function() { emit( { type: 'Undefined' } ); event.stopPropagation(); } )()"#
             .to_string()
     }
 }
