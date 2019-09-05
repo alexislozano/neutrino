@@ -275,9 +275,16 @@ impl Widget for Combo {
         };
         if self.state.opened() {
             s.push_str(r#"<div class="combo-choices">"#);
+            let combos_length = self.state.choices().len();
             for (i, choice) in self.state.choices().iter().enumerate() {
+                let last = if i == combos_length - 1 {
+                    "last"
+                } else {
+                    ""
+                };
                 s.push_str(&format!(
-                    r#"<div class="combo-choice" onmousedown="{}">{}</div>"#,
+                    r#"<div class="combo-choice {}" onmousedown="{}">{}</div>"#,
+                    last,
                     Event::change_js(&self.name, &format!("'{}'", i)),
                     choice
                 ));
