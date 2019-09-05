@@ -162,6 +162,7 @@ pub trait ContainerListener {
 ///     let my_listener = MyContainerListener::new(Rc::clone(&quotes));
 ///
 ///     let mut my_container = Container::new("my_container");
+///     my_container.set_listener(Box::new(my_listener));
 /// }
 /// ```
 pub struct Container {
@@ -205,6 +206,11 @@ impl Container {
     /// Alignment::None (default) for the Container to stretch.
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
+    }
+    
+    /// Set the listener
+    pub fn set_listener(&mut self, listener: Box<dyn ContainerListener>) {
+        self.listener.replace(listener);
     }
 
     /// Add a widget
