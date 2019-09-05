@@ -32,7 +32,7 @@ fn main() {
     textinput1.set_size(4);
 
     let mut button1 = Button::new("button1");
-    button1.set_text("Bouton à pousser");
+    button1.set_text("Button");
     button1.set_stretched();
     button1.set_icon(Box::new(BreezeIcon::Check));
 
@@ -44,11 +44,11 @@ fn main() {
     label1.set_text("70%");
 
     let mut checkbox1 = CheckBox::new("checkbox1");
-    checkbox1.set_text("Case à cocher");
+    checkbox1.set_text("Checkbox");
     checkbox1.set_checked();
 
     let mut radio1 = Radio::new("radio1");
-    radio1.set_choices(vec!["Bouton radio", "Bouton radio"]);
+    radio1.set_choices(vec!["Radio Button", "Radio Button"]);
     radio1.set_selected(0);
 
     let mut combo1 = Combo::new("combo1");
@@ -105,22 +105,22 @@ fn main() {
     let mut tabs1 = Tabs::new("tabs1");
     tabs1.set_selected(0);
     tabs1.set_listener(Box::new(tabs_listener));
-    tabs1.add("Onglet 1", Box::new(container6));
-    tabs1.add("Onglet 2", Box::new(label2));
+    tabs1.add("Tab 1", Box::new(container6));
+    tabs1.add("Tab 2", Box::new(label2));
 
-    let mut quitter = MenuFunction::new("Quitter");
+    let mut quitter = MenuFunction::new("Exit");
     quitter.set_shortcut("Ctrl-Q");
 
-    let mut fichier = MenuItem::new("Fichier");
+    let mut fichier = MenuItem::new("File");
     fichier.add(quitter);
 
-    let mut onglet1 = MenuFunction::new("Onglet 1");
+    let mut onglet1 = MenuFunction::new("Tab 1");
     onglet1.set_shortcut("Ctrl-1");
 
-    let mut onglet2 = MenuFunction::new("Onglet 2");
+    let mut onglet2 = MenuFunction::new("Tab 2");
     onglet2.set_shortcut("Ctrl-2");
 
-    let mut onglets = MenuItem::new("Onglets");
+    let mut onglets = MenuItem::new("Tabs");
     onglets.add(onglet1);
     onglets.add(onglet2);
 
