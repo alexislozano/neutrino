@@ -216,14 +216,27 @@ impl Widget for Tabs {
             r#"<div id="{}" class="tabs {}"><div class="tab-titles">"#,
             self.name, stretched
         );
+        let tabs_number = self.state.titles.len();
         for (i, title) in self.state.titles.iter().enumerate() {
             let selected = if self.state.selected() == i as u32 {
                 "selected"
             } else {
                 ""
             };
+            let first = if i == 0 {
+                "first"
+            } else {
+                ""
+            };
+            let last = if i == tabs_number - 1 {
+                "last"
+            } else {
+                ""
+            };
             s.push_str(&format!(
-                r#"<div class="tab-title {}" onmousedown="{}">{}</div>"#,
+                r#"<div class="tab-title {} {} {}" onmousedown="{}">{}</div>"#,
+                first,
+                last,
                 selected,
                 Event::change_js(&self.name, &format!("'{}'", i)),
                 title

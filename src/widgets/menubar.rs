@@ -267,8 +267,9 @@ impl MenuItem {
         );
         if selected {
             s.push_str(r#"<div class="menufunctions">"#);
+            let functions_number = self.functions.len();
             for (i, function) in self.functions.iter().enumerate() {
-                s.push_str(&function.eval(i));
+                s.push_str(&function.eval(i ,i == 0, i == functions_number - 1));
             }
             s.push_str(r#"</div>"#);
         }
@@ -312,9 +313,11 @@ impl MenuFunction {
     }
 
     /// Return the HTML representation of the widget
-    fn eval(&self, index: usize) -> String {
+    fn eval(&self, index: usize, first: bool, last: bool) -> String {
         format!(
-            r#"<div class="menufunction" onmousedown="{}"><span class="title">{}</span><span class="shortcut">{}</span></div>"#,
+            r#"<div class="menufunction {} {}" onmousedown="{}"><span class="title">{}</span><span class="shortcut">{}</span></div>"#,
+            if first { "first" } else { "" },
+            if last { "last" } else { "" },
             Event::change_js("menufunction", &format!("'{}'", index)),
             self.name, match &self.shortcut {
                 None => "",
