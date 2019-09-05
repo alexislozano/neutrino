@@ -56,6 +56,18 @@ pub struct App;
 impl App {
     /// Run the application
     pub fn run(mut window: Window) {
+        let title = &window.title.to_owned();
+        let width = window.width;
+        let height = window.height;
+        let resizable = window.resizable;
+        let debug = window.debug;
+
+        let context = if debug {
+            ""
+        } else {
+            r#"(function() { event.preventDefault(); } )()"#
+        };
+
         let html = format!(
             r#"
             <!doctype html>
@@ -64,7 +76,7 @@ impl App {
                     <meta charset="UTF-8">
                     {styles}
                 </head>
-                <body onkeydown="{key}" onmousedown="{click}">
+                <body onkeydown="{key}" onmousedown="{click}" oncontextmenu="{context}">
                     <div id="app"></div>
                     {scripts}
                 </body>
@@ -86,13 +98,8 @@ impl App {
             ),
             key = Event::key_js(),
             click = Event::undefined_js(),
+            context = context,
         );
-
-        let title = &window.title.to_owned();
-        let width = window.width;
-        let height = window.height;
-        let resizable = window.resizable;
-        let debug = window.debug;
 
         let webview = web_view::builder()
             .title(title)
