@@ -18,7 +18,7 @@ $disabled-gradient: linear-gradient($lgrey-color, $lgrey-color);
 $widget-margin: 6px;
 
 // PATH
-$checkbox-path: polygon(33% 72%, 74% 16%, 85% 24%, 34% 90%, 10% 69%, 18% 59%);
+$checkbox-path: polygon(40% 62%, 74% 17%, 81% 33%, 40% 82%, 17% 58%, 23% 44%);
 
 #app {
     font-family: 'San Francisco', sans-serif;
@@ -92,8 +92,8 @@ $checkbox-path: polygon(33% 72%, 74% 16%, 85% 24%, 34% 90%, 10% 69%, 18% 59%);
         border-radius: 4px; 
         margin: 0;
         padding: 7px;
-        padding-top: 4px;
-        padding-bottom: 4px;
+        padding-top: 6px;
+        padding-bottom: 5px;
         font-size: inherit;
         font-family: inherit;
         outline: 0;
@@ -116,7 +116,7 @@ $checkbox-path: polygon(33% 72%, 74% 16%, 85% 24%, 34% 90%, 10% 69%, 18% 59%);
         width: 14px;
         background-color: white;
         border: 1px solid $mgrey-color;
-        border-radius: 2px;
+        border-radius: 4px;
 
         &.checked {
             background-color: $primary-color;

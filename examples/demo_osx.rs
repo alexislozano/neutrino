@@ -100,6 +100,9 @@ fn main() {
     let mut label2 = Label::new("label2");
     label2.set_text("This is Tab 2.");
 
+    let mut label3 = Label::new("label3");
+    label3.set_text("This is Tab 3.");
+
     let tabs_listener = MyTabsListener::new(Rc::clone(&rpanes));
 
     let mut tabs1 = Tabs::new("tabs1");
@@ -107,6 +110,7 @@ fn main() {
     tabs1.set_listener(Box::new(tabs_listener));
     tabs1.add("Tab 1", Box::new(container6));
     tabs1.add("Tab 2", Box::new(label2));
+    tabs1.add("Tab 3", Box::new(label3));
 
     let mut quitter = MenuFunction::new("Exit");
     quitter.set_shortcut("Ctrl-Q");
@@ -120,9 +124,13 @@ fn main() {
     let mut onglet2 = MenuFunction::new("Tab 2");
     onglet2.set_shortcut("Ctrl-2");
 
+    let mut onglet3 = MenuFunction::new("Tab 3");
+    onglet3.set_shortcut("Ctrl-3");
+
     let mut onglets = MenuItem::new("Tabs");
     onglets.add(onglet1);
     onglets.add(onglet2);
+    onglets.add(onglet3);
 
     let menubar_listener = MyMenuBarListener::new(Rc::clone(&rpanes));
 

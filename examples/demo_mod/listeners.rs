@@ -23,6 +23,7 @@ impl WindowListener for MyWindowListener {
         match key {
             Key::Num1 => self.panes.borrow_mut().set_value(0),
             Key::Num2 => self.panes.borrow_mut().set_value(1),
+            Key::Num3 => self.panes.borrow_mut().set_value(2),
             Key::Q => std::process::exit(0),
             _ => (),
         }
