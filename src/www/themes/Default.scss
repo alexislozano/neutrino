@@ -155,19 +155,28 @@ $menubar-height: 30px;
     margin: 6px;
 
     .inner-range {
-        -webkit-appearance: none;
-        appearance: none;
-        height: 10px;
-        width: 100%;
-        background-color: white;
-        border: 1px solid black;
-        outline: none;
+
+        &::-webkit-slider-runnable-track {
+            height: 10px;
+            background-color: white;
+            border: 1px solid black;
+        }
 
         &::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
             width: 16px;
-            height: 10px;
+            height: 8px;
+            background: black;
+        }
+        
+        &::-ms-track {
+            height: 8px;
+            background-color: white;
+            border: 1px solid black;
+        }
+
+        &::-ms-thumb {
+            width: 16px;
+            height: 8px;
             background: black;
         }
     }

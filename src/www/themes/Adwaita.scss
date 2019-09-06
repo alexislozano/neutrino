@@ -198,23 +198,40 @@ $checkbox-path: polygon(50% 55%, 100% 10%, 100% 40%, 50% 85%, 14% 43%, 29% 29%);
     height: 32px;
 
     .inner-range {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 100%;
-        outline: none;
-        height: 4px;
-        background-color: $lgrey-color;
-        border: 1px solid $mgrey-color;
-        border-radius: 2px;
+        background-color: white;
+        
+        &::-webkit-slider-runnable-track {
+            height: 4px;
+            background-color: $lgrey-color;
+            border: 1px solid $mgrey-color;
+            border-radius: 2px;
+        }
 
         &::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
             width: 18px;
             height: 18px;
             background: $button-gradient;
             border: 1px solid $mgrey-color;
             border-radius: 50%;
+            margin-top: -8px;
+        }
+
+        &::-ms-track {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            height: 2px;
+            background-color: $lgrey-color;
+            border: 1px solid $mgrey-color;
+            border-radius: 2px;
+        }
+
+        &::-ms-thumb {
+            width: 16px;
+            height: 16px;
+            background: $button-gradient;
+            border: 1px solid $mgrey-color;
+            border-radius: 50%;
+            margin-top: -2px;
         }
     }
 }
