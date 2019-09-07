@@ -17,7 +17,9 @@ $disabled-gradient: linear-gradient($lgrey-color, $lgrey-color);
 $widget-margin: 6px;
 
 // PATH
-$checkbox-path: polygon(50% 55%, 100% 10%, 100% 40%, 50% 85%, 14% 43%, 29% 29%);
+// Base 64 encoded string from :
+// <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50 55, 100 10, 100 40, 50 85, 14 43, 29 29' fill='black'></polygon></svg>
+$checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzUwIDU1LCAxMDAgMTAsIDEwMCA0MCwgNTAgODUsIDE0IDQzLCAyOSAyOScgZmlsbD0nYmxhY2snPjwvcG9seWdvbj48L3N2Zz4=");
 
 #app {
     font-family: 'Cantarell', sans-serif;
@@ -119,9 +121,10 @@ $checkbox-path: polygon(50% 55%, 100% 10%, 100% 40%, 50% 85%, 14% 43%, 29% 29%);
             background-color: white;
         
             &.checked {
-                clip-path: $checkbox-path;
-                -webkit-clip-path: $checkbox-path;
-                background-color: black;
+                width: 14px;
+                height: 14px;
+                background-image: $checkbox-path;
+                background-size: 14px 14px;
             }
         }
     }

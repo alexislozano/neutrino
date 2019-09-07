@@ -58,7 +58,7 @@ fn themes(out_dir: &str) {
                 let css_str = str::from_utf8(&css).unwrap();
                 enum_data.push_str(&format!(r#"{},"#, &filestem));
                 impl_data.push_str(&format!(
-                    r#"Theme::{} => "{}","#,
+                    r##"Theme::{} => r#"{}"#,"##,
                     &filestem, css_str
                 ))
             }
