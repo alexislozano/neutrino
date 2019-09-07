@@ -25,7 +25,7 @@ line to your `Cargo.toml` and you'll be done :
 neutrino = "<last_version>"
 ```
 
-On Linux, you'll have to install webkit2gtk:
+On Linux, you'll have to install webkit2gtk's development library:
 ```
 sudo apt install -y libwebkit2gtk-4.0-dev
 ```
