@@ -166,10 +166,34 @@ body {
     align-items: center;
 
     .inner-range {
+        padding: 0;
         box-sizing: border-box;
+        outline: none;
+        width: 100%;
+        appearance: none;
+        -webkit-appearance: none;
+
+        &::-webkit-slider-runnable-track {
+            -webkit-appearance: none;
+            appearance: none;
+        }
 
         &::-webkit-slider-thumb {
             cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        &::-ms-thumb {
+            border: none;
+        }
+
+        &::-ms-track {
+            color: transparent;
+        }
+
+        &::-ms-fill-lower {
+            background: transparent;
         }
 
         &::-moz-range-thumb {
