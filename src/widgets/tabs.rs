@@ -252,7 +252,10 @@ impl Widget for Tabs {
 
     fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Update => self.on_update(),
+            Event::Update => {
+                self.state.children[self.state.selected as usize].trigger(event);
+                self.on_update()
+            }
             Event::Change { source, value } => {
                 if source == &self.name {
                     self.on_change(value);
