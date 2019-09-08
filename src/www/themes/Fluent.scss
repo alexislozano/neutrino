@@ -1,0 +1,297 @@
+// MENUBAR HEIGHT
+$menubar-height: 36px;
+
+// COLORS
+$primary-color: #0078cf;
+$dgrey-color: #c2c2c2;
+$mgrey-color: #b5b5b6;
+$lgrey-color: #f2f2f2;
+$background-color: #f6f5f4;
+
+// GRADIENTS
+$button-gradient: linear-gradient($background-color, #e8e9ea);
+$disabled-gradient: linear-gradient($lgrey-color, $lgrey-color);
+
+// MARGINS
+$widget-margin: 6px;
+
+// PATH
+// Base 64 encoded string from :
+// <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='30 75, 100 8, 100 24, 30 89, 0 60, 0 44' fill='white'></polygon></svg>
+$checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzMwIDc1LCAxMDAgOCwgMTAwIDI0LCAzMCA4OSwgMCA2MCwgMCA0NCcgZmlsbD0nd2hpdGUnPjwvcG9seWdvbj48L3N2Zz4=");
+
+#app {
+    font-family: 'Verdana', sans-serif;
+    font-size: 13px;
+    background-color: $background-color;
+}
+
+.label {
+    margin: $widget-margin;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.button {
+    padding: 7px;
+    margin: $widget-margin;
+    border: 1px solid $mgrey-color;
+    background: $mgrey-color;
+    color: black;
+    outline: 0;
+
+    &.disabled {
+        color: lighten(black, 50%);
+        transition: border-color 300ms, background-color 300ms, color 300ms;
+    }
+
+    img {
+        height: 18px;
+        width: 18px;
+
+        + span {
+            margin-left: 10px;
+        }
+        
+    }
+}
+
+.progressbar {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    margin-left: $widget-margin;
+    margin-right: $widget-margin;
+    height: 4px;
+    background-color: $mgrey-color;
+    border: 1px solid $mgrey-color;
+    position: relative;
+
+    .inner-progressbar {
+        position: relative;
+        top: -1px;
+        left: -1px;
+        background-color: $primary-color;
+        border: 1px solid $primary-color;
+        height: 4px;
+    }
+}
+
+.textinput {
+    margin: $widget-margin;
+
+    input {
+        border: 2px solid $mgrey-color; 
+        margin: 0;
+        padding: 7px;
+        font-size: inherit;
+        font-family: inherit;
+        outline: 0;
+
+        &:focus {
+            border-color: $primary-color;
+        }
+    }
+}
+
+.checkbox {
+    margin: $widget-margin;
+
+    label {
+        margin-left: $widget-margin;
+    }
+
+    .checkbox-outer {
+        height: 14px;
+        width: 14px;
+        background-color: white;
+        border: 2px solid black;
+
+        &.checked {
+            border-color: $primary-color;
+        }
+
+        .checkbox-inner {
+            height: 14px;
+            width: 14px;
+            background-color: white;
+        
+            &.checked {
+                width: 14px;
+                height: 14px;
+                background-image: $checkbox-path;
+                background-size: 14px 14px;
+                background-color: $primary-color;
+            }
+        }
+    }
+}
+
+.radio {
+    margin: $widget-margin;
+
+    label {
+        margin-left: $widget-margin;
+    }
+
+    .radio-outer {
+        height: 14px;
+        width: 14px;
+        background-color: white;
+        border: 2px solid black;
+        border-radius: 50%;
+
+        &.selected {
+            border-color: $primary-color;
+        }
+
+        .radio-inner {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            background-color: white;
+
+            &.selected {
+                background-color: black;
+            }
+        }
+    }
+}
+
+.combo {
+    margin: $widget-margin;
+
+    .combo-button {
+        padding: 7px;
+        border: 2px solid $mgrey-color;
+        color: black;
+        outline: 0;
+        background: white;
+
+        img {
+            margin-left: 10px;
+            height: 18px;
+            width: 18px;
+        }
+    }
+
+    .combo-choices {
+        border: 1px solid $mgrey-color;
+        border-top: none;
+        
+        .combo-choice {
+            background-color: $lgrey-color;
+            padding: 10px;
+
+            &:hover {
+                background-color: $mgrey-color;
+            }
+        }
+    }
+}
+
+.range {
+    margin-left: $widget-margin;
+    margin-right: $widget-margin;
+    height: 32px;
+
+    .inner-range {
+        background-color: white;
+        
+        &::-webkit-slider-runnable-track {
+            height: 4px;
+            background-color: $mgrey-color;
+            border: 1px solid $mgrey-color;
+        }
+
+        &::-webkit-slider-thumb {
+            width:6px;
+            height: 20px;
+            background: $primary-color;
+            border: 1px solid $primary-color;
+            border-radius: 3px;
+            margin-top: -9px;
+        }
+
+        &::-ms-track {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            height: 2px;
+            background-color: $mgrey-color;
+            border: 1px solid $mgrey-color;
+        }
+
+        &::-ms-thumb {
+            width: 4px;
+            height: 18px;
+            background: $primary-color;
+            border: 1px solid $primary-color;
+            border-radius: 3px;
+            margin-top: 0px;
+        }
+    }
+}
+
+.tabs {
+
+    .tab-titles {
+        background-color: $lgrey-color;
+
+        .tab-title {
+            color: lighten(black, 50%);
+            height: 40px;
+            padding-left: 10px;
+            padding-right: 10px;
+            
+            &.selected {
+                color: black;
+                border-bottom: 3px solid $primary-color;
+                border-top: 3px solid $lgrey-color;
+            }
+        }
+    }
+
+    .tab {
+        background-color: white;
+    }
+}
+
+#app {
+    .menubar + * {
+        top: $menubar-height;
+    }
+}
+
+.menubar {
+    height: $menubar-height;
+    background-color: white;
+
+    .menuitem {
+        
+        .menuitem-title {
+            box-sizing: border-box;
+            padding-left: 10px;
+            padding-right: 10px;
+
+            &.selected {
+                background-color: $mgrey-color;
+            }
+        }
+
+        .menufunctions {
+            background-color: $lgrey-color;
+            border: 1px solid $mgrey-color;
+
+            .menufunction {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                padding-left: 10px;
+                padding-right: 10px;
+                width: 140px;
+
+                &:hover {
+                    background-color: $mgrey-color;
+                }
+            }
+        }
+    }
+}
