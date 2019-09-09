@@ -116,13 +116,22 @@ fn main() {
     let mut label2 = Label::new("label2");
     label2.set_text("This is Tab 2.");
 
+    let mut label3 = Label::new("label3");
+    label3.unset_selectable();
+    label3.set_text("This label text is unselectable");
+
+    let mut container7 = Container::new("contanier7");
+    container7.set_direction(Direction::Vertical);
+    container7.add(Box::new(label2));
+    container7.add(Box::new(label3));
+
     let tabs_listener = MyTabsListener::new(Rc::clone(&rpanes));
 
     let mut tabs1 = Tabs::new("tabs1");
     tabs1.set_selected(0);
     tabs1.set_listener(Box::new(tabs_listener));
     tabs1.add("Tab 1", Box::new(container6));
-    tabs1.add("Tab 2", Box::new(label2));
+    tabs1.add("Tab 2", Box::new(container7));
 
     let mut quitter = MenuFunction::new("Exit");
     quitter.set_shortcut("Ctrl-Q");
@@ -157,6 +166,6 @@ fn main() {
     window.set_menubar(menu_bar);
     window.set_listener(Box::new(app_listener));
     window.set_theme(Theme::Default);
-
+    
     App::run(window);
 }

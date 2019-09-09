@@ -8,10 +8,12 @@ use crate::widgets::widget::Widget;
 /// ```text
 /// text: String
 /// stretched: bool
+/// selectable: bool
 /// ```
 pub struct LabelState {
     text: String,
     stretched: bool,
+    selectable: bool
 }
 
 impl LabelState {
@@ -25,6 +27,11 @@ impl LabelState {
         self.stretched
     }
 
+    /// Get the selectable flag
+    pub fn selectable(&self) -> bool {
+        self.selectable
+    }
+
     /// Set the text
     pub fn set_text(&mut self, text: &str) {
         self.text = text.to_string();
@@ -33,6 +40,11 @@ impl LabelState {
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the selectable flag
+    pub fn set_selectable(&mut self, selectable: bool) {
+        self.selectable = selectable;
     }
 }
 
@@ -129,6 +141,7 @@ impl Label {
             state: LabelState {
                 text: "Label".to_string(),
                 stretched: false,
+                selectable: true,
             },
             listener: None,
         }
@@ -144,6 +157,11 @@ impl Label {
         self.state.set_stretched(true);
     }
 
+    /// Set the selectable flag to false
+    pub fn unset_selectable(&mut self) {
+        self.state.set_selectable(false);
+    }
+
     /// Set the listener
     pub fn set_listener(&mut self, listener: Box<dyn LabelListener>) {
         self.listener = Some(listener);
@@ -157,10 +175,16 @@ impl Widget for Label {
         } else {
             ""
         };
+        let selectable = if self.state.selectable() {
+            "selectable"
+        } else {
+            ""
+        };
         format!(
-            r#"<div id="{}" class="label {}">{}</div>"#,
+            r#"<div id="{}" class="label {} {}">{}</div>"#,
             self.name,
             stretched,
+            selectable,
             self.state.text()
         )
     }

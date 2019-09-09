@@ -1,12 +1,11 @@
 // MENUBAR HEIGHT
-$menubar-height: 26px;
+$menubar-height: 36px;
 
 // COLORS
-$primary-color: #3584e4;
-$dprimary-color: #185fb4;
-$dgrey-color: #757778;
+$primary-color: #0078cf;
+$dgrey-color: #c2c2c2;
 $mgrey-color: #b5b5b6;
-$lgrey-color: #e1dedb;
+$lgrey-color: #f2f2f2;
 $background-color: #f6f5f4;
 
 // GRADIENTS
@@ -18,12 +17,12 @@ $widget-margin: 6px;
 
 // PATH
 // Base 64 encoded string from :
-// <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50 55, 100 10, 100 40, 50 85, 14 43, 29 29' fill='black'></polygon></svg>
-$checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzUwIDU1LCAxMDAgMTAsIDEwMCA0MCwgNTAgODUsIDE0IDQzLCAyOSAyOScgZmlsbD0nYmxhY2snPjwvcG9seWdvbj48L3N2Zz4=");
+// <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='30 75, 100 8, 100 24, 30 89, 0 60, 0 44' fill='white'></polygon></svg>
+$checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzMwIDc1LCAxMDAgOCwgMTAwIDI0LCAzMCA4OSwgMCA2MCwgMCA0NCcgZmlsbD0nd2hpdGUnPjwvcG9seWdvbj48L3N2Zz4=");
 
 #app {
-    font-family: 'Cantarell', sans-serif;
-    font-size: 14px;
+    font-family: 'Verdana', sans-serif;
+    font-size: 13px;
     background-color: $background-color;
 }
 
@@ -37,15 +36,12 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     padding: 7px;
     margin: $widget-margin;
     border: 1px solid $mgrey-color;
-    border-radius: 4px;
-    background: $button-gradient;
+    background: $mgrey-color;
     color: black;
     outline: 0;
-    
+
     &.disabled {
-        border-color: $mgrey-color;
-        background: $lgrey-color;
-        color: $dgrey-color;
+        color: lighten(black, 50%);
         transition: border-color 300ms, background-color 300ms, color 300ms;
     }
 
@@ -66,9 +62,8 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     margin-left: $widget-margin;
     margin-right: $widget-margin;
     height: 4px;
-    background-color: $lgrey-color;
+    background-color: $mgrey-color;
     border: 1px solid $mgrey-color;
-    border-radius: 2px;
     position: relative;
 
     .inner-progressbar {
@@ -76,10 +71,8 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
         top: -1px;
         left: -1px;
         background-color: $primary-color;
-        border: 1px solid $dprimary-color;
+        border: 1px solid $primary-color;
         height: 4px;
-        border-radius: 2px;
-        
     }
 }
 
@@ -87,8 +80,7 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     margin: $widget-margin;
 
     input {
-        border: 1px solid $mgrey-color;
-        border-radius: 4px; 
+        border: 2px solid $mgrey-color; 
         margin: 0;
         padding: 7px;
         font-size: inherit;
@@ -112,8 +104,11 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
         height: 14px;
         width: 14px;
         background-color: white;
-        border: 1px solid $mgrey-color;
-        border-radius: 2px;
+        border: 2px solid black;
+
+        &.checked {
+            border-color: $primary-color;
+        }
 
         .checkbox-inner {
             height: 14px;
@@ -125,6 +120,7 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
                 height: 14px;
                 background-image: $checkbox-path;
                 background-size: 14px 14px;
+                background-color: $primary-color;
             }
         }
     }
@@ -141,12 +137,16 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
         height: 14px;
         width: 14px;
         background-color: white;
-        border: 1px solid $mgrey-color;
+        border: 2px solid black;
         border-radius: 50%;
 
+        &.selected {
+            border-color: $primary-color;
+        }
+
         .radio-inner {
-            height: 6px;
-            width: 6px;
+            height: 8px;
+            width: 8px;
             border-radius: 50%;
             background-color: white;
 
@@ -162,16 +162,10 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 
     .combo-button {
         padding: 7px;
-        border: 1px solid $mgrey-color;
-        border-radius: 4px;
+        border: 2px solid $mgrey-color;
         color: black;
         outline: 0;
-        background: $button-gradient;
-
-        &.opened {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
+        background: white;
 
         img {
             margin-left: 10px;
@@ -181,15 +175,15 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     }
 
     .combo-choices {
-        box-shadow: 0 0 2px lighten(black, 50%);
+        border: 1px solid $mgrey-color;
+        border-top: none;
         
         .combo-choice {
-            background-color: white;
-            padding: 6px;
+            background-color: $lgrey-color;
+            padding: 10px;
 
             &:hover {
-                background-color: $primary-color;
-                color: white;
+                background-color: $mgrey-color;
             }
         }
     }
@@ -205,60 +199,51 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
         
         &::-webkit-slider-runnable-track {
             height: 4px;
-            background-color: $lgrey-color;
+            background-color: $mgrey-color;
             border: 1px solid $mgrey-color;
-            border-radius: 2px;
         }
 
         &::-webkit-slider-thumb {
-            width: 18px;
-            height: 18px;
-            background: $button-gradient;
-            border: 1px solid $mgrey-color;
-            border-radius: 50%;
-            margin-top: -8px;
+            width:6px;
+            height: 20px;
+            background: $primary-color;
+            border: 1px solid $primary-color;
+            border-radius: 3px;
+            margin-top: -9px;
         }
 
         &::-ms-track {
             margin-top: 10px;
             margin-bottom: 10px;
             height: 2px;
-            background-color: $lgrey-color;
+            background-color: $mgrey-color;
             border: 1px solid $mgrey-color;
-            border-radius: 2px;
         }
 
         &::-ms-thumb {
-            width: 16px;
-            height: 16px;
-            background: $button-gradient;
-            border: 1px solid $mgrey-color;
-            border-radius: 50%;
-            margin-top: -2px;
+            width: 4px;
+            height: 18px;
+            background: $primary-color;
+            border: 1px solid $primary-color;
+            border-radius: 3px;
+            margin-top: 0px;
         }
     }
 }
 
 .tabs {
-    padding: $widget-margin;
 
     .tab-titles {
         background-color: $lgrey-color;
-        border: 1px solid $mgrey-color;
-        border-bottom: none;
-        font-weight: bold;
 
         .tab-title {
-            margin-bottom: -1px;
-            color: lighten(black, 60%);
-            height: 36px;
-            padding-left: 13px;
-            padding-right: 13px;
-            border-bottom: 1px solid $mgrey-color;
-            border-top: 1px solid $lgrey-color;
-
+            color: lighten(black, 50%);
+            height: 40px;
+            padding-left: 10px;
+            padding-right: 10px;
+            
             &.selected {
-                color: lighten(black, 10%);
+                color: black;
                 border-bottom: 3px solid $primary-color;
                 border-top: 3px solid $lgrey-color;
             }
@@ -266,10 +251,6 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     }
 
     .tab {
-        border: 1px solid $mgrey-color;
-        border-radius: 2px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
         background-color: white;
     }
 }
@@ -282,48 +263,34 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 
 .menubar {
     height: $menubar-height;
-    background-color: $background-color;
-    border-bottom: 1px solid $lgrey-color;
+    background-color: white;
 
     .menuitem {
         
         .menuitem-title {
             box-sizing: border-box;
-            padding-left: 11px;
-            padding-right: 11px;
+            padding-left: 10px;
+            padding-right: 10px;
 
             &.selected {
-                color: $dprimary-color;
-                border-top: 3px solid $background-color;
-                border-bottom: 3px solid $primary-color;
+                background-color: $mgrey-color;
             }
         }
 
         .menufunctions {
-            background-color: white;
-            box-shadow: 0 0 2px lighten(black, 50%);
+            background-color: $lgrey-color;
+            border: 1px solid $mgrey-color;
 
             .menufunction {
-                padding-top: 6px;
-                padding-bottom: 6px;
-                padding-left: 11px;
-                padding-right: 11px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                padding-left: 10px;
+                padding-right: 10px;
                 width: 140px;
 
-                .shortcut {
-                    color: $dgrey-color;
-                }
-
                 &:hover {
-                    background-color: $primary-color;
-                    color: white;
-
-                    .shortcut {
-                        color: white;
-                    }
+                    background-color: $mgrey-color;
                 }
-
-                
             }
         }
     }
