@@ -185,6 +185,23 @@ $menubar-height: 30px;
 .tabs {
     padding: 6px;
 
+    &.direction-vertical {
+        padding: 0;
+        
+        .tab-titles {
+            background-color: black;
+
+            .tab-title {
+                border: none;
+            }
+        }
+
+        .tab {
+            border: none;
+            border-left: 1px solid black;
+        }
+    }
+
     .tab-titles {
 
         .tab-title {

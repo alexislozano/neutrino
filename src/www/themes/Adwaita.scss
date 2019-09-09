@@ -242,6 +242,35 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 .tabs {
     padding: $widget-margin;
 
+    &.direction-vertical {
+        padding: 0;
+        
+        .tab-titles {
+            background-color: white;
+            border: none;
+            font-weight: normal;
+
+            .tab-title {
+                color: black;
+                margin-bottom: 0;
+                border: none;
+                border-bottom: 1px solid $lgrey-color;
+
+                &.selected {
+                    border: none;
+                    border-bottom: 1px solid $lgrey-color;
+                    background-color: $primary-color;
+                    color: white;
+                }
+            }
+        }
+
+        .tab {
+            border: none;
+            border-left: 1px solid $lgrey-color;
+        }
+    }
+
     .tab-titles {
         background-color: $lgrey-color;
         border: 1px solid $mgrey-color;
