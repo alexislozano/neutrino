@@ -157,7 +157,7 @@ impl Label {
         self.state.set_stretched(true);
     }
 
-    /// Set the selectable flag to false
+    /// Set the unselectable flag to true
     pub fn set_unselectable(&mut self) {
         self.state.set_unselectable(true);
     }
