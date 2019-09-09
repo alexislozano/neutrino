@@ -1,3 +1,4 @@
+/* current selected tab panel id */
 pub struct Panes {
     value: u8,
 }
@@ -16,6 +17,10 @@ impl Panes {
     }
 }
 
+
+/* A value controlled by the Range and
+the TextInput widgets, shown in ProgressBar and a Label
+*/
 pub struct RangeValue {
     value: i32,
 }

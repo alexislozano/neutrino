@@ -12,7 +12,9 @@ use neutrino::WindowListener;
 
 use super::models::{Panes, RangeValue};
 
-
+/*
+ Window listener: waits for menu shortcuts
+*/
 pub struct MyWindowListener {
     panes: Rc<RefCell<Panes>>,
 }
@@ -35,6 +37,10 @@ impl WindowListener for MyWindowListener {
     }
 }
 
+/*
+ Tabs Listener: change current tab when user clicks on a tab label,
+ on a menu item or uses a shortcut
+*/
 pub struct MyTabsListener {
     panes: Rc<RefCell<Panes>>,
 }
@@ -55,6 +61,7 @@ impl TabsListener for MyTabsListener {
     }
 }
 
+/* Menu Bar Listener: waits for the user to select a menu item */
 pub struct MyMenuBarListener {
     panes: Rc<RefCell<Panes>>,
 }
@@ -88,6 +95,7 @@ impl MenuBarListener for MyMenuBarListener {
 }
 
 
+/* Range Listener: update RangeValue when the user scroll the Range widget */
 pub struct MyRangeListener {
     range: Rc<RefCell<RangeValue>>,
 }
@@ -107,6 +115,8 @@ impl RangeListener for MyRangeListener {
     }
 }
 
+/* Progress Bar Listener: update the Progress Bar value to the current
+RangeValue value*/
 pub struct MyProgressBarListener {
     range: Rc<RefCell<RangeValue>>,
 }
@@ -123,6 +133,9 @@ impl ProgressBarListener for MyProgressBarListener {
     }
 }
 
+
+/* Label Listenr: update the Label text to show the current RangeValue value,
+formatted as a percent */
 pub struct MyLabelListener {
     range: Rc<RefCell<RangeValue>>,
 }
@@ -141,6 +154,10 @@ impl LabelListener for MyLabelListener {
 }
 
 
+/* Text Input Listener: update the TextInput value to the
+current RangeValue value or set the RangeValue when the user
+changes the TextInput value
+TODO: don't crash if user inserts non-numeric values */
 pub struct MyTextInputListener {
     range: Rc<RefCell<RangeValue>>,
 }
