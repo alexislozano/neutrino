@@ -25,11 +25,24 @@ line to your `Cargo.toml` and you'll be done :
 neutrino = "<last_version>"
 ```
 
-On Linux, you'll have to install webkit2gtk's development library. For example, in Ubuntu or Debian:
+On Linux, you'll have to install webkit2gtk's development library. For example,
+in Ubuntu or Debian:
 ```
 sudo apt install -y libwebkit2gtk-4.0-dev
 ```
 
+## OSX and Windows
+
+The neutrino crate published on crates.io (ver. 0.2) was not tested with OSX and 
+Windows. They are known bugs that were already fixed on this repo's master 
+branch (e.g. OSX renders a white window). If you want to use neutrino on these 
+OSes, use the git version by adding the following line to your `Cargo.toml`:
+
+```text
+neutrino = { git  = "https://github.com/alexislozano/neutrino" }
+```
+
+The version containing the fixes will be published soon on crates.io.
 
 ## Examples
 
