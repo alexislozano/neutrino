@@ -37,6 +37,7 @@ fn main() {
     textinput1.set_listener(Box::new(textinput_listener));
     textinput1.set_value("0");
     textinput1.set_size(4);
+    textinput1.set_disabled();
 
     let mut button1 = Button::new("button1");
     button1.set_text("Button");
@@ -59,15 +60,18 @@ fn main() {
     let mut checkbox1 = CheckBox::new("checkbox1");
     checkbox1.set_text("Checkbox");
     checkbox1.set_checked();
+    checkbox1.set_disabled();
 
     let mut radio1 = Radio::new("radio1");
     radio1.set_choices(vec!["Radio Button", "Radio Button"]);
     radio1.set_selected(0);
+    radio1.set_disabled();
 
     let mut combo1 = Combo::new("combo1");
     combo1.set_choices(vec!["Combo Box", "Jumbo Fox"]);
     combo1.set_selected(0);
     combo1.set_icon(Box::new(BreezeIcon::Down));
+    combo1.set_disabled();
 
     let range_listener = MyRangeListener::new(Rc::clone(&rrangevalue));
 
@@ -77,6 +81,7 @@ fn main() {
     range1.set_max(100);
     range1.set_value(0);
     range1.set_stretched();
+    range1.set_disabled();
 
     let mut container1 = Container::new("container1");
     container1.set_direction(Direction::Vertical);

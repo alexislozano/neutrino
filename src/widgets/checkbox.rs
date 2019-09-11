@@ -8,11 +8,13 @@ use crate::widgets::widget::Widget;
 /// ```text
 /// text: String
 /// checked: bool
+/// disabled: bool
 /// stretched: bool
 /// ```
 pub struct CheckBoxState {
     text: String,
     checked: bool,
+    disabled: bool,
     stretched: bool,
 }
 
@@ -25,6 +27,11 @@ impl CheckBoxState {
     /// Get the checked flag
     pub fn checked(&self) -> bool {
         self.checked
+    }
+
+    /// Get the disabled flag
+    pub fn disabled(&self) -> bool {
+        self.disabled
     }
 
     /// Get the stretched flag
@@ -40,6 +47,11 @@ impl CheckBoxState {
     /// Set the checked flag
     pub fn set_checked(&mut self, checked: bool) {
         self.checked = checked;
+    }
+
+    /// Set the disabled flag
+    pub fn set_disabled(&mut self, disabled: bool) {
+        self.disabled = disabled;
     }
 
     /// Set the streched flag
@@ -74,6 +86,7 @@ pub trait CheckBoxListener {
 /// state:
 ///     text: "CheckBox".to_string()
 ///     checked: false
+///     disabled: false
 ///     stretched: false
 /// listener: None
 /// ```
@@ -153,6 +166,7 @@ impl CheckBox {
             state: CheckBoxState {
                 text: "CheckBox".to_string(),
                 checked: false,
+                disabled: false,
                 stretched: false,
             },
             listener: None,
@@ -167,6 +181,11 @@ impl CheckBox {
     /// Set the checked flag to true
     pub fn set_checked(&mut self) {
         self.state.set_checked(true);
+    }
+
+    /// Set the disabled flag to true
+    pub fn set_disabled(&mut self) {
+        self.state.set_disabled(true);
     }
 
     /// Set the stretched flag to true
@@ -188,9 +207,15 @@ impl Widget for CheckBox {
         } else {
             ""
         };
+        let disabled = if self.state.disabled() {
+            "disabled"
+        } else {
+            ""
+        };
         format!(
-            r#"<div id="{}" class="checkbox {}" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
+            r#"<div id="{}" class="checkbox {} {}" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
             self.name,
+            disabled,
             stretched,
             Event::change_js(&self.name, "''"), 
             checked,
@@ -203,7 +228,7 @@ impl Widget for CheckBox {
         match event {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
-                if source == &self.name {
+                if source == &self.name && !self.state.disabled() {
                     self.on_change(value)
                 }
             }
