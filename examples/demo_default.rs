@@ -101,7 +101,7 @@ fn main() {
     label2.set_text("This is Tab 2.");
 
     let mut label3 = Label::new("label3");
-    label3.unset_selectable();
+    label3.set_unselectable();
     label3.set_text("This label text is unselectable");
 
     let mut container7 = Container::new("contanier7");
