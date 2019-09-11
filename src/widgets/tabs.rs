@@ -217,6 +217,27 @@ impl Tabs {
     }
 
     /// Set the direction
+    /// 
+    /// # Example
+    ///
+    /// ```text
+    /// Direction::Horizontal
+    ///
+    /// +-------+-------+
+    /// | Tab 1 | Tab 2 |   
+    /// +-------+-------+
+    /// |    Content    |
+    /// |               |
+    /// +---------------+
+    /// 
+    /// Direction::Vertical
+    ///
+    /// +-------+-------------+
+    /// | Tab 1 |             |
+    /// +-------+   Content   |
+    /// | Tab 2 |             |
+    /// +-------+-------------+
+    /// ```
     pub fn set_direction(&mut self, direction: Direction) {
         self.state.set_direction(direction);
     }

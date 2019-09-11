@@ -215,9 +215,8 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     margin-left: $widget-margin;
     margin-right: $widget-margin;
     height: 32px;
-
+    
     .inner-range {
-        background-color: $tab-background-color;
 
         &::-webkit-slider-runnable-track {
             height: 6px;
