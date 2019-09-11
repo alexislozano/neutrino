@@ -206,10 +206,11 @@ impl Widget for Range {
             ""
         };
         format!(
-            r#"<div id="{}" class="range {}"><input oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
+            r#"<div id="{}" class="range {}"><input onchange="{}" oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
             self.name,
             stretched,
-            Event::change_js(&self.name, "value"), 
+            Event::change_js(&self.name, "value"),
+            Event::change_js(&self.name, "value"),
             self.state.min(),
             self.state.max(),
             self.state.value(),

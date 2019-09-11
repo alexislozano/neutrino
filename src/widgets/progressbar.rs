@@ -51,7 +51,13 @@ impl ProgressBarState {
 
     /// Set the value
     pub fn set_value(&mut self, value: i32) {
-        self.value = value;
+        self.value = if value > self.max {
+            self.max
+        } else if value < self.min {
+            self.min
+        } else {
+            value
+        };
     }
 
     /// Set the stretched flqg

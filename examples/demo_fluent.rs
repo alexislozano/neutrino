@@ -17,8 +17,9 @@ mod demo_mod;
 
 use demo_mod::listeners::{
     MyMenuBarListener, MyTabsListener, MyWindowListener,
+    MyProgressBarListener, MyRangeListener, MyLabelListener, MyTextInputListener
 };
-use demo_mod::models::Panes;
+use demo_mod::models::{Panes, RangeValue};
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -27,7 +28,13 @@ fn main() {
     let panes = Panes::new();
     let rpanes = Rc::new(RefCell::new(panes));
 
+    let rangevalue = RangeValue::new();
+    let rrangevalue = Rc::new(RefCell::new(rangevalue));
+
+    let textinput_listener = MyTextInputListener::new(Rc::clone(&rrangevalue));
+
     let mut textinput1 = TextInput::new("input1");
+    textinput1.set_listener(Box::new(textinput_listener));
     textinput1.set_value("0");
     textinput1.set_size(4);
 
@@ -36,12 +43,18 @@ fn main() {
     button1.set_stretched();
     button1.set_icon(Box::new(BreezeIcon::Check));
 
+    let progressbar_listener = MyProgressBarListener::new(Rc::clone(&rrangevalue));
+
     let mut progressbar1 = ProgressBar::new("progressbar1");
-    progressbar1.set_value(70);
+    progressbar1.set_listener(Box::new(progressbar_listener));
+    progressbar1.set_value(0);
     progressbar1.set_stretched();
 
+    let label_listener = MyLabelListener::new(Rc::clone(&rrangevalue));
+
     let mut label1 = Label::new("label1");
-    label1.set_text("70%");
+    label1.set_listener(Box::new(label_listener));
+    label1.set_text("0%");
 
     let mut checkbox1 = CheckBox::new("checkbox1");
     checkbox1.set_text("Checkbox");
@@ -56,10 +69,13 @@ fn main() {
     combo1.set_selected(0);
     combo1.set_icon(Box::new(BreezeIcon::Down));
 
+    let range_listener = MyRangeListener::new(Rc::clone(&rrangevalue));
+
     let mut range1 = Range::new("range1");
+    range1.set_listener(Box::new(range_listener));
     range1.set_min(0);
     range1.set_max(100);
-    range1.set_value(25);
+    range1.set_value(0);
     range1.set_stretched();
 
     let mut container1 = Container::new("container1");
@@ -100,13 +116,22 @@ fn main() {
     let mut label2 = Label::new("label2");
     label2.set_text("This is Tab 2.");
 
+    let mut label3 = Label::new("label3");
+    label3.set_unselectable();
+    label3.set_text("This label text is unselectable");
+
+    let mut container7 = Container::new("contanier7");
+    container7.set_direction(Direction::Vertical);
+    container7.add(Box::new(label2));
+    container7.add(Box::new(label3));
+
     let tabs_listener = MyTabsListener::new(Rc::clone(&rpanes));
 
     let mut tabs1 = Tabs::new("tabs1");
     tabs1.set_selected(0);
     tabs1.set_listener(Box::new(tabs_listener));
     tabs1.add("Tab 1", Box::new(container6));
-    tabs1.add("Tab 2", Box::new(label2));
+    tabs1.add("Tab 2", Box::new(container7));
 
     let mut quitter = MenuFunction::new("Exit");
     quitter.set_shortcut("Ctrl-Q");
