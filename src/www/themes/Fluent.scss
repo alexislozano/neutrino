@@ -233,6 +233,29 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 
 .tabs {
 
+    &.direction-vertical {
+        
+        .tab-titles {
+            border: none;
+
+            .tab-title {
+                color: black;
+                border: none;
+                border-left: 3px solid $lgrey-color;
+
+                &.selected {
+                    border: none;
+                    border-left: 3px solid $primary-color;
+                }
+            }
+        }
+
+        .tab {
+            border: none;
+            border-left: 1px solid $lgrey-color;
+        }
+    }
+
     .tab-titles {
         background-color: $lgrey-color;
 

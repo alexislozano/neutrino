@@ -234,6 +234,34 @@ $widget-margin: 6px;
 .tabs {
     padding: $widget-margin;
 
+    &.direction-vertical {
+        padding: 0;
+        
+        .tab-titles {
+            background-color: white;
+            border: none;
+
+            .tab-title {
+                background-color: white;
+                color: black;
+                margin-bottom: 0;
+                border: none;
+
+                &.selected {
+                    border: none;
+                    border-bottom: 1px solid $lgrey-color;
+                    background-color: $primary-color;
+                    color: white;
+                }
+            }
+        }
+
+        .tab {
+            border: none;
+            border-left: 1px solid $lgrey-color;
+        }
+    }
+
     .tab-titles {
         margin-bottom: -1px;
 

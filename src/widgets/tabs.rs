@@ -1,5 +1,6 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::widgets::container::Direction;
 
 /// # The state of a Tabs
 ///
@@ -9,12 +10,14 @@ use crate::widgets::widget::Widget;
 /// titles: Vec<String>
 /// children: Vec<Box<dyn Widget>>
 /// selected: u32
+/// direction: Direction
 /// stretched: bool
 /// ```
 pub struct TabsState {
     titles: Vec<String>,
     children: Vec<Box<dyn Widget>>,
     selected: u32,
+    direction: Direction,
     stretched: bool,
 }
 
@@ -32,6 +35,11 @@ impl TabsState {
     /// Get the selected index
     pub fn selected(&self) -> u32 {
         self.selected
+    }
+
+    /// Get the direction
+    pub fn direction(&self) -> &Direction {
+        &self.direction
     }
 
     /// Get the stretched flag
@@ -55,6 +63,11 @@ impl TabsState {
     /// Set the selected index
     pub fn set_selected(&mut self, selected: u32) {
         self.selected = selected;
+    }
+
+    /// Set the direction
+    pub fn set_direction(&mut self, direction: Direction) {
+        self.direction = direction;
     }
 
     /// Set the stretched flag
@@ -88,6 +101,19 @@ pub trait TabsListener {
 /// listener: Option<Box<dyn TabsListener>>
 /// ```
 ///
+/// ## Default values
+///
+/// ```text
+/// name: name.to_string()
+/// state:
+///     title: vec![]
+///     children: vec![]
+///     selected: 0
+///     direction: Direction::Horizontal
+///     stretched: false
+/// listener: None
+/// ```
+/// 
 /// ## Example
 ///
 /// ```
@@ -178,6 +204,7 @@ impl Tabs {
                 titles: vec![],
                 children: vec![],
                 selected: 0,
+                direction: Direction::Horizontal,
                 stretched: false,
             },
             listener: None,
@@ -187,6 +214,32 @@ impl Tabs {
     /// Set the selected index
     pub fn set_selected(&mut self, selected: u32) {
         self.state.set_selected(selected);
+    }
+
+    /// Set the direction
+    /// 
+    /// # Example
+    ///
+    /// ```text
+    /// Direction::Horizontal
+    ///
+    /// +-------+-------+
+    /// | Tab 1 | Tab 2 |   
+    /// +-------+-------+
+    /// |    Content    |
+    /// |               |
+    /// +---------------+
+    /// 
+    /// Direction::Vertical
+    ///
+    /// +-------+-------------+
+    /// | Tab 1 |             |
+    /// +-------+   Content   |
+    /// | Tab 2 |             |
+    /// +-------+-------------+
+    /// ```
+    pub fn set_direction(&mut self, direction: Direction) {
+        self.state.set_direction(direction);
     }
 
     /// Set the stretched flag to true
@@ -213,8 +266,8 @@ impl Widget for Tabs {
             ""
         };
         let mut s = format!(
-            r#"<div id="{}" class="tabs {}"><div class="tab-titles">"#,
-            self.name, stretched
+            r#"<div id="{}" class="tabs {} {}"><div class="tab-titles">"#,
+            self.name, stretched, self.state.direction().css()
         );
         let tabs_number = self.state.titles.len();
         for (i, title) in self.state.titles.iter().enumerate() {

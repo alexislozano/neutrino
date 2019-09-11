@@ -215,9 +215,8 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     margin-left: $widget-margin;
     margin-right: $widget-margin;
     height: 32px;
-
+    
     .inner-range {
-        background-color: $tab-background-color;
 
         &::-webkit-slider-runnable-track {
             height: 6px;
@@ -257,6 +256,44 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 
 .tabs {
     padding: $widget-margin;
+
+    &.direction-vertical {
+        padding: 0;
+        
+        .tab-titles {
+            justify-content: flex-start;
+            background-color: $background-color;
+
+            .tab-title {
+                margin-bottom: 0;
+                border: none;
+                background-color: $background-color;
+
+                &.selected {
+                    border: none;
+                    color: black;
+                    background-color: $mgrey-color;
+                }
+
+                &.first {
+                    border: none;
+                    border-radius: 0;
+                }
+    
+                &.last {
+                    border: none;
+                    border-radius: 0;
+                }
+            }
+        }
+
+        .tab {
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            background: white;
+        }
+    }
 
     .tab-titles {
         justify-content: center;

@@ -217,6 +217,15 @@ body {
     display: flex;
     flex-direction: column;
 
+    &.direction-vertical {
+        flex-direction: row;
+
+        .tab-titles {
+            flex-direction: column;
+            width: 200px;
+        }
+    }
+
     .tab-titles {
         cursor: default;
         display: flex;

@@ -276,7 +276,7 @@ pub enum Direction {
 
 impl Direction {
     // Return the CSS class corresponding to the direction
-    fn css(&self) -> &str {
+    pub fn css(&self) -> &str {
         match &self {
             Direction::Horizontal => "direction-horizontal",
             Direction::Vertical => "direction-vertical",
