@@ -8,12 +8,12 @@ use crate::widgets::widget::Widget;
 /// ```text
 /// text: String
 /// stretched: bool
-/// selectable: bool
+/// unselectable: bool
 /// ```
 pub struct LabelState {
     text: String,
     stretched: bool,
-    selectable: bool
+    unselectable: bool
 }
 
 impl LabelState {
@@ -27,9 +27,9 @@ impl LabelState {
         self.stretched
     }
 
-    /// Get the selectable flag
-    pub fn selectable(&self) -> bool {
-        self.selectable
+    /// Get the unselectable flag
+    pub fn unselectable(&self) -> bool {
+        self.unselectable
     }
 
     /// Set the text
@@ -42,9 +42,9 @@ impl LabelState {
         self.stretched = stretched;
     }
 
-    /// Set the selectable flag
-    pub fn set_selectable(&mut self, selectable: bool) {
-        self.selectable = selectable;
+    /// Set the uselectable flag
+    pub fn set_unselectable(&mut self, unselectable: bool) {
+        self.unselectable = unselectable;
     }
 }
 
@@ -71,6 +71,7 @@ pub trait LabelListener {
 /// state:
 ///     text: "Label".to_string()
 ///     stretched: false,
+///     unselectable: false,
 /// listener: None
 /// ```
 ///
@@ -141,7 +142,7 @@ impl Label {
             state: LabelState {
                 text: "Label".to_string(),
                 stretched: false,
-                selectable: true,
+                unselectable: false,
             },
             listener: None,
         }
@@ -157,9 +158,9 @@ impl Label {
         self.state.set_stretched(true);
     }
 
-    /// Set the selectable flag to false
-    pub fn unset_selectable(&mut self) {
-        self.state.set_selectable(false);
+    /// Set the unselectable flag to true
+    pub fn set_unselectable(&mut self) {
+        self.state.set_unselectable(true);
     }
 
     /// Set the listener
@@ -175,16 +176,16 @@ impl Widget for Label {
         } else {
             ""
         };
-        let selectable = if self.state.selectable() {
-            "selectable"
+        let user_select_class = if self.state.unselectable() {
+            "unselectable"
         } else {
-            ""
+            "selectable"
         };
         format!(
             r#"<div id="{}" class="label {} {}">{}</div>"#,
             self.name,
             stretched,
-            selectable,
+            user_select_class,
             self.state.text()
         )
     }
