@@ -27,7 +27,7 @@ impl LabelState {
         self.stretched
     }
 
-    /// Get the selectable flag
+    /// Get the unselectable flag
     pub fn unselectable(&self) -> bool {
         self.unselectable
     }
@@ -42,7 +42,7 @@ impl LabelState {
         self.stretched = stretched;
     }
 
-    /// Set the selectable flag
+    /// Set the uselectable flag
     pub fn set_unselectable(&mut self, unselectable: bool) {
         self.unselectable = unselectable;
     }
@@ -71,6 +71,7 @@ pub trait LabelListener {
 /// state:
 ///     text: "Label".to_string()
 ///     stretched: false,
+///     unselectable: false,
 /// listener: None
 /// ```
 ///
@@ -175,7 +176,7 @@ impl Widget for Label {
         } else {
             ""
         };
-        let selectable_class = if self.state.unselectable() {
+        let user_select_class = if self.state.unselectable() {
             "unselectable"
         } else {
             "selectable"
@@ -184,7 +185,7 @@ impl Widget for Label {
             r#"<div id="{}" class="label {} {}">{}</div>"#,
             self.name,
             stretched,
-            selectable_class,
+            user_select_class,
             self.state.text()
         )
     }
