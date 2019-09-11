@@ -156,8 +156,7 @@ impl LabelListener for MyLabelListener {
 
 /* Text Input Listener: update the TextInput value to the
 current RangeValue value or set the RangeValue when the user
-changes the TextInput value
-TODO: don't crash if user inserts non-numeric values */
+changes the TextInput value */
 pub struct MyTextInputListener {
     range: Rc<RefCell<RangeValue>>,
 }
@@ -173,6 +172,6 @@ impl TextInputListener for MyTextInputListener {
         state.set_value(&self.range.borrow().value().to_string());
     }
     fn on_change(&self, state: &TextInputState) {
-        self.range.borrow_mut().set_value(state.value().parse().unwrap());
+        self.range.borrow_mut().set_value(state.value().parse().unwrap_or(0));
     }
 }
