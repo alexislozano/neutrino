@@ -110,4 +110,6 @@ impl WindowListener for MyWindowListener {
             _ => (),
         }
     }
+
+    fn on_tick(&self) {}
 }
