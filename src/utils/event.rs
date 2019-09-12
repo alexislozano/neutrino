@@ -5,6 +5,7 @@ pub enum Event {
     Update,
     Change { source: String, value: String },
     Key { key: Key },
+    Tick,
 }
 
 impl Event {
@@ -26,6 +27,14 @@ impl Event {
     pub fn undefined_js() -> String {
         r#"(function() { emit( { type: 'Undefined' } ); event.stopPropagation(); } )()"#
             .to_string()
+    }
+
+    /// Return an one-line function setting a timer from javascript
+    pub fn tick_js(period: u32) -> String {
+        format!(
+            r#"setInterval(function(){{ emit( {{ type: 'Tick' }} ); }}, {});"#,
+            period
+        )
     }
 }
 

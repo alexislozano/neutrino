@@ -68,6 +68,14 @@ impl App {
             r#"(function() { event.preventDefault(); } )()"#
         };
 
+        let timer = match window.timer {
+            None => "".to_string(),
+            Some(period) => format!(
+                r#"<script>{}</script>"#,
+                Event::tick_js(period)
+            )
+        };
+
         let html = format!(
             r#"
             <!doctype html>
@@ -79,6 +87,7 @@ impl App {
                 <body onkeydown="{key}" onmousedown="{click}" oncontextmenu="{context}">
                     <div id="app"></div>
                     {scripts}
+                    {timer}
                 </body>
             </html>
             "#,
@@ -99,6 +108,7 @@ impl App {
             key = Event::key_js(),
             click = Event::undefined_js(),
             context = context,
+            timer = timer,
         );
 
         let webview = web_view::builder()
@@ -112,6 +122,7 @@ impl App {
                 let event: Event = match json::parse(arg) {
                     Ok(value) => match value["type"].as_str().unwrap() {
                         "Update" => Event::Update,
+                        "Tick" => Event::Tick,
                         "Key" => match Key::new(value["key"].as_str().unwrap())
                         {
                             Some(key) => Event::Key { key },
@@ -147,6 +158,9 @@ impl App {
 pub trait WindowListener {
     /// Function triggered on key event
     fn on_key(&self, _key: Key);
+
+    /// Function triggered on tick event
+    fn on_tick(&self);
 }
 
 /// # A window containing the widgets
@@ -164,6 +178,7 @@ pub trait WindowListener {
 /// child: Option<Box<dyn Widget>>
 /// menubar: Option<MenuBar>
 /// listener: Option<Box<dyn WindowListener>>
+/// timer: Option<u32>;
 /// ```
 ///
 /// # Default values
@@ -179,6 +194,7 @@ pub trait WindowListener {
 /// child: None
 /// menubar: None
 /// listener: None
+/// timer: None
 /// ```
 ///
 /// ## Example
@@ -206,6 +222,7 @@ pub struct Window {
     child: Option<Box<dyn Widget>>,
     menubar: Option<MenuBar>,
     listener: Option<Box<dyn WindowListener>>,
+    timer: Option<u32>,
 }
 
 impl Window {
@@ -222,6 +239,7 @@ impl Window {
             child: None,
             menubar: None,
             listener: None,
+            timer: None,
         }
     }
 
@@ -271,6 +289,13 @@ impl Window {
         self.listener = Some(listener);
     }
 
+    /// Set the timer
+    /// 
+    /// The app will send a Tick event with a defined period
+    pub fn set_timer(&mut self, period: u32) {
+        self.timer = Some(period);
+    }
+
     /// Render the menubar and widget tree
     fn render(&self, webview: &mut WebView<&str>) -> WVResult {
         let rendered = format!(
@@ -307,7 +332,7 @@ impl Window {
                     (Some(menubar), None) => menubar.trigger(event),
                     (None, None) => (),
                 };
-            }
+            },
             Event::Key { key } => {
                 match &self.listener {
                     None => (),
@@ -315,14 +340,13 @@ impl Window {
                         listener.on_key(*key);
                     }
                 };
-                match (&mut self.menubar, &mut self.child) {
-                    (Some(menubar), Some(child)) => {
-                        menubar.trigger(event);
-                        child.trigger(event);
+            },
+            Event::Tick => {
+                match &self.listener {
+                    None => (),
+                    Some(listener) => {
+                        listener.on_tick();
                     }
-                    (None, Some(child)) => child.trigger(event),
-                    (Some(menubar), None) => menubar.trigger(event),
-                    (None, None) => (),
                 };
             }
         }
