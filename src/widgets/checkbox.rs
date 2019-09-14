@@ -203,7 +203,7 @@ impl Widget for CheckBox {
     fn eval(&self) -> String {
         let checked = if self.state.checked() { "checked" } else { "" };
         let stretched = if self.state.stretched() {
-            "checked"
+            "stretched"
         } else {
             ""
         };
