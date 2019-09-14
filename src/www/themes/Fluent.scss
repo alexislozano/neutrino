@@ -106,21 +106,22 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
         background-color: white;
         border: 2px solid black;
 
-        &.checked {
-            border-color: $primary-color;
-        }
-
         .checkbox-inner {
-            height: 14px;
             width: 14px;
-            background-color: white;
-        
-            &.checked {
-                width: 14px;
-                height: 14px;
-                background-image: $checkbox-path;
-                background-size: 14px 14px;
-                background-color: $primary-color;
+            height: 14px;
+            background-image: $checkbox-path;
+            background-size: 14px 14px;
+            background-color: $primary-color;
+            visibility: hidden;
+        }
+    }
+
+    &.checked {
+        .checkbox-outer {
+            border-color: $primary-color;
+
+            .checkbox-inner {
+                visibility: visible;
             }
         }
     }
@@ -140,17 +141,19 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
         border: 2px solid black;
         border-radius: 50%;
 
-        &.selected {
-            border-color: $primary-color;
-        }
-
         .radio-inner {
             height: 8px;
             width: 8px;
             border-radius: 50%;
             background-color: white;
+        }
+    }
 
-            &.selected {
+    &.selected {
+        .radio-outer {
+            border-color: $primary-color;
+
+            .radio-inner {
                 background-color: black;
             }
         }

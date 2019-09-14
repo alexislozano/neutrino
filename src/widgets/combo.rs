@@ -277,12 +277,12 @@ impl Widget for Combo {
         let mut s = match self.state.icon() {
             Some(icon) => {
                 format!(
-                    r#"<div id="{}" class="combo {}"><div onmousedown="{}" class="combo-button {} {}">{}<img src="data:image/{};base64,{}" /></div>"#,
+                    r#"<div id="{}" class="combo  {} {} {}"><div onmousedown="{}" class="combo-button">{}<img src="data:image/{};base64,{}" /></div>"#,
                     self.name,
                     stretched,
-                    Event::change_js(&self.name, "'-1'"),
                     opened,
                     disabled,
+                    Event::change_js(&self.name, "'-1'"),
                     self.state.choices()[self.state.selected() as usize],
                     icon.extension(),
                     icon.data(),
@@ -290,12 +290,12 @@ impl Widget for Combo {
             },
             None => {
                 format!(
-                    r#"<div id="{}" class="combo {}"><div onmousedown="{}" class="combo-button {} {}">{}</div>"#,
+                    r#"<div id="{}" class="combo {} {} {}"><div onmousedown="{}" class="combo-button">{}</div>"#,
                     self.name,
                     stretched,
-                    Event::change_js(&self.name, "'-1'"),
                     opened,
                     disabled,
+                    Event::change_js(&self.name, "'-1'"),
                     self.state.choices()[self.state.selected() as usize],
                 )
             }

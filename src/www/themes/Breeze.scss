@@ -102,16 +102,18 @@ $widget-margin: 6px;
         border: 1px solid $dgrey-color;
         border-radius: 2px;
 
-        &.checked {
-            border: 1px solid $primary-color;
-        }
-
         .checkbox-inner {
             height: 10px;
             width: 10px;
             background-color: white;
-        
-            &.checked {
+        }
+    }
+
+    &.checked {
+        .checkbox-outer {
+            border: 1px solid $primary-color;
+
+            .checkbox-inner {
                 background-color: $primary-color;
             }
         }
@@ -132,17 +134,19 @@ $widget-margin: 6px;
         border: 1px solid $dgrey-color;
         border-radius: 50%;
 
-        &.selected {
-            border: 1px solid $primary-color;
-        }
-
         .radio-inner {
             height: 10px;
             width: 10px;
             border-radius: 50%;
             background-color: white;
+        }
+    }
 
-            &.selected {
+    &.selected {
+        .radio-outer {
+            border: 1px solid $primary-color;
+
+            .radio-inner {
                 background-color: $primary-color;
             }
         }
@@ -159,11 +163,6 @@ $widget-margin: 6px;
         color: black;
         outline: 0;
         background: $button-gradient;
-
-        &.opened {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
 
         img {
             margin-left: 10px;
@@ -185,6 +184,13 @@ $widget-margin: 6px;
                 background-color: $primary-color;
                 color: white;
             }
+        }
+    }
+
+    &.opened {
+        .combo-button {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
         }
     }
 }

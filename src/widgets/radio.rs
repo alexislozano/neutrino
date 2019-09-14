@@ -7,12 +7,14 @@ use crate::widgets::widget::Widget;
 ///
 /// ```text
 /// choices: Vec<String>
-/// selected: u32,
+/// selected: u32
+/// disabled: bool
 /// stretched: bool
 /// ```
 pub struct RadioState {
     choices: Vec<String>,
     selected: u32,
+    disabled: bool,
     stretched: bool,
 }
 
@@ -25,6 +27,11 @@ impl RadioState {
     /// Get the selected index
     pub fn selected(&self) -> u32 {
         self.selected
+    }
+
+    /// Get the disabled flag
+    pub fn disabled(&self) -> bool {
+        self.disabled
     }
 
     /// Get the stretched flag
@@ -43,6 +50,11 @@ impl RadioState {
     /// Set the selected index
     pub fn set_selected(&mut self, selected: u32) {
         self.selected = selected;
+    }
+
+    /// Set the disabled flag
+    pub fn set_disabled(&mut self, disabled: bool) {
+        self.disabled = disabled;
     }
 
     /// Set the stretched flag
@@ -79,6 +91,7 @@ pub trait RadioListener {
 /// state:
 ///     choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
 ///     selected: 0
+///     disabled: false
 ///     stretched: false
 /// listener: None
 /// ```
@@ -168,6 +181,7 @@ impl Radio {
             state: RadioState {
                 choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
                 selected: 0,
+                disabled: false,
                 stretched: false,
             },
             listener: None,
@@ -182,6 +196,11 @@ impl Radio {
     /// Set the selected index
     pub fn set_selected(&mut self, selected: u32) {
         self.state.set_selected(selected);
+    }
+
+    /// Set the disabled flag to true
+    pub fn set_disabled(&mut self) {
+        self.state.set_disabled(true);
     }
 
     /// Set the stretched flag
@@ -202,6 +221,11 @@ impl Widget for Radio {
         } else {
             ""
         };
+        let disabled = if self.state.disabled() {
+            "disabled"
+        } else {
+            ""
+        };
         let mut s = "".to_string();
         for (i, choice) in self.state.choices().iter().enumerate() {
             let selected = if self.state.selected() == i as u32 {
@@ -211,12 +235,12 @@ impl Widget for Radio {
             };
             s.push_str(
                 &format!(
-                    r#"<div id="{}" class="radio {}" onmousedown="{}"><div class="radio-outer {}"><div class="radio-inner {}"></div></div><label>{}</label></div>"#, 
+                    r#"<div id="{}" class="radio {} {} {}" onmousedown="{}"><div class="radio-outer"><div class="radio-inner"></div></div><label>{}</label></div>"#, 
                     self.name,
                     stretched,
+                    disabled,
+                    selected,
                     Event::change_js(&self.name, &format!("'{}'", i)), 
-                    selected,
-                    selected,
                     choice
                 )
             );
@@ -228,7 +252,7 @@ impl Widget for Radio {
         match event {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
-                if source == &self.name {
+                if source == &self.name && !self.state.disabled {
                     self.on_change(value);
                 }
             }

@@ -213,13 +213,12 @@ impl Widget for CheckBox {
             ""
         };
         format!(
-            r#"<div id="{}" class="checkbox {} {}" onmousedown="{}"><div class="checkbox-outer {}"><div class="checkbox-inner {}"></div></div><label>{}</label></div>"#, 
+            r#"<div id="{}" class="checkbox {} {} {}" onmousedown="{}"><div class="checkbox-outer"><div class="checkbox-inner"></div></div><label>{}</label></div>"#, 
             self.name,
             disabled,
+            checked,
             stretched,
             Event::change_js(&self.name, "''"), 
-            checked,
-            checked,
             self.state.text,
         )
     }
