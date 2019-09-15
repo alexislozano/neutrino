@@ -201,7 +201,7 @@ impl Widget for ProgressBar {
             ""
         };
         format!(
-            r#"<div id="{}" class="progressbar {}"><div class="inner-progressbar" style="width: {}%;"></div></div>"#, 
+            r#"<div id="{}" class="progressbar {}"><div class="background"></div><div class="foreground" style="width: {}%;"></div></div>"#, 
             self.name,
             stretched,
             f64::from(self.state.value() - self.state.min()) /

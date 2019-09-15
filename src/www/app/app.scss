@@ -105,10 +105,19 @@ body {
 
 .progressbar {
     min-width: 100px;
-    box-sizing: border-box;
+    position: relative;
 
-    .inner-progressbar {
+    .background {
         box-sizing: border-box;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+    .foreground {
+        box-sizing: border-box;
+        position: absolute;
+        height: 100%;
     }
 }
 

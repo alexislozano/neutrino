@@ -8,9 +8,10 @@ $dgrey-color: #757778;
 $mgrey-color: #b5b5b6;
 $lgrey-color: #e1dedb;
 $background-color: #f6f5f4;
+$disabled-color: #faf9f8;
 
 // GRADIENTS
-$button-gradient: linear-gradient($background-color, #e8e9ea);
+$button-gradient: linear-gradient(white 0, #f6f5f3 1px, #f1efee 50%, #edebe9 100%);
 $disabled-gradient: linear-gradient($lgrey-color, $lgrey-color);
 
 // MARGINS
@@ -18,8 +19,13 @@ $widget-margin: 6px;
 
 // PATH
 // Base 64 encoded string from :
+// <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50 55, 100 10, 100 40, 50 85, 14 43, 29 29' fill='white'></polygon></svg>
+$checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzUwIDU1LCAxMDAgMTAsIDEwMCA0MCwgNTAgODUsIDE0IDQzLCAyOSAyOScgZmlsbD0nd2hpdGUnPjwvcG9seWdvbj48L3N2Zz4=");
+
+// Base 64 encoded string from :
 // <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50 55, 100 10, 100 40, 50 85, 14 43, 29 29' fill='black'></polygon></svg>
-$checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzUwIDU1LCAxMDAgMTAsIDEwMCA0MCwgNTAgODUsIDE0IDQzLCAyOSAyOScgZmlsbD0nYmxhY2snPjwvcG9seWdvbj48L3N2Zz4=");
+$disabled-checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzUwIDU1LCAxMDAgMTAsIDEwMCA0MCwgNTAgODUsIDE0IDQzLCAyOSAyOScgZmlsbD0nYmxhY2snPjwvcG9seWdvbj48L3N2Zz4=");
+
 
 #app {
     font-family: 'Cantarell', sans-serif;
@@ -43,10 +49,8 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     outline: 0;
     
     &.disabled {
-        border-color: $mgrey-color;
-        background: $lgrey-color;
-        color: $dgrey-color;
-        transition: border-color 300ms, background-color 300ms, color 300ms;
+        background: $disabled-color;
+        color: lighten(black, 50%);
     }
 
     img {
@@ -66,20 +70,18 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
     margin-left: $widget-margin;
     margin-right: $widget-margin;
     height: 4px;
-    background-color: $lgrey-color;
-    border: 1px solid $mgrey-color;
-    border-radius: 2px;
-    position: relative;
 
-    .inner-progressbar {
-        position: relative;
-        top: -1px;
-        left: -1px;
+    .background {
+        background-color: $lgrey-color;
+        border: 1px solid $mgrey-color;
+        border-radius: 2px;
+    }
+
+    .foreground {
         background-color: $primary-color;
         border: 1px solid $dprimary-color;
-        height: 4px;
         border-radius: 2px;
-        
+        min-width: 4px;
     }
 }
 
@@ -97,6 +99,13 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 
         &:focus {
             border-color: $primary-color;
+        }
+    }
+
+    &.disabled {
+        input {
+            background: $disabled-color;
+            color: lighten(black, 20%);
         }
     }
 }
@@ -126,8 +135,32 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 
     &.checked {
         .checkbox-outer {
+            background: $primary-color;
+            border-color: $dprimary-color;
+
             .checkbox-inner {
                 visibility: visible;
+            }
+        }
+    }
+
+    &.disabled {
+        .checkbox-outer {
+            background: $disabled-color;
+        }
+
+        label {
+            color: lighten(black, 50%);
+        }
+
+        &.checked {
+            .checkbox-outer {
+                border-color: $mgrey-color;
+    
+                .checkbox-inner {
+                    background-image: $disabled-checkbox-path;
+                    opacity: 0.4;
+                }
             }
         }
     }
@@ -152,13 +185,38 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
             width: 6px;
             border-radius: 50%;
             background-color: white;
+            visibility: hidden;
         }
     }
 
     &.selected {
         .radio-outer {
+            background: $primary-color;
+            border-color: $dprimary-color;
+
             .radio-inner {
-                background-color: black;
+                visibility: visible;
+            }
+        }
+    }
+
+    &.disabled {
+        .radio-outer {
+            background: $disabled-color;
+        }
+
+        label {
+            color: lighten(black, 50%);
+        }
+
+        &.selected {
+            .radio-outer {
+                border-color: $mgrey-color;
+    
+                .radio-inner {
+                    background: black;
+                    opacity: 0.4;
+                }
             }
         }
     }
@@ -200,6 +258,13 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
         .combo-button {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
+        }
+    }
+
+    &.disabled {
+        .combo-button {
+            background: $disabled-color;
+            color: lighten(black, 50%);
         }
     }
 }
@@ -244,6 +309,26 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
             border: 1px solid $mgrey-color;
             border-radius: 50%;
             margin-top: -2px;
+        }
+    }
+
+    &.disabled {
+        .inner-range {
+            &::-webkit-slider-runnable-track {
+                background: $disabled-color;
+            }
+
+            &::-webkit-slider-thumb {
+                background: $disabled-color;
+            }
+
+            &::-ms-track {
+                background: $disabled-color;
+            }
+
+            &::-ms-thumb {
+                background: $disabled-color;
+            }
         }
     }
 }

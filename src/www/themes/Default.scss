@@ -38,12 +38,14 @@ $menubar-height: 30px;
     margin-left: 6px;
     margin-right: 6px;
     height: 10px;
-    background-color: white;
-    border: 1px solid black;
 
-    .inner-progressbar {
+    .background {
+        background-color: white;
+        border: 1px solid black;
+    }
+
+    .foreground {
         background-color: black;
-        height: 100%;
     }
 }
 
