@@ -9,12 +9,14 @@ use crate::widgets::widget::Widget;
 /// min: i32
 /// max: i32
 /// value: i32
+/// disabled: bool
 /// stretched: bool
 /// ```
 pub struct RangeState {
     min: i32,
     max: i32,
     value: i32,
+    disabled: bool,
     stretched: bool,
 }
 
@@ -32,6 +34,11 @@ impl RangeState {
     /// Get the value
     pub fn value(&self) -> i32 {
         self.value
+    }
+
+    /// Get the disabled flag
+    pub fn disabled(&self) -> bool {
+        self.disabled
     }
 
     /// Get the stretched flag
@@ -52,6 +59,11 @@ impl RangeState {
     /// Set the value
     pub fn set_value(&mut self, value: i32) {
         self.value = value;
+    }
+
+    /// Set the disabled flag
+    pub fn set_disabled(&mut self, disabled: bool) {
+        self.disabled = disabled;
     }
 
     /// Set the stretched flag
@@ -87,6 +99,7 @@ pub trait RangeListener {
 ///     min: 0
 ///     max: 100
 ///     value: 0
+///     disabled: false
 ///     stretched: false
 /// listener: None
 /// ```
@@ -166,6 +179,7 @@ impl Range {
                 min: 0,
                 max: 100,
                 value: 0,
+                disabled: false,
                 stretched: false,
             },
             listener: None,
@@ -187,6 +201,11 @@ impl Range {
         self.state.set_value(value);
     }
 
+    /// Set the disabled flag to true
+    pub fn set_disabled(&mut self) {
+        self.state.set_disabled(true);
+    }
+
     /// Set the stretched flag to true
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
@@ -205,10 +224,17 @@ impl Widget for Range {
         } else {
             ""
         };
+        let disabled = if self.state.disabled() {
+            "disabled"
+        } else {
+            ""
+        };
         format!(
-            r#"<div id="{}" class="range {}"><input onchange="{}" oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
+            r#"<div id="{}" class="range {} {}"><input {} onchange="{}" oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
             self.name,
+            disabled,
             stretched,
+            disabled,
             Event::change_js(&self.name, "value"),
             Event::change_js(&self.name, "value"),
             self.state.min(),
@@ -221,7 +247,7 @@ impl Widget for Range {
         match event {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
-                if source == &self.name {
+                if source == &self.name && !self.state.disabled() {
                     self.on_change(value);
                 }
             }

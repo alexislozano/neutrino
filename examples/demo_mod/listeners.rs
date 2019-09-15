@@ -8,9 +8,13 @@ use neutrino::widgets::range::{RangeListener, RangeState};
 use neutrino::widgets::progressbar::{ProgressBarListener, ProgressBarState};
 use neutrino::widgets::label::{LabelListener, LabelState};
 use neutrino::widgets::textinput::{TextInputListener, TextInputState};
+use neutrino::widgets::button::{ButtonListener, ButtonState};
+use neutrino::widgets::radio::{RadioListener, RadioState};
+use neutrino::widgets::combo::{ComboListener, ComboState};
+use neutrino::widgets::checkbox::{CheckBoxListener, CheckBoxState};
 use neutrino::WindowListener;
 
-use super::models::{Panes, RangeValue};
+use super::models::{Panes, State};
 
 /*
  Window listener: waits for menu shortcuts
@@ -97,83 +101,179 @@ impl MenuBarListener for MyMenuBarListener {
 }
 
 
-/* Range Listener: update RangeValue when the user scroll the Range widget */
+/* Range Listener: update State when the user scroll the Range widget */
 pub struct MyRangeListener {
-    range: Rc<RefCell<RangeValue>>,
+    state: Rc<RefCell<State>>,
 }
 
 impl MyRangeListener {
-    pub fn new(range: Rc<RefCell<RangeValue>>) -> Self {
-        Self { range }
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
     }
 }
 
 impl RangeListener for MyRangeListener {
     fn on_update(&self, state: &mut RangeState) {
-        state.set_value(self.range.borrow().value());
+        state.set_value(self.state.borrow().range());
+        state.set_disabled(self.state.borrow().disabled());
     }
     fn on_change(&self, state: &RangeState) {
-        self.range.borrow_mut().set_value(state.value());
+        self.state.borrow_mut().set_range(state.value());
     }
 }
 
 /* Progress Bar Listener: update the Progress Bar value to the current
-RangeValue value*/
+State value*/
 pub struct MyProgressBarListener {
-    range: Rc<RefCell<RangeValue>>,
+    state: Rc<RefCell<State>>,
 }
 
 impl MyProgressBarListener {
-    pub fn new(range: Rc<RefCell<RangeValue>>) -> Self {
-        Self { range }
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
     }
 }
 
 impl ProgressBarListener for MyProgressBarListener {
     fn on_update(&self, state: &mut ProgressBarState) {
-        state.set_value(self.range.borrow().value());
+        state.set_value(self.state.borrow().range());
     }
 }
 
 
-/* Label Listenr: update the Label text to show the current RangeValue value,
+/* Label Listenr: update the Label text to show the current State value,
 formatted as a percent */
 pub struct MyLabelListener {
-    range: Rc<RefCell<RangeValue>>,
+    state: Rc<RefCell<State>>,
 }
 
 impl MyLabelListener {
-    pub fn new(range: Rc<RefCell<RangeValue>>) -> Self {
-        Self { range }
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
     }
 }
 
 impl LabelListener for MyLabelListener {
     fn on_update(&self, state: &mut LabelState) {
-        let text = format!("{}%", self.range.borrow().value());
+        let text = format!("{}%", self.state.borrow().range());
         state.set_text(&text);
     }
 }
 
 
 /* Text Input Listener: update the TextInput value to the
-current RangeValue value or set the RangeValue when the user
+current State value or set the State when the user
 changes the TextInput value */
 pub struct MyTextInputListener {
-    range: Rc<RefCell<RangeValue>>,
+    state: Rc<RefCell<State>>,
 }
 
 impl MyTextInputListener {
-    pub fn new(range: Rc<RefCell<RangeValue>>) -> Self {
-        Self { range }
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
     }
 }
 
 impl TextInputListener for MyTextInputListener {
     fn on_update(&self, state: &mut TextInputState) {
-        state.set_value(&self.range.borrow().value().to_string());
+        state.set_value(&self.state.borrow().range().to_string());
+        state.set_disabled(self.state.borrow().disabled());
     }
     fn on_change(&self, state: &TextInputState) {
-        self.range.borrow_mut().set_value(state.value().parse().unwrap_or(0));
+        self.state.borrow_mut().set_range(state.value().parse().unwrap_or(0));
+    }
+}
+
+
+pub struct MyButtonListener {
+    state: Rc<RefCell<State>>,
+}
+
+impl MyButtonListener {
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
+    }
+}
+
+impl ButtonListener for MyButtonListener {
+    fn on_update(&self, state: &mut ButtonState) {
+        state.set_disabled(self.state.borrow().disabled());
+    }
+
+    fn on_change(&self, _state: &ButtonState) {}
+}
+
+pub struct MyComboListener {
+    state: Rc<RefCell<State>>,
+}
+
+impl MyComboListener {
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
+    }
+}
+
+impl ComboListener for MyComboListener {
+    fn on_update(&self, state: &mut ComboState) {
+        state.set_disabled(self.state.borrow().disabled());
+    }
+
+    fn on_change(&self, _state: &ComboState) {}
+}
+
+pub struct MyRadioListener {
+    state: Rc<RefCell<State>>,
+}
+
+impl MyRadioListener {
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
+    }
+}
+
+impl RadioListener for MyRadioListener {
+    fn on_update(&self, state: &mut RadioState) {
+        state.set_disabled(self.state.borrow().disabled());
+    }
+
+    fn on_change(&self, _state: &RadioState) {}
+}
+
+pub struct MyCheckBoxListener {
+    state: Rc<RefCell<State>>,
+}
+
+impl MyCheckBoxListener {
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
+    }
+}
+
+impl CheckBoxListener for MyCheckBoxListener {
+    fn on_update(&self, state: &mut CheckBoxState) {
+        state.set_disabled(self.state.borrow().disabled());
+    }
+
+    fn on_change(&self, _state: &CheckBoxState) {}
+}
+
+
+pub struct MyCheckBoxDisabledListener {
+    state: Rc<RefCell<State>>,
+}
+
+impl MyCheckBoxDisabledListener {
+    pub fn new(state: Rc<RefCell<State>>) -> Self {
+        Self { state }
+    }
+}
+
+impl CheckBoxListener for MyCheckBoxDisabledListener {
+    fn on_update(&self, state: &mut CheckBoxState) {
+        state.set_checked(self.state.borrow().disabled());
+    }
+
+    fn on_change(&self, state: &CheckBoxState) {
+        self.state.borrow_mut().set_disabled(state.checked());
     }
 }

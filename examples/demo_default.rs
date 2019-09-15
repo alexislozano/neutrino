@@ -17,59 +17,77 @@ mod demo_mod;
 
 use demo_mod::listeners::{
     MyMenuBarListener, MyTabsListener, MyWindowListener,
-    MyProgressBarListener, MyRangeListener, MyLabelListener, MyTextInputListener
+    MyProgressBarListener, MyRangeListener, MyLabelListener, 
+    MyTextInputListener, MyButtonListener, MyCheckBoxListener,
+    MyRadioListener, MyComboListener, MyCheckBoxDisabledListener
 };
-use demo_mod::models::{Panes, RangeValue};
+use demo_mod::models::{Panes, State};
 
 use std::cell::RefCell;
 use std::rc::Rc;
 
 fn main() {
-    let panes = Panes::new();
-    let rpanes = Rc::new(RefCell::new(panes));
+    let panes = Rc::new(RefCell::new(Panes::new()));
 
-    let rangevalue = RangeValue::new();
-    let rrangevalue = Rc::new(RefCell::new(rangevalue));
+    let state = Rc::new(RefCell::new(State::new()));
 
-    let textinput_listener = MyTextInputListener::new(Rc::clone(&rrangevalue));
+    let textinput_listener = MyTextInputListener::new(Rc::clone(&state));
 
     let mut textinput1 = TextInput::new("input1");
     textinput1.set_listener(Box::new(textinput_listener));
     textinput1.set_value("0");
     textinput1.set_size(4);
 
+    let button_listener = MyButtonListener::new(Rc::clone(&state));
+
     let mut button1 = Button::new("button1");
     button1.set_text("Button");
     button1.set_stretched();
     button1.set_icon(Box::new(BreezeIcon::Check));
+    button1.set_listener(Box::new(button_listener));
 
-    let progressbar_listener = MyProgressBarListener::new(Rc::clone(&rrangevalue));
+    let progressbar_listener = MyProgressBarListener::new(Rc::clone(&state));
 
     let mut progressbar1 = ProgressBar::new("progressbar1");
     progressbar1.set_listener(Box::new(progressbar_listener));
     progressbar1.set_value(0);
     progressbar1.set_stretched();
 
-    let label_listener = MyLabelListener::new(Rc::clone(&rrangevalue));
+    let label_listener = MyLabelListener::new(Rc::clone(&state));
 
     let mut label1 = Label::new("label1");
     label1.set_listener(Box::new(label_listener));
     label1.set_text("0%");
 
+    let checkbox_listener = MyCheckBoxListener::new(Rc::clone(&state));
+
     let mut checkbox1 = CheckBox::new("checkbox1");
     checkbox1.set_text("Checkbox");
     checkbox1.set_checked();
+    checkbox1.set_listener(Box::new(checkbox_listener));
+
+    let checkbox_disabled_listener = MyCheckBoxDisabledListener::new(Rc::clone(&state));
+
+    let mut checkbox_disabled = CheckBox::new("checkbox_disabled");
+    checkbox_disabled.set_text("Disabled");
+    checkbox_disabled.set_listener(Box::new(checkbox_disabled_listener));
+
+    let radio_listener = MyRadioListener::new(Rc::clone(&state));
 
     let mut radio1 = Radio::new("radio1");
     radio1.set_choices(vec!["Radio Button", "Radio Button"]);
     radio1.set_selected(0);
+    radio1.set_listener(Box::new(radio_listener));
+
+    let combo_listener = MyComboListener::new(Rc::clone(&state));
 
     let mut combo1 = Combo::new("combo1");
     combo1.set_choices(vec!["Combo Box", "Jumbo Fox"]);
     combo1.set_selected(0);
     combo1.set_icon(Box::new(BreezeIcon::Down));
+    combo1.set_listener(Box::new(combo_listener));
 
-    let range_listener = MyRangeListener::new(Rc::clone(&rrangevalue));
+    let range_listener = MyRangeListener::new(Rc::clone(&state));
 
     let mut range1 = Range::new("range1");
     range1.set_listener(Box::new(range_listener));
@@ -112,6 +130,7 @@ fn main() {
     container6.set_direction(Direction::Vertical);
     container6.add(Box::new(container4));
     container6.add(Box::new(container5));
+    container6.add(Box::new(checkbox_disabled));
 
     let mut label2 = Label::new("label2");
     label2.set_text("This is Tab 2.");
@@ -125,13 +144,17 @@ fn main() {
     container7.add(Box::new(label2));
     container7.add(Box::new(label3));
 
-    let tabs_listener = MyTabsListener::new(Rc::clone(&rpanes));
+    let mut label4 = Label::new("label4");
+    label4.set_text("This is Tab 3");
+
+    let tabs_listener = MyTabsListener::new(Rc::clone(&panes));
 
     let mut tabs1 = Tabs::new("tabs1");
     tabs1.set_selected(0);
     tabs1.set_listener(Box::new(tabs_listener));
     tabs1.add("Tab 1", Box::new(container6));
     tabs1.add("Tab 2", Box::new(container7));
+    tabs1.add("Tab 3", Box::new(label4));
 
     let mut quitter = MenuFunction::new("Exit");
     quitter.set_shortcut("Ctrl-Q");
@@ -149,14 +172,14 @@ fn main() {
     onglets.add(onglet1);
     onglets.add(onglet2);
 
-    let menubar_listener = MyMenuBarListener::new(Rc::clone(&rpanes));
+    let menubar_listener = MyMenuBarListener::new(Rc::clone(&panes));
 
     let mut menu_bar = MenuBar::new();
     menu_bar.set_listener(Box::new(menubar_listener));
     menu_bar.add(fichier);
     menu_bar.add(onglets);
 
-    let app_listener = MyWindowListener::new(Rc::clone(&rpanes));
+    let app_listener = MyWindowListener::new(Rc::clone(&panes));
 
     let mut window = Window::new();
     window.set_title("Demo");

@@ -21,11 +21,6 @@ $menubar-height: 30px;
     outline: 0;
     padding: 6px;
 
-    &.disabled {
-        background: black;
-        color: white;
-    }
-
     img {
         height: 18px;
         width: 18px;
@@ -43,12 +38,14 @@ $menubar-height: 30px;
     margin-left: 6px;
     margin-right: 6px;
     height: 10px;
-    background-color: white;
-    border: 1px solid black;
 
-    .inner-progressbar {
+    .background {
+        background-color: white;
+        border: 1px solid black;
+    }
+
+    .foreground {
         background-color: black;
-        height: 100%;
     }
 }
 
@@ -83,8 +80,12 @@ $menubar-height: 30px;
             height: 10px;
             width: 10px;
             background-color: white;
-        
-            &.checked {
+        }
+    }
+
+    &.checked {
+        .checkbox-outer {
+            .checkbox-inner {
                 background-color: black;
             }
         }
@@ -110,8 +111,12 @@ $menubar-height: 30px;
             width: 10px;
             background-color: white;
             border-radius: 50%;
+        }
+    }
 
-            &.selected {
+    &.selected {
+        .radio-outer {
+            .radio-inner {
                 background-color: black;
             }
         }

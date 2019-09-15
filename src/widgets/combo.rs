@@ -11,6 +11,7 @@ use crate::widgets::widget::Widget;
 /// choices: Vec<String>
 /// selected: u32
 /// opened: bool
+/// disabled: bool
 /// stretched: bool
 /// arrow_data: Option<String>
 /// arrow_extension: Option<String>
@@ -19,6 +20,7 @@ pub struct ComboState {
     choices: Vec<String>,
     selected: u32,
     opened: bool,
+    disabled: bool,
     stretched: bool,
     icon_data: Option<String>,
     icon_extension: Option<String>,
@@ -38,6 +40,11 @@ impl ComboState {
     /// Get the opened flag
     pub fn opened(&self) -> bool {
         self.opened
+    }
+
+    /// Get the disabled flag
+    pub fn disabled(&self) -> bool {
+        self.disabled
     }
 
     /// Get the stretched flag
@@ -69,6 +76,11 @@ impl ComboState {
     /// Set the opened flag
     pub fn set_opened(&mut self, opened: bool) {
         self.opened = opened;
+    }
+
+    /// Set the disabled flag
+    pub fn set_disabled(&mut self, disabled: bool) {
+        self.disabled = disabled;
     }
 
     /// Set the stretched flag
@@ -111,6 +123,7 @@ pub trait ComboListener {
 ///     choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
 ///     selected: 0,
 ///     opened: false,
+///     disabled: false,
 ///     stretched: false,
 ///     icon_data: None,
 ///     icon_extension: None
@@ -203,6 +216,7 @@ impl Combo {
                 choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
                 selected: 0,
                 opened: false,
+                disabled: false,
                 stretched: false,
                 icon_data: None,
                 icon_extension: None,
@@ -224,6 +238,11 @@ impl Combo {
     /// Set the opened flag to true
     pub fn set_opened(&mut self) {
         self.state.set_opened(true);
+    }
+
+    /// Set the disabled flag to true
+    pub fn set_disabled(&mut self) {
+        self.state.set_disabled(true);
     }
 
     /// Set the stretched flag to true
@@ -249,15 +268,21 @@ impl Widget for Combo {
         } else {
             ""
         };
+        let disabled = if self.state.disabled() {
+            "disabled"
+        } else {
+            ""
+        };
         let opened = if self.state.opened() { "opened" } else { "" };
         let mut s = match self.state.icon() {
             Some(icon) => {
                 format!(
-                    r#"<div id="{}" class="combo {}"><div onmousedown="{}" class="combo-button {}">{}<img src="data:image/{};base64,{}" /></div>"#,
+                    r#"<div id="{}" class="combo  {} {} {}"><div onmousedown="{}" class="combo-button">{}<img src="data:image/{};base64,{}" /></div>"#,
                     self.name,
                     stretched,
-                    Event::change_js(&self.name, "'-1'"),
                     opened,
+                    disabled,
+                    Event::change_js(&self.name, "'-1'"),
                     self.state.choices()[self.state.selected() as usize],
                     icon.extension(),
                     icon.data(),
@@ -265,9 +290,11 @@ impl Widget for Combo {
             },
             None => {
                 format!(
-                    r#"<div id="{}" class="combo {}"><div onmousedown="{}" class="combo-button">{}</div>"#,
+                    r#"<div id="{}" class="combo {} {} {}"><div onmousedown="{}" class="combo-button">{}</div>"#,
                     self.name,
                     stretched,
+                    opened,
+                    disabled,
                     Event::change_js(&self.name, "'-1'"),
                     self.state.choices()[self.state.selected() as usize],
                 )
@@ -299,7 +326,7 @@ impl Widget for Combo {
         match event {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
-                if source == &self.name {
+                if source == &self.name && !self.state.disabled() {
                     self.on_change(value);
                 } else {
                     self.state.set_opened(false);

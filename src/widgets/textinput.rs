@@ -8,11 +8,13 @@ use crate::widgets::widget::Widget;
 /// ```text
 /// value: String
 /// size: u32
+/// disabled: bool
 /// stretched: bool
 /// ```
 pub struct TextInputState {
     value: String,
     size: u32,
+    disabled: bool,
     stretched: bool,
 }
 
@@ -25,6 +27,11 @@ impl TextInputState {
     /// Get the size
     pub fn size(&self) -> u32 {
         self.size
+    }
+
+    /// Get the disabled flag
+    pub fn disabled(&self) -> bool {
+        self.disabled
     }
 
     /// Get the stretched flag
@@ -40,6 +47,11 @@ impl TextInputState {
     /// Set the size
     pub fn set_size(&mut self, size: u32) {
         self.size = size;
+    }
+
+    /// Set the disabled flag
+    pub fn set_disabled(&mut self, disabled: bool) {
+        self.disabled = disabled;
     }
 
     /// Set the stretched flag
@@ -74,6 +86,7 @@ pub trait TextInputListener {
 /// state:
 ///     value: "TextInput".to_string()
 ///     size: 10
+///     disabled: false
 ///     stretched: false
 /// listener: None
 /// ```
@@ -152,6 +165,7 @@ impl TextInput {
             state: TextInputState {
                 value: "TextInput".to_string(),
                 size: 10,
+                disabled: false,
                 stretched: false,
             },
             listener: None,
@@ -173,6 +187,11 @@ impl TextInput {
         self.state.set_stretched(true);
     }
 
+    /// Set the disabled flag to true
+    pub fn set_disabled(&mut self) {
+        self.state.set_disabled(true);
+    }
+
     /// Set the listener
     pub fn set_listener(&mut self, listener: Box<dyn TextInputListener>) {
         self.listener = Some(listener);
@@ -186,10 +205,17 @@ impl Widget for TextInput {
         } else {
             ""
         };
+        let disabled = if self.state.disabled() {
+            "disabled"
+        } else {
+            ""
+        };
         format!(
-            r#"<div id="{}" class="textinput {}"><input size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
+            r#"<div id="{}" class="textinput {} {}"><input {} size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
             self.name,
+            disabled,
             stretched,
+            disabled,
             self.state.size(),
             self.state.size(),
             self.state.value(),
@@ -201,7 +227,7 @@ impl Widget for TextInput {
         match event {
             Event::Update => self.on_update(),
             Event::Change { source, value } => {
-                if source == &self.name {
+                if source == &self.name && !self.state.disabled() {
                     self.on_change(value);
                 }
             }

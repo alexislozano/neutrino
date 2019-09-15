@@ -18,23 +18,32 @@ impl Panes {
 }
 
 
-/* A value controlled by the Range and
-the TextInput widgets, shown in ProgressBar and a Label
-*/
-pub struct RangeValue {
-    value: i32,
+/* range is the value controlled by the Range and
+the TextInput widgets, shown in ProgressBar and a Label. disabled is used 
+for input widgets */
+pub struct State {
+    range: i32,
+    disabled: bool
 }
 
-impl RangeValue {
+impl State {
     pub fn new() -> Self {
-        Self { value: 0 }
+        Self { range: 0, disabled: false }
     }
 
-    pub fn value(&self) -> i32 {
-        self.value
+    pub fn range(&self) -> i32 {
+        self.range
     }
 
-    pub fn set_value(&mut self, value: i32) {
-        self.value = value;
+    pub fn set_range(&mut self, range: i32) {
+        self.range = range;
+    }
+
+    pub fn disabled(&self) -> bool {
+        self.disabled
+    }
+
+    pub fn set_disabled(&mut self, disabled: bool) {
+        self.disabled = disabled;
     }
 }
