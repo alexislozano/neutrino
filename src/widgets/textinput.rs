@@ -7,12 +7,14 @@ use crate::widgets::widget::Widget;
 ///
 /// ```text
 /// value: String
+/// placeholder: String
 /// size: u32
 /// disabled: bool
 /// stretched: bool
 /// ```
 pub struct TextInputState {
     value: String,
+    placeholder: String,
     size: u32,
     disabled: bool,
     stretched: bool,
@@ -22,6 +24,11 @@ impl TextInputState {
     /// Get the value
     pub fn value(&self) -> &str {
         &self.value
+    }
+
+    /// Get the placeholder
+    pub fn placeholder(&self) -> &str {
+        &self.placeholder
     }
 
     /// Get the size
@@ -42,6 +49,11 @@ impl TextInputState {
     /// Set the value
     pub fn set_value(&mut self, value: &str) {
         self.value = value.to_string();
+    }
+
+    /// Set the placeholder
+    pub fn set_placeholder(&mut self, placeholder: &str) {
+        self.placeholder = placeholder.to_string();
     }
 
     /// Set the size
@@ -85,6 +97,7 @@ pub trait TextInputListener {
 /// name: name.to_string()
 /// state:
 ///     value: "TextInput".to_string()
+///     placeholder: "".to_string()
 ///     size: 10
 ///     disabled: false
 ///     stretched: false
@@ -164,6 +177,7 @@ impl TextInput {
             name: name.to_string(),
             state: TextInputState {
                 value: "TextInput".to_string(),
+                placeholder: "".to_string(),
                 size: 10,
                 disabled: false,
                 stretched: false,
@@ -175,6 +189,11 @@ impl TextInput {
     /// Set the value
     pub fn set_value(&mut self, value: &str) {
         self.state.set_value(value);
+    }
+
+    /// Set the placeholder
+    pub fn set_placeholder(&mut self, placeholder: &str) {
+        self.state.set_placeholder(placeholder);
     }
 
     /// Set the size
@@ -211,13 +230,14 @@ impl Widget for TextInput {
             ""
         };
         format!(
-            r#"<div id="{}" class="textinput {} {}"><input {} size="{}" maxlength="{}" value="{}" onchange="{}" /></div>"#,
+            r#"<div id="{}" class="textinput {} {}"><input {} size="{}" maxlength="{}" placeholder="{}" value="{}" onchange="{}" /></div>"#,
             self.name,
             disabled,
             stretched,
             disabled,
             self.state.size(),
             self.state.size(),
+            self.state.placeholder(),
             self.state.value(),
             Event::change_js(&self.name, "value")
         )

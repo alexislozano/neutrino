@@ -36,6 +36,7 @@ fn main() {
     let mut textinput1 = TextInput::new("input1");
     textinput1.set_listener(Box::new(textinput_listener));
     textinput1.set_value("0");
+    textinput1.set_placeholder("0-100");
     textinput1.set_size(4);
 
     let button_listener = MyButtonListener::new(Rc::clone(&state));
