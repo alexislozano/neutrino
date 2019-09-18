@@ -38,7 +38,13 @@ impl ButtonListener for MyButtonListener {
     }
 
     fn on_update(&self, state: &mut ButtonState) {
-        state.set_text(&self.counter.borrow().value().to_string());
+        let value = self.counter.borrow().value();
+        state.set_text(&value.to_string());
+        if value % 2 == 0 {
+            state.set_style("background-color: red; color: white");
+        } else {
+            state.set_style("");
+        }
     }
 }
 
@@ -51,7 +57,7 @@ fn main() {
     button.set_text("0");
     button.set_listener(Box::new(listener));
 
-    let css = r#"
+    let style = r#"
         #my_button {
             background: lime;
         }
@@ -61,7 +67,8 @@ fn main() {
     window.set_title("Add data");
     window.set_size(320, 240);
     window.set_child(Box::new(button));
-    window.set_custom_css(css);
+    window.set_style(style);
+    window.set_debug();
 
     App::run(window);
 }

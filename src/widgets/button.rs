@@ -2,15 +2,19 @@ use crate::utils::event::Event;
 use crate::utils::icon::Icon;
 use crate::utils::pixmap::Pixmap;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Button
 ///
 /// ## Fields
 ///
 /// ```text
-/// text: String
+/// text: Option<String>
+/// icon_data: Option<String>
+/// icon_extension: Option<String>
 /// disabled: bool
 /// stretched: bool
+/// style: String
 /// ```
 pub struct ButtonState {
     text: Option<String>,
@@ -18,6 +22,7 @@ pub struct ButtonState {
     icon_extension: Option<String>,
     disabled: bool,
     stretched: bool,
+    style: String,
 }
 
 impl ButtonState {
@@ -44,6 +49,11 @@ impl ButtonState {
         self.stretched
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the text
     pub fn set_text(&mut self, text: &str) {
         self.text = Some(text.to_string());
@@ -64,6 +74,11 @@ impl ButtonState {
     /// Set the streched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 }
 
@@ -91,9 +106,12 @@ pub trait ButtonListener {
 /// ```text
 /// name: name.to_string()
 /// state:
-///     text: "Button".to_string()
+///     text: None
+///     icon_data: None
+///     icon_extension: None
 ///     disabled: false
 ///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -175,6 +193,7 @@ impl Button {
                 icon_extension: None,
                 disabled: false,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -218,7 +237,12 @@ impl Widget for Button {
         } else {
             ""
         };
-        match (self.state.text(), self.state.icon()) {
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let html = match (self.state.text(), self.state.icon()) {
             (Some(text), Some(icon)) => format!(
                 r#"<div id="{}" onmousedown="{}" class="button {} {}"><img src="data:image/{};base64,{}" /><span>{}</span></div>"#,
                 self.name,
@@ -254,7 +278,8 @@ impl Widget for Button {
                 stretched,
                 "No text",
             ),
-        }
+        };
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {
