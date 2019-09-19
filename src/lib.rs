@@ -39,6 +39,7 @@ pub mod widgets;
 
 use utils::event::{Event, Key};
 use utils::theme::Theme;
+use utils::style::{scss_to_css, inline_script, inline_style};
 use widgets::menubar::MenuBar;
 use widgets::widget::Widget;
 
@@ -98,7 +99,7 @@ impl App {
                     "/app.css"
                 ))),
                 inline_style(&window.theme.css()),
-                inline_style(&window.custom_css),
+                inline_style(&window.style),
             ),
             scripts = format!(
                 "{}\n{}\n",
@@ -174,7 +175,7 @@ pub trait WindowListener {
 /// resizable: bool
 /// debug: bool
 /// theme: Theme
-/// custom_css: String
+/// style: String
 /// child: Option<Box<dyn Widget>>
 /// menubar: Option<MenuBar>
 /// listener: Option<Box<dyn WindowListener>>
@@ -190,7 +191,7 @@ pub trait WindowListener {
 /// resizable: false
 /// debug: false
 /// theme: Theme::Default
-/// custom_css: "".to_string()
+/// style: "".to_string()
 /// child: None
 /// menubar: None
 /// listener: None
@@ -218,7 +219,7 @@ pub struct Window {
     resizable: bool,
     debug: bool,
     theme: Theme,
-    custom_css: String,
+    style: String,
     child: Option<Box<dyn Widget>>,
     menubar: Option<MenuBar>,
     listener: Option<Box<dyn WindowListener>>,
@@ -235,7 +236,7 @@ impl Window {
             resizable: false,
             debug: false,
             theme: Theme::Default,
-            custom_css: "".to_string(),
+            style: "".to_string(),
             child: None,
             menubar: None,
             listener: None,
@@ -279,9 +280,9 @@ impl Window {
         self.theme = theme;
     }
 
-    /// Set the custom CSS
-    pub fn set_custom_css(&mut self, css: &str) {
-        self.custom_css = css.to_string();
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = scss_to_css(style);
     }
 
     /// Set the listener
@@ -362,12 +363,3 @@ impl Window {
     }
 }
 
-/// Return the HTML style tag
-fn inline_style(s: &str) -> String {
-    format!(r#"<style type="text/css">{}</style>"#, s)
-}
-
-/// Return the HTML script tag
-fn inline_script(s: &str) -> String {
-    format!(r#"<script type="text/javascript">{}</script>"#, s)
-}

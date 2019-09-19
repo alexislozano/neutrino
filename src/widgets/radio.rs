@@ -1,5 +1,6 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Radio
 ///
@@ -10,12 +11,14 @@ use crate::widgets::widget::Widget;
 /// selected: u32
 /// disabled: bool
 /// stretched: bool
+/// style: String
 /// ```
 pub struct RadioState {
     choices: Vec<String>,
     selected: u32,
     disabled: bool,
     stretched: bool,
+    style: String,
 }
 
 impl RadioState {
@@ -39,6 +42,11 @@ impl RadioState {
         self.stretched
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the choices
     pub fn set_choices(&mut self, choices: Vec<&str>) {
         self.choices = choices
@@ -60,6 +68,11 @@ impl RadioState {
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 }
 
@@ -93,6 +106,7 @@ pub trait RadioListener {
 ///     selected: 0
 ///     disabled: false
 ///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -183,6 +197,7 @@ impl Radio {
                 selected: 0,
                 disabled: false,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -212,6 +227,11 @@ impl Radio {
     pub fn set_listener(&mut self, listener: Box<dyn RadioListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for Radio {
@@ -226,14 +246,19 @@ impl Widget for Radio {
         } else {
             ""
         };
-        let mut s = "".to_string();
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let mut html = "".to_string();
         for (i, choice) in self.state.choices().iter().enumerate() {
             let selected = if self.state.selected() == i as u32 {
                 "selected"
             } else {
                 ""
             };
-            s.push_str(
+            html.push_str(
                 &format!(
                     r#"<div id="{}" class="radio {} {} {}" onmousedown="{}"><div class="radio-outer"><div class="radio-inner"></div></div><label>{}</label></div>"#, 
                     self.name,
@@ -245,7 +270,7 @@ impl Widget for Radio {
                 )
             );
         }
-        s
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

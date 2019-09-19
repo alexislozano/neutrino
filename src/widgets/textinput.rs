@@ -1,5 +1,6 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a TextInput
 ///
@@ -11,6 +12,7 @@ use crate::widgets::widget::Widget;
 /// size: u32
 /// disabled: bool
 /// stretched: bool
+/// style: String
 /// ```
 pub struct TextInputState {
     value: String,
@@ -18,6 +20,7 @@ pub struct TextInputState {
     size: u32,
     disabled: bool,
     stretched: bool,
+    style: String,
 }
 
 impl TextInputState {
@@ -46,6 +49,11 @@ impl TextInputState {
         self.stretched
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the value
     pub fn set_value(&mut self, value: &str) {
         self.value = value.to_string();
@@ -69,6 +77,11 @@ impl TextInputState {
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 }
 
@@ -101,6 +114,7 @@ pub trait TextInputListener {
 ///     size: 10
 ///     disabled: false
 ///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -181,6 +195,7 @@ impl TextInput {
                 size: 10,
                 disabled: false,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -215,6 +230,11 @@ impl TextInput {
     pub fn set_listener(&mut self, listener: Box<dyn TextInputListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for TextInput {
@@ -229,7 +249,12 @@ impl Widget for TextInput {
         } else {
             ""
         };
-        format!(
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let html = format!(
             r#"<div id="{}" class="textinput {} {}"><input {} size="{}" maxlength="{}" placeholder="{}" value="{}" onchange="{}" /></div>"#,
             self.name,
             disabled,
@@ -240,7 +265,8 @@ impl Widget for TextInput {
             self.state.placeholder(),
             self.state.value(),
             Event::change_js(&self.name, "value")
-        )
+        );
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

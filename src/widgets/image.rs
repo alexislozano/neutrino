@@ -2,6 +2,7 @@ use crate::utils::event::Event;
 use crate::utils::icon::Icon;
 use crate::utils::pixmap::Pixmap;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of an Image
 ///
@@ -13,6 +14,7 @@ use crate::widgets::widget::Widget;
 /// background: String
 /// keep_ratio_aspect: bool
 /// stretched: bool
+/// style: String
 /// ```
 pub struct ImageState {
     data: String,
@@ -20,6 +22,7 @@ pub struct ImageState {
     background: String,
     keep_ratio_aspect: bool,
     stretched: bool,
+    style: String,
 }
 
 impl ImageState {
@@ -48,6 +51,11 @@ impl ImageState {
         self.stretched
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the base64 encoded image data
     pub fn set_data(&mut self, data: &str) {
         self.data = data.to_string();
@@ -71,6 +79,11 @@ impl ImageState {
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 }
 
@@ -98,11 +111,12 @@ pub trait ImageListener {
 /// ```text
 /// name: name.to_string()
 /// state:
-///     data: pixmap.data().to_string(),
-///     extension: pixmap.extension().to_string(),
-///     background: "black".to_string(),
-///     keep_ratio_aspect: false,
-///     stretched: false,
+///     data: pixmap.data().to_string()
+///     extension: pixmap.extension().to_string()
+///     background: "black".to_string()
+///     keep_ratio_aspect: false
+///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -179,6 +193,7 @@ impl Image {
                 background: "black".to_string(),
                 keep_ratio_aspect: false,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -195,6 +210,7 @@ impl Image {
                 background: "black".to_string(),
                 keep_ratio_aspect: false,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -219,6 +235,11 @@ impl Image {
     pub fn set_listener(&mut self, listener: Box<dyn ImageListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for Image {
@@ -233,7 +254,12 @@ impl Widget for Image {
         } else {
             ""
         };
-        format!(
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let html = format!(
             r#"<div id="{}" class="image {}" style="background:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
             self.name,
             stretched,
@@ -241,7 +267,8 @@ impl Widget for Image {
             ratio,
             self.state.extension(),
             self.state.data(),
-        )
+        );
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

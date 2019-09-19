@@ -372,7 +372,7 @@ $widget-margin: 6px;
 }
 
 #app {
-    .menubar + * {
+    .menubar ~ * {
         top: $menubar-height;
     }
 }

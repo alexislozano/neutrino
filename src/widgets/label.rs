@@ -1,5 +1,6 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Label
 ///
@@ -9,11 +10,13 @@ use crate::widgets::widget::Widget;
 /// text: String
 /// stretched: bool
 /// unselectable: bool
+/// style: String
 /// ```
 pub struct LabelState {
     text: String,
     stretched: bool,
-    unselectable: bool
+    unselectable: bool,
+    style: String,
 }
 
 impl LabelState {
@@ -32,6 +35,11 @@ impl LabelState {
         self.unselectable
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the text
     pub fn set_text(&mut self, text: &str) {
         self.text = text.to_string();
@@ -45,6 +53,11 @@ impl LabelState {
     /// Set the uselectable flag
     pub fn set_unselectable(&mut self, unselectable: bool) {
         self.unselectable = unselectable;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 }
 
@@ -70,8 +83,9 @@ pub trait LabelListener {
 /// name: name.to_string()
 /// state:
 ///     text: "Label".to_string()
-///     stretched: false,
-///     unselectable: false,
+///     stretched: false
+///     unselectable: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -143,6 +157,7 @@ impl Label {
                 text: "Label".to_string(),
                 stretched: false,
                 unselectable: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -167,6 +182,11 @@ impl Label {
     pub fn set_listener(&mut self, listener: Box<dyn LabelListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for Label {
@@ -181,13 +201,19 @@ impl Widget for Label {
         } else {
             "selectable"
         };
-        format!(
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let html = format!(
             r#"<div id="{}" class="label {} {}">{}</div>"#,
             self.name,
             stretched,
             user_select_class,
             self.state.text()
-        )
+        );
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

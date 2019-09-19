@@ -351,7 +351,7 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 }
 
 #app {
-    .menubar + * {
+    .menubar ~ * {
         top: $menubar-height;
     }
 }
