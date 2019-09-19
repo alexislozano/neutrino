@@ -1,5 +1,6 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a ProgressBar
 ///
@@ -10,12 +11,14 @@ use crate::widgets::widget::Widget;
 /// max: i32
 /// value: i32
 /// stretched: bool
+/// style: String
 /// ```
 pub struct ProgressBarState {
     min: i32,
     max: i32,
     value: i32,
     stretched: bool,
+    style: String,
 }
 
 impl ProgressBarState {
@@ -37,6 +40,11 @@ impl ProgressBarState {
     /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
+    }
+
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
     }
 
     /// Set the min
@@ -63,6 +71,11 @@ impl ProgressBarState {
     /// Set the stretched flqg
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 }
 
@@ -91,6 +104,7 @@ pub trait ProgressBarListener {
 ///     max: 100
 ///     value: 0
 ///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -162,6 +176,7 @@ impl ProgressBar {
                 max: 100,
                 value: 0,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -191,6 +206,11 @@ impl ProgressBar {
     pub fn set_listener(&mut self, listener: Box<dyn ProgressBarListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for ProgressBar {
@@ -200,14 +220,20 @@ impl Widget for ProgressBar {
         } else {
             ""
         };
-        format!(
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let html = format!(
             r#"<div id="{}" class="progressbar {}"><div class="background"></div><div class="foreground" style="width: {}%;"></div></div>"#, 
             self.name,
             stretched,
             f64::from(self.state.value() - self.state.min()) /
             f64::from(self.state.max() - self.state.min()) *
             100.0,
-        )
+        );
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

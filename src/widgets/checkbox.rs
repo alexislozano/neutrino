@@ -1,5 +1,6 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a CheckBox
 ///
@@ -10,12 +11,14 @@ use crate::widgets::widget::Widget;
 /// checked: bool
 /// disabled: bool
 /// stretched: bool
+/// style: String
 /// ```
 pub struct CheckBoxState {
     text: String,
     checked: bool,
     disabled: bool,
     stretched: bool,
+    style: String,
 }
 
 impl CheckBoxState {
@@ -39,6 +42,11 @@ impl CheckBoxState {
         self.stretched
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the text
     pub fn set_text(&mut self, text: &str) {
         self.text = text.to_string();
@@ -57,6 +65,11 @@ impl CheckBoxState {
     /// Set the streched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 }
 
@@ -88,6 +101,7 @@ pub trait CheckBoxListener {
 ///     checked: false
 ///     disabled: false
 ///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -168,6 +182,7 @@ impl CheckBox {
                 checked: false,
                 disabled: false,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -197,6 +212,11 @@ impl CheckBox {
     pub fn set_listener(&mut self, listener: Box<dyn CheckBoxListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for CheckBox {
@@ -212,7 +232,12 @@ impl Widget for CheckBox {
         } else {
             ""
         };
-        format!(
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let html = format!(
             r#"<div id="{}" class="checkbox {} {} {}" onmousedown="{}"><div class="checkbox-outer"><div class="checkbox-inner"></div></div><label>{}</label></div>"#, 
             self.name,
             disabled,
@@ -220,7 +245,8 @@ impl Widget for CheckBox {
             stretched,
             Event::change_js(&self.name, "''"), 
             self.state.text,
-        )
+        );
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

@@ -2,6 +2,7 @@ use crate::utils::event::Event;
 use crate::utils::icon::Icon;
 use crate::utils::pixmap::Pixmap;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Combo
 ///
@@ -15,6 +16,7 @@ use crate::widgets::widget::Widget;
 /// stretched: bool
 /// arrow_data: Option<String>
 /// arrow_extension: Option<String>
+/// style: String
 /// ```
 pub struct ComboState {
     choices: Vec<String>,
@@ -24,6 +26,7 @@ pub struct ComboState {
     stretched: bool,
     icon_data: Option<String>,
     icon_extension: Option<String>,
+    style: String,
 }
 
 impl ComboState {
@@ -60,6 +63,11 @@ impl ComboState {
         }
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the choices
     pub fn set_choices(&mut self, choices: Vec<&str>) {
         self.choices = choices
@@ -94,6 +102,11 @@ impl ComboState {
         self.icon_data = Some(pixmap.data().to_string());
         self.icon_extension = Some(pixmap.extension().to_string());
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
+    }
 }
 
 /// # The listener of a Combo
@@ -127,6 +140,7 @@ pub trait ComboListener {
 ///     stretched: false,
 ///     icon_data: None,
 ///     icon_extension: None
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -220,6 +234,7 @@ impl Combo {
                 stretched: false,
                 icon_data: None,
                 icon_extension: None,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -259,6 +274,11 @@ impl Combo {
     pub fn set_listener(&mut self, listener: Box<dyn ComboListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for Combo {
@@ -274,7 +294,12 @@ impl Widget for Combo {
             ""
         };
         let opened = if self.state.opened() { "opened" } else { "" };
-        let mut s = match self.state.icon() {
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let mut html = match self.state.icon() {
             Some(icon) => {
                 format!(
                     r#"<div id="{}" class="combo  {} {} {}"><div onmousedown="{}" class="combo-button">{}<img src="data:image/{};base64,{}" /></div>"#,
@@ -301,7 +326,7 @@ impl Widget for Combo {
             }
         };
         if self.state.opened() {
-            s.push_str(r#"<div class="combo-choices">"#);
+            html.push_str(r#"<div class="combo-choices">"#);
             let combos_length = self.state.choices().len();
             for (i, choice) in self.state.choices().iter().enumerate() {
                 let last = if i == combos_length - 1 {
@@ -309,17 +334,17 @@ impl Widget for Combo {
                 } else {
                     ""
                 };
-                s.push_str(&format!(
+                html.push_str(&format!(
                     r#"<div class="combo-choice {}" onmousedown="{}">{}</div>"#,
                     last,
                     Event::change_js(&self.name, &format!("'{}'", i)),
                     choice
                 ));
             }
-            s.push_str(r#"</div>"#);
+            html.push_str(r#"</div>"#);
         }
-        s.push_str("</div>");
-        s
+        html.push_str("</div>");
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

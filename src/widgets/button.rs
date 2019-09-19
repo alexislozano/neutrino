@@ -223,6 +223,11 @@ impl Button {
     pub fn set_listener(&mut self, listener: Box<dyn ButtonListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for Button {

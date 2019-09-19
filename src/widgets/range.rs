@@ -1,5 +1,6 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Range
 ///
@@ -11,6 +12,7 @@ use crate::widgets::widget::Widget;
 /// value: i32
 /// disabled: bool
 /// stretched: bool
+/// style: String
 /// ```
 pub struct RangeState {
     min: i32,
@@ -18,6 +20,7 @@ pub struct RangeState {
     value: i32,
     disabled: bool,
     stretched: bool,
+    style: String,
 }
 
 impl RangeState {
@@ -46,6 +49,11 @@ impl RangeState {
         self.stretched
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the min
     pub fn set_min(&mut self, min: i32) {
         self.min = min;
@@ -69,6 +77,11 @@ impl RangeState {
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 }
 
@@ -101,6 +114,7 @@ pub trait RangeListener {
 ///     value: 0
 ///     disabled: false
 ///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -181,6 +195,7 @@ impl Range {
                 value: 0,
                 disabled: false,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -215,6 +230,11 @@ impl Range {
     pub fn set_listener(&mut self, listener: Box<dyn RangeListener>) {
         self.listener = Some(listener);
     }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
 }
 
 impl Widget for Range {
@@ -229,7 +249,12 @@ impl Widget for Range {
         } else {
             ""
         };
-        format!(
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let html = format!(
             r#"<div id="{}" class="range {} {}"><input {} onchange="{}" oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
             self.name,
             disabled,
@@ -240,7 +265,8 @@ impl Widget for Range {
             self.state.min(),
             self.state.max(),
             self.state.value(),
-        )
+        );
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

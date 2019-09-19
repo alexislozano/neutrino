@@ -1,5 +1,6 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Container
 ///
@@ -10,6 +11,7 @@ use crate::widgets::widget::Widget;
 /// direction: Direction
 /// position: Position
 /// alignment: Alignment
+/// style: String
 /// ```
 pub struct ContainerState {
     children: Vec<Box<dyn Widget>>,
@@ -17,6 +19,7 @@ pub struct ContainerState {
     position: Position,
     alignment: Alignment,
     stretched: bool,
+    style: String,
 }
 
 impl ContainerState {
@@ -45,6 +48,11 @@ impl ContainerState {
         self.stretched
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the children
     pub fn set_children(&mut self, children: Vec<Box<dyn Widget>>) {
         self.children = children;
@@ -68,6 +76,11 @@ impl ContainerState {
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 
     /// Add a child
@@ -101,6 +114,8 @@ pub trait ContainerListener {
 ///     direction: Direction::Vertical
 ///     position: Position::Start
 ///     alignment: Alignment::None
+///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 ///
@@ -182,6 +197,7 @@ impl Container {
                 position: Position::Start,
                 alignment: Alignment::None,
                 stretched: false,
+                style: "".to_string()
             },
             listener: None,
         }
@@ -213,6 +229,11 @@ impl Container {
         self.listener.replace(listener);
     }
 
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
+
     /// Add a widget
     pub fn add(&mut self, widget: Box<dyn Widget>) {
         self.state.add(widget);
@@ -226,7 +247,12 @@ impl Widget for Container {
         } else {
             ""
         };
-        let mut s = format!(
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let mut html = format!(
             r#"<div id="{}" class="container {} {} {} {}">"#,
             self.name,
             self.state.position().css(),
@@ -235,10 +261,10 @@ impl Widget for Container {
             stretched,
         );
         for widget in self.state.children.iter() {
-            s.push_str(&widget.eval());
+            html.push_str(&widget.eval());
         }
-        s.push_str("</div>");
-        s
+        html.push_str("</div>");
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {

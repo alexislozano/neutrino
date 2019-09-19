@@ -1,6 +1,7 @@
 use crate::utils::event::Event;
 use crate::widgets::widget::Widget;
 use crate::widgets::container::Direction;
+use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Tabs
 ///
@@ -12,6 +13,7 @@ use crate::widgets::container::Direction;
 /// selected: u32
 /// direction: Direction
 /// stretched: bool
+/// style: String
 /// ```
 pub struct TabsState {
     titles: Vec<String>,
@@ -19,6 +21,7 @@ pub struct TabsState {
     selected: u32,
     direction: Direction,
     stretched: bool,
+    style: String
 }
 
 impl TabsState {
@@ -47,6 +50,11 @@ impl TabsState {
         self.stretched
     }
 
+    /// Get the style
+    pub fn style(&self) -> &str {
+        &self.style
+    }
+
     /// Set the titles
     pub fn set_titles(&mut self, titles: Vec<&str>) {
         self.titles = titles
@@ -73,6 +81,11 @@ impl TabsState {
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
+    }
+
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.style = style.to_string();
     }
 
     /// Add a tab
@@ -111,6 +124,7 @@ pub trait TabsListener {
 ///     selected: 0
 ///     direction: Direction::Horizontal
 ///     stretched: false
+///     style: "".to_string()
 /// listener: None
 /// ```
 /// 
@@ -206,6 +220,7 @@ impl Tabs {
                 selected: 0,
                 direction: Direction::Horizontal,
                 stretched: false,
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -252,6 +267,11 @@ impl Tabs {
         self.listener = Some(listener);
     }
 
+    /// Set the style
+    pub fn set_style(&mut self, style: &str) {
+        self.state.set_style(style);
+    }
+
     /// Add a tab
     pub fn add(&mut self, name: &str, child: Box<dyn Widget>) {
         self.state.add(name, child);
@@ -265,7 +285,12 @@ impl Widget for Tabs {
         } else {
             ""
         };
-        let mut s = format!(
+        let style = inline_style(&scss_to_css(&format!(
+            r##"#{}{{{}}}"##,
+            self.name, 
+            self.state.style(),
+        )));
+        let mut html = format!(
             r#"<div id="{}" class="tabs {} {}"><div class="tab-titles">"#,
             self.name, stretched, self.state.direction().css()
         );
@@ -286,7 +311,7 @@ impl Widget for Tabs {
             } else {
                 ""
             };
-            s.push_str(&format!(
+            html.push_str(&format!(
                 r#"<div class="tab-title {} {} {}" onmousedown="{}">{}</div>"#,
                 first,
                 last,
@@ -295,12 +320,11 @@ impl Widget for Tabs {
                 title
             ));
         }
-        s.push_str(&format!(
-            r#"</div><div class="tab">{}</div>"#,
+        html.push_str(&format!(
+            r#"</div><div class="tab">{}</div></div>"#,
             self.state.children[self.state.selected() as usize].eval()
         ));
-        s.push_str("</div>");
-        s
+        format!("{}{}", style, html)
     }
 
     fn trigger(&mut self, event: &Event) {
