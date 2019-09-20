@@ -121,7 +121,7 @@ pub trait TextInputListener {
 /// ```text
 /// name: name.to_string()
 /// state:
-///     value: "TextInput".to_string()
+///     value: "".to_string()
 ///     input_type: InputType::Text
 ///     placeholder: "".to_string()
 ///     size: 10
@@ -203,7 +203,7 @@ impl TextInput {
         Self {
             name: name.to_string(),
             state: TextInputState {
-                value: "TextInput".to_string(),
+                value: "".to_string(),
                 input_type: InputType::Text,
                 placeholder: "".to_string(),
                 size: 10,
