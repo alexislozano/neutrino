@@ -8,6 +8,7 @@ use crate::utils::style::{scss_to_css, inline_style};
 ///
 /// ```text
 /// value: String
+/// input_type: InputType,
 /// placeholder: String
 /// size: u32
 /// disabled: bool
@@ -16,6 +17,7 @@ use crate::utils::style::{scss_to_css, inline_style};
 /// ```
 pub struct TextInputState {
     value: String,
+    input_type: InputType,
     placeholder: String,
     size: u32,
     disabled: bool,
@@ -27,6 +29,11 @@ impl TextInputState {
     /// Get the value
     pub fn value(&self) -> &str {
         &self.value
+    }
+
+    /// Get the input_type
+    pub fn input_type(&self) -> &InputType {
+        &self.input_type
     }
 
     /// Get the placeholder
@@ -57,6 +64,11 @@ impl TextInputState {
     /// Set the value
     pub fn set_value(&mut self, value: &str) {
         self.value = value.to_string();
+    }
+
+    /// Set the input_type
+    pub fn set_input_type(&mut self, input_type: InputType) {
+        self.input_type = input_type;
     }
 
     /// Set the placeholder
@@ -110,6 +122,7 @@ pub trait TextInputListener {
 /// name: name.to_string()
 /// state:
 ///     value: "TextInput".to_string()
+///     input_type: InputType::Text
 ///     placeholder: "".to_string()
 ///     size: 10
 ///     disabled: false
@@ -191,6 +204,7 @@ impl TextInput {
             name: name.to_string(),
             state: TextInputState {
                 value: "TextInput".to_string(),
+                input_type: InputType::Text,
                 placeholder: "".to_string(),
                 size: 10,
                 disabled: false,
@@ -204,6 +218,11 @@ impl TextInput {
     /// Set the value
     pub fn set_value(&mut self, value: &str) {
         self.state.set_value(value);
+    }
+
+    /// Set the input_type
+    pub fn set_input_type(&mut self, input_type: InputType) {
+        self.state.set_input_type(input_type);
     }
 
     /// Set the placeholder
@@ -255,11 +274,12 @@ impl Widget for TextInput {
             self.state.style(),
         )));
         let html = format!(
-            r#"<div id="{}" class="textinput {} {}"><input {} size="{}" maxlength="{}" placeholder="{}" value="{}" onchange="{}" /></div>"#,
+            r#"<div id="{}" class="textinput {} {}"><input {} type="{}" size="{}" maxlength="{}" placeholder="{}" value="{}" onchange="{}" /></div>"#,
             self.name,
             disabled,
             stretched,
             disabled,
+            self.state.input_type().css(),
             self.state.size(),
             self.state.size(),
             self.state.placeholder(),
@@ -297,6 +317,20 @@ impl Widget for TextInput {
             Some(listener) => {
                 listener.on_change(&self.state);
             }
+        }
+    }
+}
+
+pub enum InputType {
+    Text,
+    Password
+}
+
+impl InputType {
+    fn css(&self) -> &str {
+        match &self {
+            InputType::Text => "text",
+            InputType::Password => "password",
         }
     }
 }
