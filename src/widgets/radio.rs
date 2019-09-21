@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
+use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
-use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Radio
 ///
@@ -248,7 +248,7 @@ impl Widget for Radio {
         };
         let style = inline_style(&scss_to_css(&format!(
             r##"#{}{{{}}}"##,
-            self.name, 
+            self.name,
             self.state.style(),
         )));
         let mut html = "".to_string();

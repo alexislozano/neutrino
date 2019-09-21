@@ -31,19 +31,6 @@ in Ubuntu or Debian:
 sudo apt install -y libwebkit2gtk-4.0-dev
 ```
 
-## OSX and Windows
-
-The neutrino crate published on crates.io (ver. 0.2) was not tested with OSX and 
-Windows. They are known bugs that were already fixed on this repo's master 
-branch (e.g. OSX renders a white window). If you want to use neutrino on these 
-OSes, use the git version by adding the following line to your `Cargo.toml`:
-
-```text
-neutrino = { git  = "https://github.com/alexislozano/neutrino" }
-```
-
-The version containing the fixes will be published soon on crates.io.
-
 ## Examples
 
 ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/image_viewer/3.png)
@@ -51,3 +38,7 @@ The version containing the fixes will be published soon on crates.io.
 ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/3.png)
 
 ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/4.png)
+
+![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/5.png)
+
+![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/6.png)

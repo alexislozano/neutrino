@@ -5,10 +5,11 @@ pub fn scss_to_css(style: &str) -> String {
     match compile_scss(style.as_bytes(), OutputStyle::Compressed) {
         Ok(css) => match std::str::from_utf8(&css) {
             Ok(css) => css.to_string(),
-            Err(_) => "".to_string()
+            Err(_) => "".to_string(),
         },
-        Err(_) => "".to_string()
-    }.replace("\n", "")
+        Err(_) => "".to_string(),
+    }
+    .replace("\n", "")
 }
 
 /// Return the HTML style tag

@@ -16,10 +16,10 @@ use neutrino::{App, Window};
 mod demo_mod;
 
 use demo_mod::listeners::{
-    MyMenuBarListener, MyTabsListener, MyWindowListener,
-    MyProgressBarListener, MyRangeListener, MyLabelListener, 
-    MyTextInputListener, MyButtonListener, MyCheckBoxListener,
-    MyRadioListener, MyComboListener, MyCheckBoxDisabledListener
+    MyButtonListener, MyCheckBoxDisabledListener, MyCheckBoxListener,
+    MyComboListener, MyLabelListener, MyMenuBarListener, MyProgressBarListener,
+    MyRadioListener, MyRangeListener, MyTabsListener, MyTextInputListener,
+    MyWindowListener,
 };
 use demo_mod::models::{Panes, State};
 
@@ -67,7 +67,8 @@ fn main() {
     checkbox1.set_checked();
     checkbox1.set_listener(Box::new(checkbox_listener));
 
-    let checkbox_disabled_listener = MyCheckBoxDisabledListener::new(Rc::clone(&state));
+    let checkbox_disabled_listener =
+        MyCheckBoxDisabledListener::new(Rc::clone(&state));
 
     let mut checkbox_disabled = CheckBox::new("checkbox_disabled");
     checkbox_disabled.set_text("Disabled");
@@ -189,6 +190,6 @@ fn main() {
     window.set_menubar(menu_bar);
     window.set_listener(Box::new(app_listener));
     window.set_theme(Theme::Breeze);
-    
+
     App::run(window);
 }

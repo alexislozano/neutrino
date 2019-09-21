@@ -2,16 +2,16 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use neutrino::utils::event::Key;
-use neutrino::widgets::menubar::{MenuBarListener, MenuBarState};
-use neutrino::widgets::tabs::{TabsListener, TabsState};
-use neutrino::widgets::range::{RangeListener, RangeState};
-use neutrino::widgets::progressbar::{ProgressBarListener, ProgressBarState};
-use neutrino::widgets::label::{LabelListener, LabelState};
-use neutrino::widgets::textinput::{TextInputListener, TextInputState};
 use neutrino::widgets::button::{ButtonListener, ButtonState};
-use neutrino::widgets::radio::{RadioListener, RadioState};
-use neutrino::widgets::combo::{ComboListener, ComboState};
 use neutrino::widgets::checkbox::{CheckBoxListener, CheckBoxState};
+use neutrino::widgets::combo::{ComboListener, ComboState};
+use neutrino::widgets::label::{LabelListener, LabelState};
+use neutrino::widgets::menubar::{MenuBarListener, MenuBarState};
+use neutrino::widgets::progressbar::{ProgressBarListener, ProgressBarState};
+use neutrino::widgets::radio::{RadioListener, RadioState};
+use neutrino::widgets::range::{RangeListener, RangeState};
+use neutrino::widgets::tabs::{TabsListener, TabsState};
+use neutrino::widgets::textinput::{TextInputListener, TextInputState};
 use neutrino::WindowListener;
 
 use super::models::{Panes, State};
@@ -100,7 +100,6 @@ impl MenuBarListener for MyMenuBarListener {
     }
 }
 
-
 /* Range Listener: update State when the user scroll the Range widget */
 pub struct MyRangeListener {
     state: Rc<RefCell<State>>,
@@ -140,7 +139,6 @@ impl ProgressBarListener for MyProgressBarListener {
     }
 }
 
-
 /* Label Listenr: update the Label text to show the current State value,
 formatted as a percent */
 pub struct MyLabelListener {
@@ -159,7 +157,6 @@ impl LabelListener for MyLabelListener {
         state.set_text(&text);
     }
 }
-
 
 /* Text Input Listener: update the TextInput value to the
 current State value or set the State when the user
@@ -180,10 +177,11 @@ impl TextInputListener for MyTextInputListener {
         state.set_disabled(self.state.borrow().disabled());
     }
     fn on_change(&self, state: &TextInputState) {
-        self.state.borrow_mut().set_range(state.value().parse().unwrap_or(0));
+        self.state
+            .borrow_mut()
+            .set_range(state.value().parse().unwrap_or(0));
     }
 }
-
 
 pub struct MyButtonListener {
     state: Rc<RefCell<State>>,
@@ -256,7 +254,6 @@ impl CheckBoxListener for MyCheckBoxListener {
 
     fn on_change(&self, _state: &CheckBoxState) {}
 }
-
 
 pub struct MyCheckBoxDisabledListener {
     state: Rc<RefCell<State>>,

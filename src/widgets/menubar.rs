@@ -269,7 +269,11 @@ impl MenuItem {
             s.push_str(r#"<div class="menufunctions">"#);
             let functions_number = self.functions.len();
             for (i, function) in self.functions.iter().enumerate() {
-                s.push_str(&function.eval(i ,i == 0, i == functions_number - 1));
+                s.push_str(&function.eval(
+                    i,
+                    i == 0,
+                    i == functions_number - 1,
+                ));
             }
             s.push_str(r#"</div>"#);
         }
