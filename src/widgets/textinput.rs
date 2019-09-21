@@ -130,7 +130,15 @@ pub trait TextInputListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
+/// 
+/// ## Style
 ///
+/// ```text
+/// div.textinput[.disabled]
+///     input[.focus]
+/// ```
+/// 
+/// 
 /// ## Example
 ///
 /// ```

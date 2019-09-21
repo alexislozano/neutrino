@@ -108,6 +108,14 @@ pub trait ProgressBarListener {
 /// listener: None
 /// ```
 ///
+/// ## Style
+///
+/// ```text
+/// div.progressbar
+///     div.background
+///     div.foreground
+/// ```
+/// 
 /// ## Example
 ///
 /// ```

@@ -118,6 +118,12 @@ pub trait ContainerListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
+/// 
+/// ## Style
+///
+/// ```text
+/// div.container
+/// ```
 ///
 /// ## Example
 ///

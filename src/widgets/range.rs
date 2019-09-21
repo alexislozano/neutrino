@@ -118,6 +118,17 @@ pub trait RangeListener {
 /// listener: None
 /// ```
 ///
+/// ## Style
+///
+/// ```text
+/// div.range[.disabled]
+///     div.inner-range
+///         ::-webkit-slider-runnable-track
+///         ::-webkit-slider-thumb
+///         ::-ms-track
+///         ::-ms-thumb
+/// ```
+/// 
 /// ## Example
 ///
 /// ```

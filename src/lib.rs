@@ -31,6 +31,10 @@
 //! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/3.png)
 //!
 //! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/4.png)
+//! 
+//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/5.png)
+//! 
+//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/6.png)
 
 use web_view::*;
 

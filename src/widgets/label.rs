@@ -88,6 +88,12 @@ pub trait LabelListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
+/// 
+/// ## Style
+///
+/// ```text
+/// div.label
+/// ```
 ///
 /// ## Example
 ///

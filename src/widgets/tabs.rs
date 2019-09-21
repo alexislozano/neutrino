@@ -127,7 +127,16 @@ pub trait TabsListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
+/// 
+/// ## Style
 ///
+/// ```text
+/// div.tabs[.direction-vertical]
+///     div.tab-titles
+///         div.tab-title[.selected]
+///     div.tab
+/// ```
+/// 
 /// ## Example
 ///
 /// ```

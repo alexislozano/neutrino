@@ -110,6 +110,15 @@ pub trait RadioListener {
 /// listener: None
 /// ```
 ///
+/// ## Style
+///
+/// ```text
+/// div.radio[.disabled][.selected]
+///     label
+///     div.radio-outer
+///         div.radio-inner
+/// ```
+/// 
 /// ## Example
 ///
 /// ```

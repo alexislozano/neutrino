@@ -119,7 +119,14 @@ pub trait ImageListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
+/// 
+/// ## Style
 ///
+/// ```text
+/// div.image
+///     img
+/// ```
+/// 
 /// ## Example
 ///
 /// ```
