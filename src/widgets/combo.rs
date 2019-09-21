@@ -1,6 +1,4 @@
 use crate::utils::event::Event;
-use crate::utils::icon::Icon;
-use crate::utils::pixmap::Pixmap;
 use crate::widgets::widget::Widget;
 use crate::utils::style::{scss_to_css, inline_style};
 
@@ -14,8 +12,6 @@ use crate::utils::style::{scss_to_css, inline_style};
 /// opened: bool
 /// disabled: bool
 /// stretched: bool
-/// arrow_data: Option<String>
-/// arrow_extension: Option<String>
 /// style: String
 /// ```
 pub struct ComboState {
@@ -24,8 +20,6 @@ pub struct ComboState {
     opened: bool,
     disabled: bool,
     stretched: bool,
-    icon_data: Option<String>,
-    icon_extension: Option<String>,
     style: String,
 }
 
@@ -53,14 +47,6 @@ impl ComboState {
     /// Get the stretched flag
     pub fn stretched(&self) -> bool {
         self.stretched
-    }
-
-    /// Get the icon
-    pub fn icon(&self) -> Option<Pixmap> {
-        match (&self.icon_data, &self.icon_extension) {
-            (Some(data), Some(extension)) => Some(Pixmap::new(data, extension)),
-            _ => None,
-        }
     }
 
     /// Get the style
@@ -94,13 +80,6 @@ impl ComboState {
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
-    }
-
-    /// Set the icon
-    pub fn set_icon(&mut self, icon: Box<dyn Icon>) {
-        let pixmap = Pixmap::from_icon(icon);
-        self.icon_data = Some(pixmap.data().to_string());
-        self.icon_extension = Some(pixmap.extension().to_string());
     }
 
     /// Set the style
@@ -138,8 +117,6 @@ pub trait ComboListener {
 ///     opened: false,
 ///     disabled: false,
 ///     stretched: false,
-///     icon_data: None,
-///     icon_extension: None
 ///     style: "".to_string()
 /// listener: None
 /// ```
@@ -149,7 +126,7 @@ pub trait ComboListener {
 /// ```text
 /// div.combo[.opened][.disabled]
 ///     div.combo-button
-///         img
+///         div.combo-icon
 ///     div.combo-choices
 ///         div.combo-choice
 /// ```
@@ -242,8 +219,6 @@ impl Combo {
                 opened: false,
                 disabled: false,
                 stretched: false,
-                icon_data: None,
-                icon_extension: None,
                 style: "".to_string(),
             },
             listener: None,
@@ -275,11 +250,6 @@ impl Combo {
         self.state.set_stretched(true);
     }
 
-    /// Set the icon
-    pub fn set_icon(&mut self, icon: Box<dyn Icon>) {
-        self.state.set_icon(icon);
-    }
-
     /// Set the listener
     pub fn set_listener(&mut self, listener: Box<dyn ComboListener>) {
         self.listener = Some(listener);
@@ -309,32 +279,15 @@ impl Widget for Combo {
             self.name, 
             self.state.style(),
         )));
-        let mut html = match self.state.icon() {
-            Some(icon) => {
-                format!(
-                    r#"<div id="{}" class="combo {} {} {}"><div onmousedown="{}" class="combo-button">{}<img src="data:image/{};base64,{}" /></div>"#,
-                    self.name,
-                    stretched,
-                    opened,
-                    disabled,
-                    Event::change_js(&self.name, "'-1'"),
-                    self.state.choices()[self.state.selected() as usize],
-                    icon.extension(),
-                    icon.data(),
-                )
-            },
-            None => {
-                format!(
-                    r#"<div id="{}" class="combo {} {} {}"><div onmousedown="{}" class="combo-button">{}</div>"#,
-                    self.name,
-                    stretched,
-                    opened,
-                    disabled,
-                    Event::change_js(&self.name, "'-1'"),
-                    self.state.choices()[self.state.selected() as usize],
-                )
-            }
-        };
+        let mut html = format!(
+            r#"<div id="{}" class="combo {} {} {}"><div onmousedown="{}" class="combo-button">{}<div class="combo-icon"></div></div>"#,
+            self.name,
+            stretched,
+            opened,
+            disabled,
+            Event::change_js(&self.name, "'-1'"),
+            self.state.choices()[self.state.selected() as usize],
+        );
         if self.state.opened() {
             html.push_str(r#"<div class="combo-choices">"#);
             let combos_length = self.state.choices().len();

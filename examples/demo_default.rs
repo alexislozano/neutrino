@@ -85,7 +85,6 @@ fn main() {
     let mut combo1 = Combo::new("combo1");
     combo1.set_choices(vec!["Combo Box", "Jumbo Fox"]);
     combo1.set_selected(0);
-    combo1.set_icon(Box::new(BreezeIcon::Down));
     combo1.set_listener(Box::new(combo_listener));
 
     let range_listener = MyRangeListener::new(Rc::clone(&state));

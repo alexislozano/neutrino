@@ -26,6 +26,10 @@ $checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwM
 // <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50 55, 100 10, 100 40, 50 85, 14 43, 29 29' fill='black'></polygon></svg>
 $disabled-checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzUwIDU1LCAxMDAgMTAsIDEwMCA0MCwgNTAgODUsIDE0IDQzLCAyOSAyOScgZmlsbD0nYmxhY2snPjwvcG9seWdvbj48L3N2Zz4=");
 
+// Base 64 encoded string from :
+// <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50 60, 28 40, 72 40' fill='black'></polygon></svg>
+$combo-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzUwIDYwLCAyOCA0MCwgNzIgNDAnIGZpbGw9J2JsYWNrJz48L3BvbHlnb24+PC9zdmc+");
+
 
 #app {
     font-family: 'Cantarell', sans-serif;
@@ -233,10 +237,12 @@ $disabled-checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAg
         outline: 0;
         background: $button-gradient;
 
-        img {
+        .combo-icon {
             margin-left: 10px;
             height: 18px;
             width: 18px;
+            background-image: $combo-path;
+            background-size: 18px 18px;
         }
     }
 
@@ -265,6 +271,10 @@ $disabled-checkbox-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAg
         .combo-button {
             background: $disabled-color;
             color: lighten(black, 50%);
+
+            .combo-icon {
+                opacity: 0.4;
+            }
         }
     }
 }
