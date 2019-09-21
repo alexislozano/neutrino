@@ -38,8 +38,8 @@ pub mod utils;
 pub mod widgets;
 
 use utils::event::{Event, Key};
+use utils::style::{inline_script, inline_style, scss_to_css};
 use utils::theme::Theme;
-use utils::style::{scss_to_css, inline_script, inline_style};
 use widgets::menubar::MenuBar;
 use widgets::widget::Widget;
 
@@ -71,10 +71,9 @@ impl App {
 
         let timer = match window.timer {
             None => "".to_string(),
-            Some(period) => format!(
-                r#"<script>{}</script>"#,
-                Event::tick_js(period)
-            )
+            Some(period) => {
+                format!(r#"<script>{}</script>"#, Event::tick_js(period))
+            }
         };
 
         let html = format!(
@@ -291,7 +290,7 @@ impl Window {
     }
 
     /// Set the timer
-    /// 
+    ///
     /// The app will send a Tick event with a defined period
     pub fn set_timer(&mut self, period: u32) {
         self.timer = Some(period);
@@ -321,9 +320,7 @@ impl Window {
     /// Trigger the events in the widget tree
     fn trigger(&mut self, event: &Event) {
         match event {
-            Event::Change { .. }
-            | Event::Update
-            | Event::Undefined => {
+            Event::Change { .. } | Event::Update | Event::Undefined => {
                 match (&mut self.menubar, &mut self.child) {
                     (Some(menubar), Some(child)) => {
                         menubar.trigger(event);
@@ -333,7 +330,7 @@ impl Window {
                     (Some(menubar), None) => menubar.trigger(event),
                     (None, None) => (),
                 };
-            },
+            }
             Event::Key { key } => {
                 match &self.listener {
                     None => (),
@@ -350,7 +347,7 @@ impl Window {
                     (Some(menubar), None) => menubar.trigger(event),
                     (None, None) => (),
                 };
-            },
+            }
             Event::Tick => {
                 match &self.listener {
                     None => (),
@@ -362,4 +359,3 @@ impl Window {
         }
     }
 }
-

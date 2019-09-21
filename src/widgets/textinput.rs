@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
+use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
-use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a TextInput
 ///
@@ -270,7 +270,7 @@ impl Widget for TextInput {
         };
         let style = inline_style(&scss_to_css(&format!(
             r##"#{}{{{}}}"##,
-            self.name, 
+            self.name,
             self.state.style(),
         )));
         let html = format!(
@@ -323,7 +323,7 @@ impl Widget for TextInput {
 
 pub enum InputType {
     Text,
-    Password
+    Password,
 }
 
 impl InputType {

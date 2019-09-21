@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
+use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
-use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Container
 ///
@@ -197,7 +197,7 @@ impl Container {
                 position: Position::Start,
                 alignment: Alignment::None,
                 stretched: false,
-                style: "".to_string()
+                style: "".to_string(),
             },
             listener: None,
         }
@@ -223,7 +223,7 @@ impl Container {
     pub fn set_stretched(&mut self) {
         self.state.set_stretched(true);
     }
-    
+
     /// Set the listener
     pub fn set_listener(&mut self, listener: Box<dyn ContainerListener>) {
         self.listener.replace(listener);
@@ -249,7 +249,7 @@ impl Widget for Container {
         };
         let style = inline_style(&scss_to_css(&format!(
             r##"#{}{{{}}}"##,
-            self.name, 
+            self.name,
             self.state.style(),
         )));
         let mut html = format!(

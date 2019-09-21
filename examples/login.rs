@@ -1,10 +1,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use neutrino::widgets::label::Label;
-use neutrino::widgets::textinput::{TextInput, InputType, TextInputListener, TextInputState};
 use neutrino::widgets::button::{Button, ButtonListener, ButtonState};
 use neutrino::widgets::container::{Container, Direction, Position};
+use neutrino::widgets::label::Label;
+use neutrino::widgets::textinput::{
+    InputType, TextInput, TextInputListener, TextInputState,
+};
 use neutrino::{App, Window};
 
 struct Login {
@@ -14,15 +16,14 @@ struct Login {
 
 impl Login {
     fn new() -> Self {
-        Self { 
+        Self {
             username: "".to_string(),
             password: "".to_string(),
         }
     }
 
     fn check(&self) -> bool {
-        &self.username == "Neutrino" &&
-        &self.password == "is great !"
+        &self.username == "Neutrino" && &self.password == "is great !"
     }
 
     fn set_username(&mut self, username: &str) {
@@ -49,18 +50,22 @@ impl ButtonListener for MyButtonListener {
 
     fn on_update(&self, state: &mut ButtonState) {
         if self.login.borrow().check() {
-            state.set_style(r#"
+            state.set_style(
+                r#"
                 $color: forestgreen;
                 background-color: $color;
                 border-color: $color;
-            "#);
+            "#,
+            );
             state.set_text("OK");
         } else {
-            state.set_style(r#"
+            state.set_style(
+                r#"
                 $color: crimson;
                 background-color: $color;
                 border-color: $color;
-            "#);
+            "#,
+            );
             state.set_text("KO");
         }
     }
@@ -112,7 +117,7 @@ fn main() {
 
     let username_listener = MyUsernameListener::new(Rc::clone(&login));
     username_input.set_listener(Box::new(username_listener));
-    
+
     let mut password_label = Label::new("password_label");
     password_label.set_text("Password");
 

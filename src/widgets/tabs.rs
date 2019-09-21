@@ -1,7 +1,7 @@
 use crate::utils::event::Event;
-use crate::widgets::widget::Widget;
+use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::container::Direction;
-use crate::utils::style::{scss_to_css, inline_style};
+use crate::widgets::widget::Widget;
 
 /// # The state of a Tabs
 ///
@@ -21,7 +21,7 @@ pub struct TabsState {
     selected: u32,
     direction: Direction,
     stretched: bool,
-    style: String
+    style: String,
 }
 
 impl TabsState {
@@ -127,7 +127,7 @@ pub trait TabsListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -232,7 +232,7 @@ impl Tabs {
     }
 
     /// Set the direction
-    /// 
+    ///
     /// # Example
     ///
     /// ```text
@@ -244,7 +244,7 @@ impl Tabs {
     /// |    Content    |
     /// |               |
     /// +---------------+
-    /// 
+    ///
     /// Direction::Vertical
     ///
     /// +-------+-------------+
@@ -287,12 +287,14 @@ impl Widget for Tabs {
         };
         let style = inline_style(&scss_to_css(&format!(
             r##"#{}{{{}}}"##,
-            self.name, 
+            self.name,
             self.state.style(),
         )));
         let mut html = format!(
             r#"<div id="{}" class="tabs {} {}"><div class="tab-titles">"#,
-            self.name, stretched, self.state.direction().css()
+            self.name,
+            stretched,
+            self.state.direction().css()
         );
         let tabs_number = self.state.titles.len();
         for (i, title) in self.state.titles.iter().enumerate() {
@@ -301,16 +303,8 @@ impl Widget for Tabs {
             } else {
                 ""
             };
-            let first = if i == 0 {
-                "first"
-            } else {
-                ""
-            };
-            let last = if i == tabs_number - 1 {
-                "last"
-            } else {
-                ""
-            };
+            let first = if i == 0 { "first" } else { "" };
+            let last = if i == tabs_number - 1 { "last" } else { "" };
             html.push_str(&format!(
                 r#"<div class="tab-title {} {} {}" onmousedown="{}">{}</div>"#,
                 first,
@@ -330,7 +324,8 @@ impl Widget for Tabs {
     fn trigger(&mut self, event: &Event) {
         match event {
             Event::Update => {
-                self.state.children[self.state.selected as usize].trigger(event);
+                self.state.children[self.state.selected as usize]
+                    .trigger(event);
                 self.on_update()
             }
             Event::Change { source, value } => {

@@ -1,8 +1,8 @@
 use crate::utils::event::Event;
 use crate::utils::icon::Icon;
 use crate::utils::pixmap::Pixmap;
+use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
-use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Button
 ///
@@ -114,9 +114,9 @@ pub trait ButtonListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
-/// 
+///
 /// ## Style
-/// 
+///
 /// ```text
 /// div.button[.disabled]
 ///     img
@@ -251,7 +251,7 @@ impl Widget for Button {
         };
         let style = inline_style(&scss_to_css(&format!(
             r##"#{}{{{}}}"##,
-            self.name, 
+            self.name,
             self.state.style(),
         )));
         let html = match (self.state.text(), self.state.icon()) {

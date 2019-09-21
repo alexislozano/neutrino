@@ -17,18 +17,20 @@ impl Panes {
     }
 }
 
-
 /* range is the value controlled by the Range and
-the TextInput widgets, shown in ProgressBar and a Label. disabled is used 
+the TextInput widgets, shown in ProgressBar and a Label. disabled is used
 for input widgets */
 pub struct State {
     range: i32,
-    disabled: bool
+    disabled: bool,
 }
 
 impl State {
     pub fn new() -> Self {
-        Self { range: 0, disabled: false }
+        Self {
+            range: 0,
+            disabled: false,
+        }
     }
 
     pub fn range(&self) -> i32 {

@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
+use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
-use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a CheckBox
 ///
@@ -106,14 +106,14 @@ pub trait CheckBoxListener {
 /// ```
 ///
 /// ## Style
-/// 
+///
 /// ```text
 /// div.checkbox[.disabled][.checked]
 ///     div.checkbox-outer
 ///         div.checkbox-inner
 ///     label
 /// ```
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -243,7 +243,7 @@ impl Widget for CheckBox {
         };
         let style = inline_style(&scss_to_css(&format!(
             r##"#{}{{{}}}"##,
-            self.name, 
+            self.name,
             self.state.style(),
         )));
         let html = format!(

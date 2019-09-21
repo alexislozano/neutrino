@@ -1,6 +1,6 @@
 use crate::utils::event::Event;
+use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
-use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of a Combo
 ///
@@ -120,9 +120,9 @@ pub trait ComboListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
-/// 
+///
 /// ## Style
-/// 
+///
 /// ```text
 /// div.combo[.opened][.disabled]
 ///     div.combo-button
@@ -276,7 +276,7 @@ impl Widget for Combo {
         let opened = if self.state.opened() { "opened" } else { "" };
         let style = inline_style(&scss_to_css(&format!(
             r##"#{}{{{}}}"##,
-            self.name, 
+            self.name,
             self.state.style(),
         )));
         let mut html = format!(
@@ -292,11 +292,7 @@ impl Widget for Combo {
             html.push_str(r#"<div class="combo-choices">"#);
             let combos_length = self.state.choices().len();
             for (i, choice) in self.state.choices().iter().enumerate() {
-                let last = if i == combos_length - 1 {
-                    "last"
-                } else {
-                    ""
-                };
+                let last = if i == combos_length - 1 { "last" } else { "" };
                 html.push_str(&format!(
                     r#"<div class="combo-choice {}" onmousedown="{}">{}</div>"#,
                     last,

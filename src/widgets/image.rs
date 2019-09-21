@@ -1,8 +1,8 @@
 use crate::utils::event::Event;
 use crate::utils::icon::Icon;
 use crate::utils::pixmap::Pixmap;
+use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
-use crate::utils::style::{scss_to_css, inline_style};
 
 /// # The state of an Image
 ///
@@ -256,7 +256,7 @@ impl Widget for Image {
         };
         let style = inline_style(&scss_to_css(&format!(
             r##"#{}{{{}}}"##,
-            self.name, 
+            self.name,
             self.state.style(),
         )));
         let html = format!(
