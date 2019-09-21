@@ -1,6 +1,12 @@
 // MENUBAR HEIGHT
 $menubar-height: 30px;
 
+// PATH
+// Base 64 encoded string from :
+// <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50 60, 80 35, 80 45, 50 70, 20 45, 20 35' fill='black'></polygon></svg>
+$combo-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cG9seWdvbiBwb2ludHM9JzUwIDYwLCA4MCAzNSwgODAgNDUsIDUwIDcwLCAyMCA0NSwgMjAgMzUnIGZpbGw9J2JsYWNrJz48L3BvbHlnb24+PC9zdmc+");
+
+
 #app {
     font-family: sans-serif;
     font-size: 13px;
@@ -134,10 +140,12 @@ $menubar-height: 30px;
         outline: 0;
         padding: 6px;
 
-        img {
+        .combo-icon {
             margin-left: 10px;
             height: 18px;
             width: 18px;
+            background-image: $combo-path;
+            background-size: 18px 18px;
         }
     }
 
