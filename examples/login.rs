@@ -12,6 +12,7 @@ use neutrino::{App, Window};
 struct Login {
     username: String,
     password: String,
+    ok: bool,
 }
 
 impl Login {
@@ -19,11 +20,16 @@ impl Login {
         Self {
             username: "".to_string(),
             password: "".to_string(),
+            ok: false,
         }
     }
 
-    fn check(&self) -> bool {
-        &self.username == "Neutrino" && &self.password == "is great !"
+    fn check(&mut self) {
+        self.ok = &self.username == "Neutrino" && &self.password == "is great !";
+    }
+
+    fn ok(&self) -> bool {
+        self.ok
     }
 
     fn set_username(&mut self, username: &str) {
@@ -46,10 +52,12 @@ impl MyButtonListener {
 }
 
 impl ButtonListener for MyButtonListener {
-    fn on_change(&self, _state: &ButtonState) {}
+    fn on_change(&self, _state: &ButtonState) {
+        self.login.borrow_mut().check();
+    }
 
     fn on_update(&self, state: &mut ButtonState) {
-        if self.login.borrow().check() {
+        if self.login.borrow().ok() {
             state.set_style(
                 r#"
                 $color: forestgreen;

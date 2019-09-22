@@ -282,7 +282,7 @@ impl Widget for TextInput {
             self.state.style(),
         )));
         let html = format!(
-            r#"<div id="{}" class="textinput {} {}"><input {} type="{}" size="{}" maxlength="{}" placeholder="{}" value="{}" onchange="{}" /></div>"#,
+            r#"<div id="{}" class="textinput {} {}"><input {} type="{}" size="{}" maxlength="{}" placeholder="{}" value="{}" onchange="{}" oninput="{}" /></div>"#,
             self.name,
             disabled,
             stretched,
@@ -292,7 +292,8 @@ impl Widget for TextInput {
             self.state.size(),
             self.state.placeholder(),
             self.state.value(),
-            Event::change_js(&self.name, "value")
+            Event::change_js(&self.name, "value"),
+            Event::change_js(&self.name, "value"),
         );
         format!("{}{}", style, html)
     }
