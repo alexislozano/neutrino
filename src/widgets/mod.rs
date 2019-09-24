@@ -10,4 +10,5 @@ pub mod radio;
 pub mod range;
 pub mod tabs;
 pub mod textinput;
+pub mod table;
 pub mod widget;
