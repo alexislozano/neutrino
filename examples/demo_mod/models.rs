@@ -5,7 +5,7 @@ pub struct Panes {
 
 impl Panes {
     pub fn new() -> Self {
-        Self { value: 0 }
+        Self { value: 2 }
     }
 
     pub fn value(&self) -> u8 {

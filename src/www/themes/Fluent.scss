@@ -402,3 +402,30 @@ $combo-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcg
         }
     }
 }
+
+.table {
+    padding: $widget-margin;
+
+    table {
+        border-collapse: collapse; 
+        background: white;
+        border: 1px solid $mgrey-color;
+
+        tr {
+            th, td {
+                padding: 6px;
+            }
+
+            th {
+                font-weight: normal;
+                background: $mgrey-color;
+                text-align: left;
+            }
+
+            td {
+                text-align: left;
+            }
+
+        }
+    }
+}

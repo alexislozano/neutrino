@@ -149,7 +149,7 @@ impl Widget for Table {
             self.state.style(),
         )));
         let mut html = format!(
-            r#"<table id="{}" class="table {}">"#,
+            r#"<div id="{}" class="table {}"><table>"#,
             self.name,
             stretched,
         );
@@ -157,25 +157,38 @@ impl Widget for Table {
             None => (),
             Some(headers) => {
                 html.push_str("<tr>");
-                for header in headers.iter() {
+                for (index, header) in headers.iter().enumerate() {
+                    let last = if index == headers.len() - 1 {
+                        "last"
+                    } else {
+                        ""
+                    };
                     html.push_str(&format!(
-                        r#"<th>{}</th>"#,
-                        header
+                        r#"<th class="{}">{}</th>"#,
+                        last,
+                        header,
                     ));
                 }
                 html.push_str("</tr>");
             }
         };
-        for row in self.state.rows().iter() {
+        for (index, row) in self.state.rows().iter().enumerate() {
+            let parity = if index % 2 == 0 {
+                "even"
+            } else {
+                "odd"
+            };
             html.push_str("<tr>");
             for item in row.iter() {
                 html.push_str(&format!(
-                    "<td>{}</td>",
+                    r#"<td class="{}">{}</td>"#,
+                    parity,
                     item
                 ));
             }
             html.push_str("</tr>");
         }
+        html.push_str("</table></div>");
         format!("{}{}", style, html)
     }
 

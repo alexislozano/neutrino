@@ -147,10 +147,10 @@ fn main() {
     container7.add(Box::new(label3));
 
     let mut table1 = Table::new("table1");
-    table1.set_headers(vec!["Lastname", "Firstname", "Birth Date"]);
-    table1.add_row(vec!["Lozano", "Alexis", "22/12/1995"]);
-    table1.add_row(vec!["Strugala", "Flora", "10/01/1995"]);
-    table1.add_row(vec!["Lozano", "Célia", "15/03/1998"]);
+    table1.set_headers(vec!["Lastname", "Firstname", "From"]);
+    table1.add_row(vec!["Solo", "Han", "Star Wars"]);
+    table1.add_row(vec!["Baggins", "Frodo", "The Lord of the Rings"]);
+    table1.add_row(vec!["Seldon", "Hari", "Foundation"]);
 
     let tabs_listener = MyTabsListener::new(Rc::clone(&panes));
 

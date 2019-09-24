@@ -282,3 +282,33 @@ $combo-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcg
         }
     }
 }
+
+.table {
+    padding: 6px;
+
+    table {
+        border-collapse: collapse; 
+        background: white;
+        border: 1px solid black;
+
+        tr {
+            th, td {
+                padding: 4px;
+                border-bottom: 1px solid black;
+                border-right: 1px solid black;
+            }
+
+            th {
+                font-weight: normal;
+                text-align: center;
+            }
+
+            td {
+                text-align: left;
+                padding-top: 2px;
+                padding-bottom: 2px;
+            }
+
+        }
+    }
+}

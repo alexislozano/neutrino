@@ -11,6 +11,7 @@ use neutrino::widgets::radio::Radio;
 use neutrino::widgets::range::Range;
 use neutrino::widgets::tabs::Tabs;
 use neutrino::widgets::textinput::TextInput;
+use neutrino::widgets::table::Table;
 use neutrino::{App, Window};
 
 mod demo_mod;
@@ -145,17 +146,19 @@ fn main() {
     container7.add(Box::new(label2));
     container7.add(Box::new(label3));
 
-    let mut label4 = Label::new("label4");
-    label4.set_text("This is Tab 3");
+    let mut table1 = Table::new("table1");
+    table1.set_headers(vec!["Lastname", "Firstname", "From"]);
+    table1.add_row(vec!["Solo", "Han", "Star Wars"]);
+    table1.add_row(vec!["Baggins", "Frodo", "The Lord of the Rings"]);
+    table1.add_row(vec!["Seldon", "Hari", "Foundation"]);
 
     let tabs_listener = MyTabsListener::new(Rc::clone(&panes));
 
     let mut tabs1 = Tabs::new("tabs1");
-    tabs1.set_selected(0);
     tabs1.set_listener(Box::new(tabs_listener));
     tabs1.add("Tab 1", Box::new(container6));
     tabs1.add("Tab 2", Box::new(container7));
-    tabs1.add("Tab 3", Box::new(label4));
+    tabs1.add("Tab 3", Box::new(table1));
 
     let mut quitter = MenuFunction::new("Exit");
     quitter.set_shortcut("Ctrl-Q");
@@ -190,6 +193,7 @@ fn main() {
     window.set_menubar(menu_bar);
     window.set_listener(Box::new(app_listener));
     window.set_theme(Theme::OSX);
+    window.set_debug();
 
     App::run(window);
 }

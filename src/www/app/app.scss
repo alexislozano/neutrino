@@ -308,3 +308,11 @@ body {
 .unselectable {
     @include user-select(none);
 }
+
+.table {
+    box-sizing: border-box;
+
+    table {
+        width: 100%;
+    }
+}
