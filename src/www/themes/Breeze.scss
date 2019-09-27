@@ -364,13 +364,18 @@ $combo-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcg
             height: 28px;
             padding-left: 13px;
             padding-right: 13px;
-            border: 1px solid $lgrey-color;
+            border: 1px solid transparent;
+            border-bottom-color: $mgrey-color;
 
             &.selected {
                 color: black;
                 background-color: $background-color;
-                border-color: $mgrey-color;
+                border: 1px solid $mgrey-color;
                 border-bottom-color: $background-color;
+            }
+
+            &:not(.selected) + .tab-title:not(.selected) {
+                border-left-color: $mgrey-color;
             }
         }
     }
