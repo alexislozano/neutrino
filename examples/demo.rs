@@ -25,6 +25,7 @@ use demo_mod::models::{Panes, State};
 
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::env;
 
 fn main() {
     let panes = Rc::new(RefCell::new(Panes::new()));
@@ -189,7 +190,16 @@ fn main() {
     window.set_child(Box::new(tabs1));
     window.set_menubar(menu_bar);
     window.set_listener(Box::new(app_listener));
-    window.set_theme(Theme::Fluent);
+
+    let args: Vec<String> = env::args().collect();
+    
+    window.set_theme(match args[1].as_str() {
+        "adwaita" => Theme::Adwaita,
+        "breeze" => Theme::Breeze,
+        "fluent" => Theme::Fluent,
+        "osx" => Theme::OSX,
+        _ => Theme::Default,
+    });
 
     App::run(window);
 }
