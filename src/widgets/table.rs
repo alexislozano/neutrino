@@ -58,6 +58,16 @@ impl TableState {
         );
     }
 
+    /// Remove a row
+    pub fn remove_row(&mut self, index: usize) -> Vec<String> {
+        self.rows.remove(index)
+    }
+
+    /// Remove all rows
+    pub fn remove_all_rows(&mut self) {
+        self.rows.clear();
+    }
+
     /// Set the stretched flag
     pub fn set_stretched(&mut self, stretched: bool) {
         self.stretched = stretched;
