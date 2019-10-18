@@ -49,6 +49,13 @@ impl TableState {
         );
     }
 
+    pub fn set_rows(&mut self, rows: Vec<Vec<&str>>) {
+        self.rows = rows
+            .iter()
+            .map(|r| r.iter().map(|c| c.to_string()).collect::<Vec<_>>())
+            .collect::<Vec<_>>();
+    }
+
     /// Add a row
     pub fn add_row(&mut self, row: Vec<&str>) {
         self.rows.push(row
