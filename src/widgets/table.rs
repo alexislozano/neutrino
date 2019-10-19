@@ -49,6 +49,9 @@ impl TableState {
         );
     }
 
+    /// Set rows with new content
+    ///
+    /// Note that this will effectively replace the entire table content with given ones
     pub fn set_rows(&mut self, rows: Vec<Vec<&str>>) {
         self.rows = rows
             .iter()
