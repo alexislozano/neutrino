@@ -58,9 +58,10 @@ impl TableState {
 
     /// Set the headers
     ///
-    /// Note that in case rows are not empty, calling this method will remove all existing rows,
-    /// due to the potential discrepancy in column counts between headers and rows.
-    /// To suppress this behavior, use [`set_headers_unchecked`] method instead.
+    /// Note that in case rows are not empty, calling this method will remove
+    /// all existing rows, due to the potential discrepancy in column counts
+    /// between headers and rows. To suppress this behavior, use
+    /// [`set_headers_unchecked`] method instead.
     ///
     /// [`set_headers_unchecked`]: #method.set_headers_unchecked
     pub fn set_headers(&mut self, headers: Vec<&str>) {
@@ -69,18 +70,20 @@ impl TableState {
 
     /// Set the headers, without removing all the existing rows
     ///
-    /// This is for when you can guarantee that the column counts between headers and rows will
-    /// match.
+    /// This is for when you can guarantee that the column counts between
+    /// headers and rows will match.
     pub fn set_headers_unchecked(&mut self, headers: Vec<&str>) {
         self.set_headers_impl(headers, false);
     }
 
     /// Set rows with new content
     ///
-    /// Note that this will effectively replace the entire table content, if any, with given ones.
+    /// Note that this will effectively replace the entire table content, if
+    /// any, with given ones.
     ///
     /// # Errors
-    /// A variant of [`TableError`] will be returned in case the column count check fails due to:
+    /// A variant of [`TableError`] will be returned in case the column count
+    /// check fails due to:
     /// * the `rows` vector containing some rows with uneven column counts, or
     /// * the column count of the header and `rows` being not equal.
     ///
@@ -112,10 +115,11 @@ impl TableState {
     /// Add a row
     ///
     /// # Errors
-    /// A variant of [`TableError`] will be returned in case the column count check fails due to:
+    /// A variant of [`TableError`] will be returned in case the column count
+    /// check fails due to:
     /// * the column count of the header and the `row` being not equal, or
-    /// * the table does not have a header but the column count of existing rows and this `row`
-    ///   being not equal.
+    /// * the table does not have a header but the column count of existing rows
+    ///   and this `row` being not equal.
     ///
     /// [`TableError`]: enum.TableError.html
     pub fn add_row(&mut self, row: Vec<&str>) -> Result<(), TableError> {
@@ -217,9 +221,10 @@ impl Table {
 
     /// Set the headers
     ///
-    /// Note that in case rows are not empty, calling this method will remove all existing rows,
-    /// due to the potential discrepancy in column counts between headers and rows.
-    /// To suppress this behavior, use [`set_headers_unchecked`] method instead.
+    /// Note that in case rows are not empty, calling this method will remove
+    /// all existing rows, due to the potential discrepancy in column counts
+    /// between headers and rows. To suppress this behavior, use
+    /// [`set_headers_unchecked`] method instead.
     ///
     /// [`set_headers_unchecked`]: #method.set_headers_unchecked
     pub fn set_headers(&mut self, headers: Vec<&str>) {
@@ -228,8 +233,8 @@ impl Table {
 
     /// Set the headers, without removing all the existing rows
     ///
-    /// This is for when you can guarantee that the column counts between headers and rows will
-    /// match.
+    /// This is for when you can guarantee that the column counts between
+    /// headers and rows will match.
     pub fn set_headers_unchecked(&mut self, headers: Vec<&str>) {
         self.state.set_headers_unchecked(headers);
     }
@@ -237,10 +242,11 @@ impl Table {
     /// Add a row
     ///
     /// # Errors
-    /// A variant of [`TableError`] will be returned in case the column count check fails due to:
+    /// A variant of [`TableError`] will be returned in case the column count
+    /// check fails due to:
     /// * the column count of the header and the `row` being not equal, or
-    /// * the table does not have a header but the column count of existing rows and this `row`
-    ///   being not equal.
+    /// * the table does not have a header but the column count of existing rows
+    ///   and this `row` being not equal.
     ///
     /// [`TableError`]: enum.TableError.html
     pub fn add_row(&mut self, row: Vec<&str>) -> Result<(), TableError> {
