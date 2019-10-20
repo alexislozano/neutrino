@@ -139,6 +139,9 @@ impl TableState {
     }
 
     /// Remove a row
+    ///
+    /// # Panics
+    /// Panics if `index` is out of bounds.
     pub fn remove_row(&mut self, index: usize) -> Vec<String> {
         self.rows.remove(index)
     }
