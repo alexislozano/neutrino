@@ -1,6 +1,10 @@
 use crate::utils::event::Event;
 use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
+use std::{
+    error::Error,
+    fmt::{Display, Formatter, Result as FmtResult},
+};
 
 /// # The state of a Table
 ///
@@ -73,21 +77,65 @@ impl TableState {
 
     /// Set rows with new content
     ///
-    /// Note that this will effectively replace the entire table content with given ones
-    pub fn set_rows(&mut self, rows: Vec<Vec<&str>>) {
+    /// Note that this will effectively replace the entire table content, if any, with given ones.
+    ///
+    /// # Errors
+    /// A variant of [`TableError`] will be returned in case the column count check fails due to:
+    /// * the `rows` vector containing some rows with uneven column counts, or
+    /// * the column count of the header and `rows` being not equal.
+    ///
+    /// [`TableError`]: enum.TableError.html
+    pub fn set_rows(&mut self, rows: Vec<Vec<&str>>) -> Result<(), TableError> {
+        let mut within_rows = rows.iter().map(|r| r.len()).collect::<Vec<_>>();
+        within_rows.sort_unstable();
+        within_rows.dedup();
+        match within_rows.len() {
+            0 => {}
+            1 => {
+                if let Some(headers) = self.headers.as_ref() {
+                    if headers.len() != within_rows.pop().unwrap() {
+                        return Err(TableError::ColumnCountMismatchHeaderRow);
+                    }
+                }
+            }
+            _ => return Err(TableError::ColumnCountMismatchWithinRows),
+        }
+
         self.rows = rows
             .iter()
             .map(|r| r.iter().map(|c| c.to_string()).collect::<Vec<_>>())
             .collect::<Vec<_>>();
+
+        Ok(())
     }
 
     /// Add a row
-    pub fn add_row(&mut self, row: Vec<&str>) {
+    ///
+    /// # Errors
+    /// A variant of [`TableError`] will be returned in case the column count check fails due to:
+    /// * the column count of the header and the `row` being not equal, or
+    /// * the table does not have a header but the column count of existing rows and this `row`
+    ///   being not equal.
+    ///
+    /// [`TableError`]: enum.TableError.html
+    pub fn add_row(&mut self, row: Vec<&str>) -> Result<(), TableError> {
+        if let Some(headers) = self.headers.as_ref() {
+            if headers.len() != row.len() {
+                return Err(TableError::ColumnCountMismatchHeaderRow);
+            }
+        } else if !self.rows.is_empty()
+            && self.rows.first().as_ref().unwrap().len() != row.len()
+        {
+            return Err(TableError::ColumnCountMismatchWithinRows);
+        }
+
         self.rows.push(row
             .iter()
             .map(|c| c.to_string())
             .collect::<Vec<String>>()
         );
+
+        Ok(())
     }
 
     /// Remove a row
@@ -110,6 +158,32 @@ impl TableState {
         self.style = style.to_string();
     }
 }
+
+/// Error type denoting possible failures of Table manipulation
+#[derive(Debug)]
+pub enum TableError {
+    /// For when the column counts between the header and rows do not match
+    ColumnCountMismatchHeaderRow,
+    /// For when the column counts within rows do not match
+    ColumnCountMismatchWithinRows,
+}
+impl Display for TableError {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(
+            f,
+            "{}",
+            match self {
+                TableError::ColumnCountMismatchHeaderRow => {
+                    "column counts between header and row(s) do not match"
+                }
+                TableError::ColumnCountMismatchWithinRows => {
+                    "column counts within non-header rows do not match"
+                }
+            }
+        )
+    }
+}
+impl Error for TableError {}
 
 /// # The listener of a Table
 pub trait TableListener {
@@ -158,8 +232,16 @@ impl Table {
     }
 
     /// Add a row
-    pub fn add_row(&mut self, row: Vec<&str>) {
-        self.state.add_row(row);
+    ///
+    /// # Errors
+    /// A variant of [`TableError`] will be returned in case the column count check fails due to:
+    /// * the column count of the header and the `row` being not equal, or
+    /// * the table does not have a header but the column count of existing rows and this `row`
+    ///   being not equal.
+    ///
+    /// [`TableError`]: enum.TableError.html
+    pub fn add_row(&mut self, row: Vec<&str>) -> Result<(), TableError> {
+        self.state.add_row(row)
     }
 
     /// Set the stretched flag to true
