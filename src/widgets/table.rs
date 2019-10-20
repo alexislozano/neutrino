@@ -40,13 +40,35 @@ impl TableState {
         &self.style
     }
 
-    /// Set the headers
-    pub fn set_headers(&mut self, headers: Vec<&str>) {
+    fn set_headers_impl(&mut self, headers: Vec<&str>, cleanslate: bool) {
+        if cleanslate && !self.rows.is_empty() {
+            self.rows.clear();
+        }
+
         self.headers = Some(headers
             .iter()
             .map(|c| c.to_string())
             .collect::<Vec<String>>()
         );
+    }
+
+    /// Set the headers
+    ///
+    /// Note that in case rows are not empty, calling this method will remove all existing rows,
+    /// due to the potential discrepancy in column counts between headers and rows.
+    /// To suppress this behavior, use [`set_headers_unchecked`] method instead.
+    ///
+    /// [`set_headers_unchecked`]: #method.set_headers_unchecked
+    pub fn set_headers(&mut self, headers: Vec<&str>) {
+        self.set_headers_impl(headers, true);
+    }
+
+    /// Set the headers, without removing all the existing rows
+    ///
+    /// This is for when you can guarantee that the column counts between headers and rows will
+    /// match.
+    pub fn set_headers_unchecked(&mut self, headers: Vec<&str>) {
+        self.set_headers_impl(headers, false);
     }
 
     /// Set rows with new content
@@ -117,8 +139,22 @@ impl Table {
     }
 
     /// Set the headers
+    ///
+    /// Note that in case rows are not empty, calling this method will remove all existing rows,
+    /// due to the potential discrepancy in column counts between headers and rows.
+    /// To suppress this behavior, use [`set_headers_unchecked`] method instead.
+    ///
+    /// [`set_headers_unchecked`]: #method.set_headers_unchecked
     pub fn set_headers(&mut self, headers: Vec<&str>) {
         self.state.set_headers(headers);
+    }
+
+    /// Set the headers, without removing all the existing rows
+    ///
+    /// This is for when you can guarantee that the column counts between headers and rows will
+    /// match.
+    pub fn set_headers_unchecked(&mut self, headers: Vec<&str>) {
+        self.state.set_headers_unchecked(headers);
     }
 
     /// Add a row
