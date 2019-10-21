@@ -135,9 +135,8 @@ pub struct MenuBar {
     listener: Option<Box<dyn MenuBarListener>>,
 }
 
-impl MenuBar {
-    /// Create a MenuBar
-    pub fn new() -> Self {
+impl Default for MenuBar {
+    fn default() -> Self {
         Self {
             items: vec![],
             state: MenuBarState {
@@ -146,6 +145,13 @@ impl MenuBar {
             },
             listener: None,
         }
+    }
+}
+
+impl MenuBar {
+    /// Create a MenuBar
+    pub fn new() -> Self {
+        Default::default()
     }
 
     /// Set the listener
