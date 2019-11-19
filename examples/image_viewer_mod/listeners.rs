@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::collections::HashSet;
 
 use neutrino::utils::event::Key;
 use neutrino::utils::pixmap::Pixmap;
@@ -103,11 +104,13 @@ impl MyWindowListener {
 }
 
 impl WindowListener for MyWindowListener {
-    fn on_key(&self, key: Key) {
-        match key {
-            Key::Left => self.images.borrow_mut().previous(),
-            Key::Right => self.images.borrow_mut().next(),
-            _ => (),
+    fn on_keys(&self, keys: HashSet<Key>) {
+        if keys.contains(&Key::Control) {
+            if keys.contains(&Key::Left) {
+                self.images.borrow_mut().previous();
+            } else if keys.contains(&Key::Right) {
+                self.images.borrow_mut().next();
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::collections::HashSet;
 
 use neutrino::utils::event::Key;
 use neutrino::widgets::button::{ButtonListener, ButtonState};
@@ -30,13 +31,17 @@ impl MyWindowListener {
 }
 
 impl WindowListener for MyWindowListener {
-    fn on_key(&self, key: Key) {
-        match key {
-            Key::Num1 => self.panes.borrow_mut().set_value(0),
-            Key::Num2 => self.panes.borrow_mut().set_value(1),
-            Key::Num3 => self.panes.borrow_mut().set_value(2),
-            Key::Q => std::process::exit(0),
-            _ => (),
+    fn on_keys(&self, keys: HashSet<Key>) {
+        if keys.contains(&Key::Control) {
+            if keys.contains(&Key::Num1) {
+                self.panes.borrow_mut().set_value(0);
+            } else if keys.contains(&Key::Num2) {
+                self.panes.borrow_mut().set_value(1);
+            } else if keys.contains(&Key::Num3) {
+                self.panes.borrow_mut().set_value(2);
+            } else if keys.contains(&Key::Q) {
+                std::process::exit(0);
+            }
         }
     }
 

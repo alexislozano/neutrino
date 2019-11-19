@@ -4,7 +4,7 @@ pub enum Event {
     Undefined,
     Update,
     Change { source: String, value: String },
-    Key { key: Key },
+    Keys,
     Tick,
 }
 
@@ -17,9 +17,15 @@ impl Event {
         )
     }
 
-    /// Return an one-line function sending a key event from javascript
-    pub fn key_js() -> String {
-        r#"(function() { if (event.ctrlKey && event.key !== 'Control') { emit( { type: 'Key', key: event.key } ); } event.stopPropagation(); } )()"#
+    /// Return an one-line function sending a keydown event from javascript
+    pub fn keydown_js() -> String {
+        r#"(function() { emit( { type: 'KeyDown', key: event.key } ); event.stopPropagation(); } )()"#
+            .to_string()
+    }
+
+    /// Return an one-line function sending a keyup event from javascript
+    pub fn keyup_js() -> String {
+        r#"(function() { emit( { type: 'KeyUp', key: event.key } ); event.stopPropagation(); } )()"#
             .to_string()
     }
 
@@ -39,9 +45,7 @@ impl Event {
 }
 
 /// # An enum holding a keyboard key
-///
-/// The key event is triggered with `Ctrl + Key`.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Key {
     A,
     B,
@@ -83,6 +87,11 @@ pub enum Key {
     Right,
     Up,
     Down,
+    Shift,
+    Control,
+    Super,
+    Alt,
+    Space,
 }
 
 impl Key {
@@ -129,6 +138,11 @@ impl Key {
             "ArrowRight" => Some(Key::Right),
             "ArrowUp" => Some(Key::Up),
             "ArrowDown" => Some(Key::Down),
+            "Shift" => Some(Key::Space),
+            "Control" => Some(Key::Control),
+            "Super" => Some(Key::Super),
+            "Alt" => Some(Key::Alt),
+            "Space" => Some(Key::Space),
             _ => None,
         }
     }
