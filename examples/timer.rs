@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::collections::HashSet;
 
 use neutrino::utils::event::Key;
 use neutrino::widgets::button::{Button, ButtonListener, ButtonState};
@@ -61,7 +62,7 @@ impl MyWindowListener {
 }
 
 impl WindowListener for MyWindowListener {
-    fn on_key(&self, _key: Key) {}
+    fn on_keys(&self, _keys: HashSet<Key>) {}
 
     fn on_tick(&self) {
         self.counter.borrow_mut().increment();

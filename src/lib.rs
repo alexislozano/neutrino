@@ -47,6 +47,7 @@ use utils::theme::Theme;
 use widgets::menubar::MenuBar;
 use widgets::widget::Widget;
 
+use std::collections::HashSet;
 use json;
 
 /// # An abstract application
@@ -88,7 +89,12 @@ impl App {
                     <meta charset="UTF-8">
                     {styles}
                 </head>
-                <body onkeydown="{key}" onmousedown="{click}" oncontextmenu="{context}">
+                <body 
+                    onkeydown="{keydown}"
+                    onkeyup="{keyup}"
+                    onmousedown="{click}" 
+                    oncontextmenu="{context}"
+                >
                     <div id="app"></div>
                     {scripts}
                     {timer}
@@ -109,7 +115,8 @@ impl App {
                 inline_script(include_str!("www/app/morphdom.min.js")),
                 inline_script(include_str!("www/app/app.js"))
             ),
-            key = Event::key_js(),
+            keydown = Event::keydown_js(),
+            keyup = Event::keyup_js(),
             click = Event::undefined_js(),
             context = context,
             timer = timer,
@@ -127,9 +134,20 @@ impl App {
                     Ok(value) => match value["type"].as_str().unwrap() {
                         "Update" => Event::Update,
                         "Tick" => Event::Tick,
-                        "Key" => match Key::new(value["key"].as_str().unwrap())
+                        "KeyDown" => match Key::new(value["key"].as_str().unwrap())
                         {
-                            Some(key) => Event::Key { key },
+                            Some(key) => {
+                                window.keys.insert(key);
+                                Event::Keys
+                            },
+                            None => Event::Undefined,
+                        },
+                        "KeyUp" => match Key::new(value["key"].as_str().unwrap())
+                        {
+                            Some(key) => {
+                                window.keys.remove(&key);
+                                Event::Keys
+                            },
                             None => Event::Undefined,
                         },
                         "Change" => Event::Change {
@@ -160,8 +178,8 @@ impl App {
 
 /// # The listener of a Window
 pub trait WindowListener {
-    /// Function triggered on key event
-    fn on_key(&self, _key: Key);
+    /// Function triggered on keyup and keydown events
+    fn on_keys(&self, _keys: HashSet<Key>);
 
     /// Function triggered on tick event
     fn on_tick(&self);
@@ -182,7 +200,8 @@ pub trait WindowListener {
 /// child: Option<Box<dyn Widget>>
 /// menubar: Option<MenuBar>
 /// listener: Option<Box<dyn WindowListener>>
-/// timer: Option<u32>;
+/// timer: Option<u32>
+/// keys: HashSet<Key>
 /// ```
 ///
 /// # Default values
@@ -199,6 +218,7 @@ pub trait WindowListener {
 /// menubar: None
 /// listener: None
 /// timer: None
+/// keys: HashSet::new()
 /// ```
 ///
 /// ## Example
@@ -227,6 +247,7 @@ pub struct Window {
     menubar: Option<MenuBar>,
     listener: Option<Box<dyn WindowListener>>,
     timer: Option<u32>,
+    keys: HashSet<Key>,
 }
 
 impl Default for Window {
@@ -243,6 +264,7 @@ impl Default for Window {
             menubar: None,
             listener: None,
             timer: None,
+            keys: HashSet::new(),
         }
     }
 }
@@ -341,11 +363,11 @@ impl Window {
                     (None, None) => (),
                 };
             }
-            Event::Key { key } => {
+            Event::Keys => {
                 match &self.listener {
                     None => (),
                     Some(listener) => {
-                        listener.on_key(*key);
+                        listener.on_keys(self.keys.clone());
                     }
                 };
                 match (&mut self.menubar, &mut self.child) {
