@@ -118,7 +118,7 @@ pub trait ContainerListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
-/// 
+///
 /// ## Style
 ///
 /// ```text
@@ -131,7 +131,11 @@ pub trait ContainerListener {
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
 ///
-/// use neutrino::widgets::container::{Container, ContainerListener, ContainerState};
+/// use neutrino::widgets::container::{
+///     Container,
+///     ContainerListener,
+///     ContainerState
+/// };
 /// use neutrino::widgets::label::Label;
 /// use neutrino::widgets::widget::Widget;
 /// use neutrino::utils::theme::Theme;
@@ -165,7 +169,8 @@ pub trait ContainerListener {
 ///
 /// impl ContainerListener for MyContainerListener {
 ///     fn on_update(&self, state: &mut ContainerState) {
-///         let labels = self.quotes.borrow().values().iter().enumerate().map(|(i, q)| {
+///         let labels = self.quotes.borrow().values().iter().enumerate().map(
+///         |(i, q)| {
 ///             let name = format!("quote-{}", i);
 ///             let mut w = Label::new(&name);
 ///             w.set_text(q);

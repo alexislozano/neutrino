@@ -128,7 +128,7 @@ pub trait RangeListener {
 ///         ::-ms-track
 ///         ::-ms-thumb
 /// ```
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -266,7 +266,13 @@ impl Widget for Range {
             self.state.style(),
         )));
         let html = format!(
-            r#"<div id="{}" class="range {} {}"><input {} onchange="{}" oninput="{}" type="range" min="{}" max="{}" value="{}" class="inner-range"></div>"#, 
+            r#"
+            <div id="{}" class="range {} {}">
+                <input {} onchange="{}" oninput="{}" type="range" 
+                    min="{}" max="{}" value="{}" class="inner-range"
+                >
+            </div>
+            "#, 
             self.name,
             disabled,
             stretched,

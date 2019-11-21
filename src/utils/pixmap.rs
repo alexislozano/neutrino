@@ -5,8 +5,8 @@ use std::path::Path;
 
 /// # A model for an image
 ///
-/// As a webview does not have access to the local file system, the given images
-/// are encoded into text (Base64) to be displayed.
+/// As a webview does not have access to the local file system, the given
+/// images are encoded into text (Base64) to be displayed.
 ///
 /// ## Fields
 ///

@@ -119,14 +119,14 @@ pub trait ImageListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
-/// 
+///
 /// ## Style
 ///
 /// ```text
 /// div.image
 ///     img
 /// ```
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -174,11 +174,16 @@ pub trait ImageListener {
 ///
 ///
 /// fn main() {
-///     let painting = Rc::new(RefCell::new(Painting::new("/home/neutrino/le_radeau_de_la_meduse.jpg")));
+///     let painting = Rc::new(RefCell::new(
+///         Painting::new("/home/neutrino/le_radeau_de_la_meduse.jpg")
+///     ));
 ///
 ///     let my_listener = MyImageListener::new(Rc::clone(&painting));
 ///
-///     let mut my_image = Image::from_path("my_image", "/home/neutrino/le_radeau_de_la_meduse.jpg");
+///     let mut my_image = Image::from_path(
+///         "my_image", 
+///         "/home/neutrino/le_radeau_de_la_meduse.jpg"
+///     );
 ///     my_image.set_listener(Box::new(my_listener));
 /// }
 /// ```
@@ -267,7 +272,11 @@ impl Widget for Image {
             self.state.style(),
         )));
         let html = format!(
-            r#"<div id="{}" class="image {}" style="background:{};"><img {} src="data:image/{};base64,{}" /></div>"#, 
+            r#"
+            <div id="{}" class="image {}" style="background:{};">
+                <img {} src="data:image/{};base64,{}" />
+            </div>
+            "#, 
             self.name,
             stretched,
             self.state.background(),

@@ -1,6 +1,6 @@
 use std::cell::RefCell;
-use std::rc::Rc;
 use std::collections::HashSet;
+use std::rc::Rc;
 
 use neutrino::utils::event::Key;
 use neutrino::widgets::button::{ButtonListener, ButtonState};

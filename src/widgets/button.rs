@@ -256,7 +256,12 @@ impl Widget for Button {
         )));
         let html = match (self.state.text(), self.state.icon()) {
             (Some(text), Some(icon)) => format!(
-                r#"<div id="{}" onmousedown="{}" class="button {} {}"><img src="data:image/{};base64,{}" /><span>{}</span></div>"#,
+                r#"
+                <div id="{}" class="button {} {}" onmousedown="{}">
+                    <img src="data:image/{};base64,{}" />
+                    <span>{}</span>
+                </div>
+                "#,
                 self.name,
                 Event::change_js(&self.name, "''"),
                 disabled,
@@ -266,7 +271,11 @@ impl Widget for Button {
                 text,
             ),
             (Some(text), None) => format!(
-                r#"<div id="{}" onmousedown="{}" class="button {} {}">{}</div>"#,
+                r#"
+                <div id="{}" class="button {} {}" onmousedown="{}">
+                    {}
+                </div>
+                "#,
                 self.name,
                 Event::change_js(&self.name, "''"),
                 disabled,
@@ -274,7 +283,11 @@ impl Widget for Button {
                 text,
             ),
             (None, Some(icon)) => format!(
-                r#"<div id="{}" onmousedown="{}" class="button {} {}"><img src="data:image/{};base64,{}" /></div>"#,
+                r#"
+                <div id="{}" onmousedown="{}" class="button {} {}">
+                    <img src="data:image/{};base64,{}" />
+                </div>
+                "#,
                 self.name,
                 Event::change_js(&self.name, "''"),
                 disabled,
@@ -283,7 +296,11 @@ impl Widget for Button {
                 icon.data(),
             ),
             (None, None) => format!(
-                r#"<div id="{}" onmousedown="{}" class="button {} {}">{}</div>"#,
+                r#"
+                <div id="{}" onmousedown="{}" class="button {} {}">
+                    {}
+                </div>
+                "#,
                 self.name,
                 Event::change_js(&self.name, "''"),
                 disabled,

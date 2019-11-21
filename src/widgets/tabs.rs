@@ -127,7 +127,7 @@ pub trait TabsListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
-/// 
+///
 /// ## Style
 ///
 /// ```text
@@ -136,7 +136,7 @@ pub trait TabsListener {
 ///         div.tab-title[.selected]
 ///     div.tab
 /// ```
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -300,7 +300,10 @@ impl Widget for Tabs {
             self.state.style(),
         )));
         let mut html = format!(
-            r#"<div id="{}" class="tabs {} {}"><div class="tab-titles">"#,
+            r#"
+            <div id="{}" class="tabs {} {}">
+                <div class="tab-titles">
+            "#,
             self.name,
             stretched,
             self.state.direction().css()
@@ -315,7 +318,11 @@ impl Widget for Tabs {
             let first = if i == 0 { "first" } else { "" };
             let last = if i == tabs_number - 1 { "last" } else { "" };
             html.push_str(&format!(
-                r#"<div class="tab-title {} {} {}" onmousedown="{}">{}</div>"#,
+                r#"
+                <div class="tab-title {} {} {}" onmousedown="{}">
+                    {}
+                </div>
+                "#,
                 first,
                 last,
                 selected,
@@ -346,7 +353,9 @@ impl Widget for Tabs {
                 };
             }
             _ => {
-                self.state.children[self.state.selected as usize].trigger(event)
+                self.state.children[self.state.selected as usize].trigger(
+                    event
+                )
             }
         }
     }
