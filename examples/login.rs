@@ -25,7 +25,8 @@ impl Login {
     }
 
     fn check(&mut self) {
-        self.ok = &self.username == "Neutrino" && &self.password == "is great !";
+        self.ok =
+            &self.username == "Neutrino" && &self.password == "is great !";
     }
 
     fn ok(&self) -> bool {

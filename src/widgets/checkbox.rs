@@ -120,7 +120,11 @@ pub trait CheckBoxListener {
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
 ///
-/// use neutrino::widgets::checkbox::{CheckBox, CheckBoxListener, CheckBoxState};
+/// use neutrino::widgets::checkbox::{
+///     CheckBox,
+///     CheckBoxListener,
+///     CheckBoxState
+/// };
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
 ///
@@ -247,12 +251,20 @@ impl Widget for CheckBox {
             self.state.style(),
         )));
         let html = format!(
-            r#"<div id="{}" class="checkbox {} {} {}" onmousedown="{}"><div class="checkbox-outer"><div class="checkbox-inner"></div></div><label>{}</label></div>"#, 
+            r#"
+            <div id="{}" class="checkbox {} {} {}" onmousedown="{}">
+                <div class="checkbox-outer">
+                    <div class="checkbox-inner">
+                    </div>
+                </div>
+                <label>{}</label>
+            </div>
+            "#,
             self.name,
             disabled,
             checked,
             stretched,
-            Event::change_js(&self.name, "''"), 
+            Event::change_js(&self.name, "''"),
             self.state.text,
         );
         format!("{}{}", style, html)

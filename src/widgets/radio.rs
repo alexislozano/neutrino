@@ -118,7 +118,7 @@ pub trait RadioListener {
 ///     div.radio-outer
 ///         div.radio-inner
 /// ```
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -202,7 +202,10 @@ impl Radio {
         Self {
             name: name.to_string(),
             state: RadioState {
-                choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
+                choices: vec![
+                    "Choice 1".to_string(), 
+                    "Choice 2".to_string()
+                ],
                 selected: 0,
                 disabled: false,
                 stretched: false,
@@ -269,7 +272,14 @@ impl Widget for Radio {
             };
             html.push_str(
                 &format!(
-                    r#"<div id="{}" class="radio {} {} {}" onmousedown="{}"><div class="radio-outer"><div class="radio-inner"></div></div><label>{}</label></div>"#, 
+                    r#"
+                    <div id="{}" class="radio {} {} {}" onmousedown="{}">
+                        <div class="radio-outer">
+                            <div class="radio-inner"></div>
+                        </div>
+                        <label>{}</label>
+                    </div>
+                    "#, 
                     self.name,
                     stretched,
                     disabled,

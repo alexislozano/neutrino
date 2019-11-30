@@ -280,7 +280,13 @@ impl Widget for Combo {
             self.state.style(),
         )));
         let mut html = format!(
-            r#"<div id="{}" class="combo {} {} {}"><div onmousedown="{}" class="combo-button">{}<div class="combo-icon"></div></div>"#,
+            r#"
+            <div id="{}" class="combo {} {} {}">
+                <div onmousedown="{}" class="combo-button">
+                    {}
+                    <div class="combo-icon"></div>
+                </div>
+            "#,
             self.name,
             stretched,
             opened,
@@ -294,7 +300,11 @@ impl Widget for Combo {
             for (i, choice) in self.state.choices().iter().enumerate() {
                 let last = if i == combos_length - 1 { "last" } else { "" };
                 html.push_str(&format!(
-                    r#"<div class="combo-choice {}" onmousedown="{}">{}</div>"#,
+                    r#"
+                    <div class="combo-choice {}" onmousedown="{}">
+                        {}
+                    </div>
+                    "#,
                     last,
                     Event::change_js(&self.name, &format!("'{}'", i)),
                     choice

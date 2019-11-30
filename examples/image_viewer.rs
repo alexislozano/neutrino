@@ -6,6 +6,7 @@ use neutrino::widgets::button::Button;
 use neutrino::widgets::container::{Container, Direction};
 use neutrino::widgets::image::Image;
 use neutrino::widgets::menubar::{MenuBar, MenuFunction, MenuItem};
+use neutrino::utils::event::Key;
 use neutrino::{App, Window};
 
 mod image_viewer_mod;
@@ -48,7 +49,7 @@ fn main() {
     let mut next_function = MenuFunction::new("Next");
     next_function.set_shortcut("Ctrl+Right");
 
-    let mut menuitem = MenuItem::new("File");
+    let mut menuitem = MenuItem::new("File", Key::F, 0);
     menuitem.add(prev_function);
     menuitem.add(next_function);
 

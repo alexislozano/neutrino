@@ -1,3 +1,4 @@
+use neutrino::utils::event::Key;
 use neutrino::utils::icon::BreezeIcon;
 use neutrino::utils::theme::Theme;
 use neutrino::widgets::button::Button;
@@ -24,8 +25,8 @@ use demo_mod::listeners::{
 use demo_mod::models::{Panes, State};
 
 use std::cell::RefCell;
-use std::rc::Rc;
 use std::env;
+use std::rc::Rc;
 
 fn main() {
     let panes = Rc::new(RefCell::new(Panes::new()));
@@ -161,7 +162,7 @@ fn main() {
     let mut quitter = MenuFunction::new("Exit");
     quitter.set_shortcut("Ctrl-Q");
 
-    let mut fichier = MenuItem::new("File");
+    let mut fichier = MenuItem::new("File", Key::F, 0);
     fichier.add(quitter);
 
     let mut onglet1 = MenuFunction::new("Tab 1");
@@ -170,9 +171,13 @@ fn main() {
     let mut onglet2 = MenuFunction::new("Tab 2");
     onglet2.set_shortcut("Ctrl-2");
 
-    let mut onglets = MenuItem::new("Tabs");
+    let mut onglet3 = MenuFunction::new("Tab 3");
+    onglet3.set_shortcut("Ctrl-3");
+
+    let mut onglets = MenuItem::new("Tabs", Key::T, 0);
     onglets.add(onglet1);
     onglets.add(onglet2);
+    onglets.add(onglet3);
 
     let menubar_listener = MyMenuBarListener::new(Rc::clone(&panes));
 
@@ -190,22 +195,21 @@ fn main() {
     window.set_child(Box::new(tabs1));
     window.set_menubar(menu_bar);
     window.set_listener(Box::new(app_listener));
+    window.set_debug();
 
     let args: Vec<String> = env::args().collect();
 
-    window.set_theme(
-        if args.len() == 2 {
-            match args[1].as_str() {
-                "adwaita" => Theme::Adwaita,
-                "breeze" => Theme::Breeze,
-                "fluent" => Theme::Fluent,
-                "osx" => Theme::OSX,
-                _ => Theme::Default,
-            }
-        } else {
-            Theme::Default
+    window.set_theme(if args.len() == 2 {
+        match args[1].as_str() {
+            "adwaita" => Theme::Adwaita,
+            "breeze" => Theme::Breeze,
+            "fluent" => Theme::Fluent,
+            "osx" => Theme::OSX,
+            _ => Theme::Default,
         }
-    );
+    } else {
+        Theme::Default
+    });
 
     App::run(window);
 }

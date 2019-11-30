@@ -1,44 +1,47 @@
+use std::collections::HashSet;
+
 /// # An equivalent of Javascript events
 #[derive(Debug)]
 pub enum Event {
     Undefined,
     Update,
-    Change { source: String, value: String },
-    Keys,
     Tick,
+    Change { source: String, value: String },
+    Keypress { source: String, keys: HashSet<Key> },
 }
 
 impl Event {
     /// Return an one-line function sending a change event from javascript
     pub fn change_js(source: &str, value: &str) -> String {
         format!(
-            r#"(function(){{ emit( {{ type: 'Change', source: '{}', value: {} }} ); event.stopPropagation(); }})()"#,
+            r#"(function() {{ emit( {{ 
+                type: 'Change', 
+                source: '{}', 
+                value: {} 
+            }} ); event.stopPropagation(); }})()"#,
             source, value
         )
     }
 
-    /// Return an one-line function sending a keydown event from javascript
-    pub fn keydown_js() -> String {
-        r#"(function() { emit( { type: 'KeyDown', key: event.key } ); event.stopPropagation(); } )()"#
-            .to_string()
-    }
-
-    /// Return an one-line function sending a keyup event from javascript
-    pub fn keyup_js() -> String {
-        r#"(function() { emit( { type: 'KeyUp', key: event.key } ); event.stopPropagation(); } )()"#
-            .to_string()
-    }
-
-    /// Return an one-line function sending a undefined event from javascript
-    pub fn undefined_js() -> String {
-        r#"(function() { emit( { type: 'Undefined' } ); event.stopPropagation(); } )()"#
-            .to_string()
+    /// Return an one-line function sending a key event from javascript
+    pub fn keypress_js(source: &str, state: &str) -> String {
+        format!(
+            r#"(function() {{ emit( {{ 
+                type: 'Keypress', 
+                source: '{}', 
+                state: '{}', 
+                key: event.key 
+            }} ); event.stopPropagation(); }} )()"#,
+            source, state
+        )
     }
 
     /// Return an one-line function setting a timer from javascript
     pub fn tick_js(period: u32) -> String {
         format!(
-            r#"setInterval(function(){{ emit( {{ type: 'Tick' }} ); }}, {});"#,
+            r#"setInterval(function() {{ emit( {{ 
+                type: 'Tick'
+            }} ); }}, {});"#,
             period
         )
     }
@@ -92,6 +95,8 @@ pub enum Key {
     Super,
     Alt,
     Space,
+    Escape,
+    Enter,
 }
 
 impl Key {
@@ -143,6 +148,8 @@ impl Key {
             "Super" => Some(Key::Super),
             "Alt" => Some(Key::Alt),
             "Space" => Some(Key::Space),
+            "Escape" => Some(Key::Escape),
+            "Enter" => Some(Key::Enter),
             _ => None,
         }
     }

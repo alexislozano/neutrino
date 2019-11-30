@@ -7,18 +7,18 @@
 //!
 //! Neutrino is a MVC GUI framework written in Rust. It lets users create GUI
 //! applications by positioning widgets on a window and by handling events.
-//! Neutrino is based on the [web-view](https://crates.io/crates/web-view) crate
-//! provided by Boscop. As such, Neutrino renders the application using web
-//! technologies as HTML and CSS.
+//! Neutrino is based on the [web-view](https://crates.io/crates/web-view) 
+//! crate provided by Boscop. As such, Neutrino renders the application using 
+//! web technologies as HTML and CSS.
 //!
-//! As it is based on web-view, Neutrino does not embed a whole web browser. So
-//! don't worry, due to the very lightweight footprint of web-view, you won't
-//! have to buy more memory for your computer.
+//! As it is based on web-view, Neutrino does not embed a whole web browser.
+//! So don't worry, due to the very lightweight footprint of web-view, you 
+//! won't have to buy more memory for your computer.
 //!
 //! # Install
 //!
-//! In order to use Neutrino, you will have to use cargo. Just add the following
-//! line to your `Cargo.toml` and you'll be done :
+//! In order to use Neutrino, you will have to use cargo. Just add the
+//! following line to your `Cargo.toml` and you'll be done :
 //!
 //! ```text
 //! neutrino = "<last_version>"
@@ -26,15 +26,20 @@
 //!
 //! # Examples
 //!
-//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/image_viewer/3.png)
+//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/
+//! image_viewer/3.png)
 //!
-//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/3.png)
+//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/
+//! styling/3.png)
 //!
-//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/4.png)
-//! 
-//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/5.png)
-//! 
-//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/styling/6.png)
+//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/
+//! styling/4.png)
+//!
+//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/
+//! styling/5.png)
+//!
+//! ![](https://raw.githubusercontent.com/wiki/alexislozano/neutrino/images/
+//! styling/6.png)
 
 use web_view::*;
 
@@ -47,8 +52,9 @@ use utils::theme::Theme;
 use widgets::menubar::MenuBar;
 use widgets::widget::Widget;
 
-use std::collections::HashSet;
+use html_minifier::HTMLMinifier;
 use json;
+use std::collections::HashSet;
 
 /// # An abstract application
 ///
@@ -115,9 +121,9 @@ impl App {
                 inline_script(include_str!("www/app/morphdom.min.js")),
                 inline_script(include_str!("www/app/app.js"))
             ),
-            keydown = Event::keydown_js(),
-            keyup = Event::keyup_js(),
-            click = Event::undefined_js(),
+            keydown = Event::keypress_js("app", "down"),
+            keyup = Event::keypress_js("app", "up"),
+            click = Event::change_js("app", "''"),
             context = context,
             timer = timer,
         );
@@ -131,40 +137,67 @@ impl App {
             .debug(debug)
             .invoke_handler(|webview, arg| {
                 let event: Event = match json::parse(arg) {
-                    Ok(value) => match value["type"].as_str().unwrap() {
-                        "Update" => Event::Update,
-                        "Tick" => Event::Tick,
-                        "KeyDown" => match Key::new(value["key"].as_str().unwrap())
-                        {
-                            Some(key) => {
-                                window.keys.insert(key);
-                                Event::Keys
-                            },
-                            None => Event::Undefined,
+                    Ok(value) => match value["type"].as_str() {
+                        Some(type_str) => match type_str {
+                            "Update" => Event::Update,
+                            "Tick" => Event::Tick,
+                            "Keypress" => {
+                                let (key_str, source_str, state_str) = (
+                                    value["key"].as_str(),
+                                    value["source"].as_str(),
+                                    value["state"].as_str(),
+                                );
+                                match (key_str, source_str, state_str) {
+                                    (
+                                        Some(key_str), 
+                                        Some(source_str), 
+                                        Some(state_str)
+                                    ) => match Key::new(key_str) {
+                                        Some(key) => {
+                                            if state_str == "up" {
+                                                window.keys.remove(&key);
+                                            } else {
+                                                window.keys.insert(key);
+                                            }
+                                            let s = source_str.to_string();
+                                            Event::Keypress {
+                                                source: s,
+                                                keys: window.keys.clone(),
+                                            }
+                                        },
+                                        None => Event::Undefined,
+                                    },
+                                    _ => Event::Undefined
+                                }
+                            }
+                            "Change" => {
+                                let (source_str, value_str) = (
+                                    value["source"].as_str(), 
+                                    value["value"].as_str()
+                                );
+                                match (source_str, value_str) {
+                                    (
+                                        Some(source_str), 
+                                        Some(value_str)
+                                    ) => Event::Change {
+                                        source: source_str.to_string(),
+                                        value: value_str.to_string(),
+                                    },
+                                    _ => Event::Undefined,
+                                }
+                            }
+                            _ => Event::Undefined,
                         },
-                        "KeyUp" => match Key::new(value["key"].as_str().unwrap())
-                        {
-                            Some(key) => {
-                                window.keys.remove(&key);
-                                Event::Keys
-                            },
-                            None => Event::Undefined,
-                        },
-                        "Change" => Event::Change {
-                            source: value["source"]
-                                .as_str()
-                                .unwrap()
-                                .to_string(),
-                            value: value["value"].as_str().unwrap().to_string(),
-                        },
-                        _ => Event::Undefined,
+                        None => Event::Undefined,
                     },
                     Err(_) => Event::Undefined,
                 };
-                window.trigger(&event);
                 match event {
                     Event::Undefined => (),
-                    _ => window.trigger(&Event::Update),
+                    _ => {
+                        window.trigger(&event);
+                        window.trigger(&Event::Update);
+                    }
                 };
                 window.render(webview)
             })
@@ -334,7 +367,11 @@ impl Window {
             r#"render("<div id=\"app\">{}</div>")"#,
             self.eval().replace(r#"""#, r#"\""#)
         );
-        webview.eval(&rendered)
+        let mut html_minifier = HTMLMinifier::new();
+        webview.eval(&match html_minifier.digest(rendered) {
+            Ok(_) => html_minifier.get_html(),
+            Err(_) => "".to_string(),
+        })
     }
 
     /// Return the HTML representation of the menubar and the widget tree
@@ -351,43 +388,29 @@ impl Window {
 
     /// Trigger the events in the widget tree
     fn trigger(&mut self, event: &Event) {
-        match event {
-            Event::Change { .. } | Event::Update | Event::Undefined => {
-                match (&mut self.menubar, &mut self.child) {
-                    (Some(menubar), Some(child)) => {
-                        menubar.trigger(event);
-                        child.trigger(event);
-                    }
-                    (None, Some(child)) => child.trigger(event),
-                    (Some(menubar), None) => menubar.trigger(event),
-                    (None, None) => (),
-                };
+        if self.debug {
+            println!("{:?}", event);
+        }
+        match (&mut self.menubar, &mut self.child) {
+            (Some(menubar), Some(child)) => {
+                menubar.trigger(event);
+                child.trigger(event);
             }
-            Event::Keys => {
-                match &self.listener {
-                    None => (),
-                    Some(listener) => {
-                        listener.on_keys(self.keys.clone());
+            (None, Some(child)) => child.trigger(event),
+            (Some(menubar), None) => menubar.trigger(event),
+            (None, None) => (),
+        };
+        match &self.listener {
+            Some(listener) => match event {
+                Event::Tick => listener.on_tick(),
+                Event::Keypress { source, keys } => {
+                    if source == "app" {
+                        listener.on_keys(keys.clone());
                     }
-                };
-                match (&mut self.menubar, &mut self.child) {
-                    (Some(menubar), Some(child)) => {
-                        menubar.trigger(event);
-                        child.trigger(event);
-                    }
-                    (None, Some(child)) => child.trigger(event),
-                    (Some(menubar), None) => menubar.trigger(event),
-                    (None, None) => (),
-                };
-            }
-            Event::Tick => {
-                match &self.listener {
-                    None => (),
-                    Some(listener) => {
-                        listener.on_tick();
-                    }
-                };
-            }
+                }
+                _ => (),
+            },
+            None => (),
         }
     }
 }

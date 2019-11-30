@@ -130,22 +130,26 @@ pub trait TextInputListener {
 ///     style: "".to_string()
 /// listener: None
 /// ```
-/// 
+///
 /// ## Style
 ///
 /// ```text
 /// div.textinput[.disabled]
 ///     input[.focus]
 /// ```
-/// 
-/// 
+///
+///
 /// ## Example
 ///
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
 ///
-/// use neutrino::widgets::textinput::{TextInput, TextInputListener, TextInputState};
+/// use neutrino::widgets::textinput::{
+///     TextInput, 
+///     TextInputListener, 
+///     TextInputState
+/// };
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
 ///
@@ -282,7 +286,12 @@ impl Widget for TextInput {
             self.state.style(),
         )));
         let html = format!(
-            r#"<div id="{}" class="textinput {} {}"><input {} type="{}" size="{}" maxlength="{}" placeholder="{}" value="{}" onchange="{}" oninput="{}" /></div>"#,
+            r#"
+            <div id="{}" class="textinput {} {}">
+                <input {} type="{}" size="{}" maxlength="{}" 
+                placeholder="{}"  value="{}" onchange="{}" oninput="{}" />
+            </div>
+            "#,
             self.name,
             disabled,
             stretched,

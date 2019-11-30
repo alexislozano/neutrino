@@ -115,14 +115,18 @@ pub trait ProgressBarListener {
 ///     div.background
 ///     div.foreground
 /// ```
-/// 
+///
 /// ## Example
 ///
 /// ```
 /// use std::cell::RefCell;
 /// use std::rc::Rc;
 ///
-/// use neutrino::widgets::progressbar::{ProgressBar, ProgressBarListener, ProgressBarState};
+/// use neutrino::widgets::progressbar::{
+///     ProgressBar, 
+///     ProgressBarListener, 
+///     ProgressBarState
+/// };
 /// use neutrino::utils::theme::Theme;
 /// use neutrino::{App, Window};
 ///
@@ -234,7 +238,12 @@ impl Widget for ProgressBar {
             self.state.style(),
         )));
         let html = format!(
-            r#"<div id="{}" class="progressbar {}"><div class="background"></div><div class="foreground" style="width: {}%;"></div></div>"#, 
+            r#"
+            <div id="{}" class="progressbar {}">
+                <div class="background"></div>
+                <div class="foreground" style="width: {}%;"></div>
+            </div>
+            "#, 
             self.name,
             stretched,
             f64::from(self.state.value() - self.state.min()) /
