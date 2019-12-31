@@ -98,7 +98,7 @@ impl App {
                 <body 
                     onkeydown="{keydown}"
                     onkeyup="{keyup}"
-                    onmousedown="{click}" 
+                    onclick="{click}" 
                     oncontextmenu="{context}"
                 >
                     <div id="app"></div>

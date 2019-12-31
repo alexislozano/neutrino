@@ -420,7 +420,7 @@ impl MenuItem {
             r#"
             <div class="menuitem">
                 <div class="menuitem-title {}" 
-                    onmousedown="{}" 
+                    onclick="{}" 
                     onmouseover="{}"
                 >
                     {}{}{}
@@ -508,7 +508,7 @@ impl MenuFunction {
         format!(
             r#"
             <div class="menufunction {} {} {}" 
-                onmousedown="{}" 
+                onclick="{}" 
                 onmouseover="{}"
             >
                 <span class="title">{}</span>

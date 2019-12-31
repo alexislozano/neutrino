@@ -252,7 +252,7 @@ impl Widget for CheckBox {
         )));
         let html = format!(
             r#"
-            <div id="{}" class="checkbox {} {} {}" onmousedown="{}">
+            <div id="{}" class="checkbox {} {} {}" onclick="{}">
                 <div class="checkbox-outer">
                     <div class="checkbox-inner">
                     </div>

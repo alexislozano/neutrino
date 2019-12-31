@@ -319,7 +319,7 @@ impl Widget for Tabs {
             let last = if i == tabs_number - 1 { "last" } else { "" };
             html.push_str(&format!(
                 r#"
-                <div class="tab-title {} {} {}" onmousedown="{}">
+                <div class="tab-title {} {} {}" onclick="{}">
                     {}
                 </div>
                 "#,

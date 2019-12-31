@@ -273,7 +273,7 @@ impl Widget for Radio {
             html.push_str(
                 &format!(
                     r#"
-                    <div id="{}" class="radio {} {} {}" onmousedown="{}">
+                    <div id="{}" class="radio {} {} {}" onclick="{}">
                         <div class="radio-outer">
                             <div class="radio-inner"></div>
                         </div>

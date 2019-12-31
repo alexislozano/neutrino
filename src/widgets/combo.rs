@@ -282,7 +282,7 @@ impl Widget for Combo {
         let mut html = format!(
             r#"
             <div id="{}" class="combo {} {} {}">
-                <div onmousedown="{}" class="combo-button">
+                <div onclick="{}" class="combo-button">
                     {}
                     <div class="combo-icon"></div>
                 </div>
@@ -301,7 +301,7 @@ impl Widget for Combo {
                 let last = if i == combos_length - 1 { "last" } else { "" };
                 html.push_str(&format!(
                     r#"
-                    <div class="combo-choice {}" onmousedown="{}">
+                    <div class="combo-choice {}" onclick="{}">
                         {}
                     </div>
                     "#,

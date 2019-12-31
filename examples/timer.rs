@@ -86,6 +86,7 @@ fn main() {
     window.set_child(Box::new(button));
     window.set_timer(1000);
     window.set_listener(Box::new(wlistener));
+    window.set_debug();
 
     App::run(window);
 }

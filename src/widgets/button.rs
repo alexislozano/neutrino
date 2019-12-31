@@ -257,54 +257,54 @@ impl Widget for Button {
         let html = match (self.state.text(), self.state.icon()) {
             (Some(text), Some(icon)) => format!(
                 r#"
-                <div id="{}" class="button {} {}" onmousedown="{}">
+                <div id="{}" class="button {} {}" onclick="{}">
                     <img src="data:image/{};base64,{}" />
                     <span>{}</span>
                 </div>
                 "#,
                 self.name,
-                Event::change_js(&self.name, "''"),
                 disabled,
                 stretched,
+                Event::change_js(&self.name, "''"),
                 icon.extension(),
                 icon.data(),
                 text,
             ),
             (Some(text), None) => format!(
                 r#"
-                <div id="{}" class="button {} {}" onmousedown="{}">
+                <div id="{}" class="button {} {}" onclick="{}">
                     {}
                 </div>
                 "#,
                 self.name,
-                Event::change_js(&self.name, "''"),
                 disabled,
                 stretched,
+                Event::change_js(&self.name, "''"),
                 text,
             ),
             (None, Some(icon)) => format!(
                 r#"
-                <div id="{}" onmousedown="{}" class="button {} {}">
+                <div id="{}" class="button {} {}" onclick="{}">
                     <img src="data:image/{};base64,{}" />
                 </div>
                 "#,
                 self.name,
-                Event::change_js(&self.name, "''"),
                 disabled,
                 stretched,
+                Event::change_js(&self.name, "''"),
                 icon.extension(),
                 icon.data(),
             ),
             (None, None) => format!(
                 r#"
-                <div id="{}" onmousedown="{}" class="button {} {}">
+                <div id="{}" class="button {} {}" onclick="{}">
                     {}
                 </div>
                 "#,
                 self.name,
-                Event::change_js(&self.name, "''"),
                 disabled,
                 stretched,
+                Event::change_js(&self.name, "''"),
                 "No text",
             ),
         };

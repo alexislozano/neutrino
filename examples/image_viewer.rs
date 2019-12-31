@@ -67,6 +67,7 @@ fn main() {
     window.set_child(Box::new(root));
     window.set_menubar(menubar);
     window.set_listener(Box::new(window_listener));
+    window.set_debug();
 
     App::run(window);
 }

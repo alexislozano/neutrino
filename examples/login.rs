@@ -188,6 +188,7 @@ fn main() {
     window.set_size(320, 240);
     window.set_child(Box::new(root));
     window.set_style(style);
+    window.set_debug();
 
     App::run(window);
 }

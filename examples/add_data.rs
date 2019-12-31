@@ -55,6 +55,7 @@ fn main() {
     window.set_title("Add data");
     window.set_size(320, 240);
     window.set_child(Box::new(button));
+    window.set_debug();
 
     App::run(window);
 }

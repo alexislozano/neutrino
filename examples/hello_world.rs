@@ -9,6 +9,7 @@ fn main() {
     window.set_title("Hello World");
     window.set_size(320, 240);
     window.set_child(Box::new(label));
+    window.set_debug();
 
     App::run(window);
 }
