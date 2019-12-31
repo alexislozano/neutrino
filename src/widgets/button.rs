@@ -118,7 +118,7 @@ pub trait ButtonListener {
 /// ## Style
 ///
 /// ```text
-/// div.button[.disabled]
+/// divbutton[.disabled]
 ///     img
 /// ```
 ///
@@ -254,60 +254,32 @@ impl Widget for Button {
             self.name,
             self.state.style(),
         )));
-        let html = match (self.state.text(), self.state.icon()) {
-            (Some(text), Some(icon)) => format!(
-                r#"
-                <div id="{}" class="button {} {}" onclick="{}">
-                    <img src="data:image/{};base64,{}" />
-                    <span>{}</span>
-                </div>
-                "#,
-                self.name,
-                disabled,
-                stretched,
-                Event::change_js(&self.name, "''"),
-                icon.extension(),
-                icon.data(),
-                text,
+        let text_html = match self.state.text() {
+            Some(text) => format!(
+                r#"<span>{}</span>"#, 
+                text
             ),
-            (Some(text), None) => format!(
-                r#"
-                <div id="{}" class="button {} {}" onclick="{}">
-                    {}
-                </div>
-                "#,
-                self.name,
-                disabled,
-                stretched,
-                Event::change_js(&self.name, "''"),
-                text,
-            ),
-            (None, Some(icon)) => format!(
-                r#"
-                <div id="{}" class="button {} {}" onclick="{}">
-                    <img src="data:image/{};base64,{}" />
-                </div>
-                "#,
-                self.name,
-                disabled,
-                stretched,
-                Event::change_js(&self.name, "''"),
-                icon.extension(),
-                icon.data(),
-            ),
-            (None, None) => format!(
-                r#"
-                <div id="{}" class="button {} {}" onclick="{}">
-                    {}
-                </div>
-                "#,
-                self.name,
-                disabled,
-                stretched,
-                Event::change_js(&self.name, "''"),
-                "No text",
-            ),
+            None => "".to_string()
         };
+        let icon_html = match self.state.icon() {
+            Some(icon) => format!(
+                r#"<img src="data:image/{};base64,{}" />"#,
+                icon.extension(),
+                icon.data(),
+            ), 
+            None => "".to_string()
+        };
+        let html = format!(
+            r#"<button id="{}" class="{} {}" onclick="{}">
+                {}{}
+            </button>"#,
+            self.name,
+            disabled,
+            stretched,
+            Event::change_js(&self.name, "''"),
+            icon_html,
+            text_html,
+        );
         format!("{}{}", style, html)
     }
 

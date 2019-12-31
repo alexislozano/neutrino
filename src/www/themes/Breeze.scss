@@ -33,14 +33,13 @@ $combo-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcg
     font-family: inherit;
 }
 
-.button {
+button {
     padding: 6px;
     margin: $widget-margin;
     border: 1px solid $mgrey-color;
     border-radius: 2px;
     background: $button-gradient;
     color: black;
-    outline: 0;
     
     &.disabled {
         background: $disabled-color;
