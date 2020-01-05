@@ -369,15 +369,8 @@ impl Window {
         );
         let mut html_minifier = HTMLMinifier::new();
         webview.eval(&match html_minifier.digest(rendered) {
-            Ok(_) => {
-                let html = html_minifier.get_html();
-                println!("{}", &html);
-                html
-            },
-            Err(_) => {
-                println!("error");
-                "".to_string()
-            },
+            Ok(_) => html_minifier.get_html(),
+            Err(_) => "".to_string()
         })
     }
 
