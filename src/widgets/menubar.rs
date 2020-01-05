@@ -98,6 +98,7 @@ pub trait MenuBarListener {
 ///     MenuFunction
 /// };
 /// use neutrino::utils::theme::Theme;
+/// use neutrino::utils::event::Key;
 /// use neutrino::{App, Window};
 ///
 ///
@@ -148,7 +149,7 @@ pub trait MenuBarListener {
 ///     let mut new = MenuFunction::new("New");
 ///     new.set_shortcut("Ctrl-N");
 ///     
-///     let mut file = MenuItem::new("File");
+///     let mut file = MenuItem::new("File", Key::F, 0);
 ///     file.add(new);
 ///     
 ///     let my_menubarlistener = MyMenuBarListener::new(
