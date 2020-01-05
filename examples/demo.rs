@@ -142,7 +142,7 @@ fn main() {
     label3.set_unselectable();
     label3.set_text("This label text is unselectable");
 
-    let mut container7 = Container::new("contanier7");
+    let mut container7 = Container::new("container7");
     container7.set_direction(Direction::Vertical);
     container7.add(Box::new(label2));
     container7.add(Box::new(label3));
