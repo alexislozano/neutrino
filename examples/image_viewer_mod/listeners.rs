@@ -40,11 +40,11 @@ impl MyPrevButtonListener {
 }
 
 impl ButtonListener for MyPrevButtonListener {
-    fn on_update(&self, _state: &mut ButtonState) {}
-
     fn on_change(&self, _state: &ButtonState) {
         self.images.borrow_mut().previous();
     }
+
+    fn on_update(&self, _state: &mut ButtonState) {}
 }
 
 pub struct MyNextButtonListener {
@@ -58,11 +58,11 @@ impl MyNextButtonListener {
 }
 
 impl ButtonListener for MyNextButtonListener {
-    fn on_update(&self, _state: &mut ButtonState) {}
-
     fn on_change(&self, _state: &ButtonState) {
         self.images.borrow_mut().next();
     }
+
+    fn on_update(&self, _state: &mut ButtonState) {}
 }
 
 pub struct MyMenuBarListener {

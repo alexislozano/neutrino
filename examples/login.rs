@@ -91,11 +91,11 @@ impl MyUsernameListener {
 }
 
 impl TextInputListener for MyUsernameListener {
+    fn on_update(&self, _state: &mut TextInputState) {}
+
     fn on_change(&self, state: &TextInputState) {
         self.login.borrow_mut().set_username(state.value());
     }
-
-    fn on_update(&self, _state: &mut TextInputState) {}
 }
 
 struct MyPasswordListener {
@@ -109,11 +109,11 @@ impl MyPasswordListener {
 }
 
 impl TextInputListener for MyPasswordListener {
+    fn on_update(&self, _state: &mut TextInputState) {}
+
     fn on_change(&self, state: &TextInputState) {
         self.login.borrow_mut().set_password(state.value());
     }
-
-    fn on_update(&self, _state: &mut TextInputState) {}
 }
 
 fn main() {

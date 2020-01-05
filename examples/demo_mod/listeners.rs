@@ -199,11 +199,11 @@ impl MyButtonListener {
 }
 
 impl ButtonListener for MyButtonListener {
+    fn on_change(&self, _state: &ButtonState) {}
+
     fn on_update(&self, state: &mut ButtonState) {
         state.set_disabled(self.state.borrow().disabled());
     }
-
-    fn on_change(&self, _state: &ButtonState) {}
 }
 
 pub struct MyComboListener {
@@ -217,11 +217,11 @@ impl MyComboListener {
 }
 
 impl ComboListener for MyComboListener {
+    fn on_change(&self, _state: &ComboState) {}
+
     fn on_update(&self, state: &mut ComboState) {
         state.set_disabled(self.state.borrow().disabled());
     }
-
-    fn on_change(&self, _state: &ComboState) {}
 }
 
 pub struct MyRadioListener {
@@ -235,11 +235,11 @@ impl MyRadioListener {
 }
 
 impl RadioListener for MyRadioListener {
+    fn on_change(&self, _state: &RadioState) {}
+
     fn on_update(&self, state: &mut RadioState) {
         state.set_disabled(self.state.borrow().disabled());
     }
-
-    fn on_change(&self, _state: &RadioState) {}
 }
 
 pub struct MyCheckBoxListener {
@@ -253,11 +253,11 @@ impl MyCheckBoxListener {
 }
 
 impl CheckBoxListener for MyCheckBoxListener {
+    fn on_change(&self, _state: &CheckBoxState) {}
+
     fn on_update(&self, state: &mut CheckBoxState) {
         state.set_disabled(self.state.borrow().disabled());
     }
-
-    fn on_change(&self, _state: &CheckBoxState) {}
 }
 
 pub struct MyCheckBoxDisabledListener {
@@ -271,11 +271,11 @@ impl MyCheckBoxDisabledListener {
 }
 
 impl CheckBoxListener for MyCheckBoxDisabledListener {
-    fn on_update(&self, state: &mut CheckBoxState) {
-        state.set_checked(self.state.borrow().disabled());
-    }
-
     fn on_change(&self, state: &CheckBoxState) {
         self.state.borrow_mut().set_disabled(state.checked());
+    }
+
+    fn on_update(&self, state: &mut CheckBoxState) {
+        state.set_checked(self.state.borrow().disabled());
     }
 }
