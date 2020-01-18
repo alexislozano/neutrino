@@ -44,7 +44,7 @@ fn main() {
     let button_listener = MyButtonListener::new(Rc::clone(&state));
 
     let mut button1 = Button::new("button1");
-    button1.set_text("Button");
+    button1.set_text("Reset");
     button1.set_stretched();
     button1.set_icon(Box::new(BreezeIcon::Check));
     button1.set_listener(Box::new(button_listener));

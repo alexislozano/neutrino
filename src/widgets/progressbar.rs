@@ -123,8 +123,8 @@ pub trait ProgressBarListener {
 /// use std::rc::Rc;
 ///
 /// use neutrino::widgets::progressbar::{
-///     ProgressBar, 
-///     ProgressBarListener, 
+///     ProgressBar,
+///     ProgressBarListener,
 ///     ProgressBarState
 /// };
 /// use neutrino::utils::theme::Theme;
@@ -243,12 +243,12 @@ impl Widget for ProgressBar {
                 <div class="background"></div>
                 <div class="foreground" style="width: {}%;"></div>
             </div>
-            "#, 
+            "#,
             self.name,
             stretched,
-            f64::from(self.state.value() - self.state.min()) /
-            f64::from(self.state.max() - self.state.min()) *
-            100.0,
+            f64::from(self.state.value() - self.state.min())
+                / f64::from(self.state.max() - self.state.min())
+                * 100.0,
         );
         format!("{}{}", style, html)
     }

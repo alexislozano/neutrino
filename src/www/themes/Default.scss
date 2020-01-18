@@ -19,7 +19,7 @@ $combo-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcg
     font-family: inherit;
 }
 
-button {
+.button {
     margin: 6px;
     border: 1px solid black;
     background: white;
@@ -64,7 +64,6 @@ button {
         padding: 6px;
         font-size: inherit;
         font-family: inherit;
-        outline: 0;
     }
 }
 
@@ -136,7 +135,6 @@ button {
         border: 1px solid black;
         background: white;
         color: black;
-        outline: 0;
         padding: 6px;
 
         .combo-icon {
@@ -156,7 +154,7 @@ button {
             background: white;
             padding: 6px;
 
-            &:hover {
+            &.hovered {
                 background-color: black;
                 color: white;
             }

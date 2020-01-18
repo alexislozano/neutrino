@@ -3,14 +3,12 @@ $menubar-height: 30px;
 
 // COLORS
 $primary-color: #3daee9;
+$dprimary-color: #348cba;
 $dgrey-color: #757778;
 $mgrey-color: #b5b5b6;
 $lgrey-color: #d0d2d2;
 $background-color: #f3f4f4;
 $disabled-color: #e3e4e6;
-
-// GRADIENTS
-$button-gradient: linear-gradient($background-color, #e8e9ea);
 
 // MARGINS
 $widget-margin: 6px;
@@ -33,13 +31,14 @@ $combo-path: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMTAwIDEwMCcg
     font-family: inherit;
 }
 
-button {
+.button {
     padding: 6px;
     margin: $widget-margin;
     border: 1px solid $mgrey-color;
     border-radius: 2px;
-    background: $button-gradient;
+    background: $background-color;
     color: black;
+    outline: 0;
     
     &.disabled {
         background: $disabled-color;
@@ -52,8 +51,13 @@ button {
 
         + span {
             margin-left: 10px;
-        }
-        
+        }   
+    }
+
+    &:focus:not(.disabled) {
+        background: $primary-color;
+        border-color: $dprimary-color;
+        color: white;
     }
 }
 
@@ -103,9 +107,11 @@ button {
 
 .checkbox {
     margin: $widget-margin;
+    outline: 0;
 
     label {
         margin-left: $widget-margin;
+        border: 1px solid transparent;
     }
 
     .checkbox-outer {
@@ -154,58 +160,79 @@ button {
             }
         }
     }
+
+    &:focus:not(.disabled) {
+        label {
+            border-bottom-color: $primary-color; 
+        }
+    }
 }
 
-.radio {
-    margin: $widget-margin;
+.radio-group {
+    outline: 0;
+    
+    .radio {
+        margin: $widget-margin;
 
-    label {
-        margin-left: $widget-margin;
-    }
+        label {
+            margin-left: $widget-margin;
+            border: 1px solid transparent;
+        }
 
-    .radio-outer {
-        height: 14px;
-        width: 14px;
-        background-color: white;
-        border: 1px solid $dgrey-color;
-        border-radius: 50%;
-
-        .radio-inner {
-            height: 10px;
-            width: 10px;
-            border-radius: 50%;
+        .radio-outer {
+            height: 14px;
+            width: 14px;
             background-color: white;
-            visibility: hidden;
+            border: 1px solid $dgrey-color;
+            border-radius: 50%;
+
+            .radio-inner {
+                height: 10px;
+                width: 10px;
+                border-radius: 50%;
+                background-color: white;
+                visibility: hidden;
+            }
+        }
+
+        &.selected {
+            .radio-outer {
+                border: 1px solid $primary-color;
+
+                .radio-inner {
+                    background-color: $primary-color;
+                    visibility: visible;
+                }
+            }
         }
     }
 
-    &.selected {
-        .radio-outer {
-            border: 1px solid $primary-color;
-
-            .radio-inner {
-                background-color: $primary-color;
-                visibility: visible;
+    &:focus:not(.disabled) {
+        .radio.selected {
+            label {
+                border-bottom-color: $primary-color; 
             }
         }
     }
 
     &.disabled {
-        .radio-outer {
-            background: $disabled-color;
-            border-color: $mgrey-color;
-        }
-
-        label {
-            color: lighten(black, 50%);
-        }
-
-        &.selected {
+        .radio {
             .radio-outer {
+                background: $disabled-color;
                 border-color: $mgrey-color;
-    
-                .radio-inner {
-                    background-color: $mgrey-color;
+            }
+
+            label {
+                color: lighten(black, 50%);
+            }
+
+            &.selected {
+                .radio-outer {
+                    border-color: $mgrey-color;
+        
+                    .radio-inner {
+                        background-color: $mgrey-color;
+                    }
                 }
             }
         }
@@ -221,7 +248,7 @@ button {
         border-radius: 2px;
         color: black;
         outline: 0;
-        background: $button-gradient;
+        background: $background-color;
 
         .combo-icon {
             margin-left: 10px;
@@ -229,6 +256,12 @@ button {
             width: 18px;
             background-image: $combo-path;
             background-size: 18px 18px;
+        }
+
+        &:focus {
+            background: $primary-color;
+            border-color: $dprimary-color;
+            color: white;
         }
     }
 
@@ -241,7 +274,7 @@ button {
             background-color: white;
             padding: 6px;
 
-            &:hover {
+            &.hovered {
                 background-color: $primary-color;
                 color: white;
             }
@@ -258,6 +291,7 @@ button {
     &.disabled {
         .combo-button {
             background: $disabled-color;
+            border-color: $mgrey-color;
             color: lighten(black, 50%);
 
             .combo-icon {
@@ -272,6 +306,17 @@ button {
 
     .inner-range {
         background-color: $background-color;
+        outline: 0;
+
+        &:focus {
+            &::-webkit-slider-thumb {
+                border-color: $primary-color;
+            }
+
+            &::-ms-thumb {
+                border-color: $primary-color;
+            }
+        }
 
         &::-webkit-slider-runnable-track {
             height: 6px;
@@ -283,7 +328,7 @@ button {
         &::-webkit-slider-thumb {
             width: 18px;
             height: 18px;
-            background: $button-gradient;
+            background: $background-color;
             border: 1px solid $dgrey-color;
             border-radius: 50%;
             margin-top: -7px;
@@ -301,7 +346,7 @@ button {
         &::-ms-thumb {
             width: 16px;
             height: 16px;
-            background: $button-gradient;
+            background: $background-color;
             border: 1px solid $dgrey-color;
             border-radius: 50%;
             margin-top: -1px;
@@ -356,6 +401,7 @@ button {
 
     .tab-titles {
         margin-bottom: -1px;
+        outline: 0;
 
         .tab-title {
             color: black;
@@ -366,6 +412,10 @@ button {
             border: 1px solid transparent;
             border-bottom-color: $mgrey-color;
 
+            label {
+                border: 1px solid transparent;
+            }
+
             &.selected {
                 color: black;
                 background-color: $background-color;
@@ -375,6 +425,14 @@ button {
 
             &:not(.selected) + .tab-title:not(.selected) {
                 border-left-color: $mgrey-color;
+            }
+        }
+
+        &:focus {
+            .tab-title.selected {
+                label {
+                    border-bottom-color: $primary-color; 
+                }
             }
         }
     }
@@ -421,7 +479,7 @@ button {
                 padding-right: 11px;
                 width: 140px;
 
-                &:hover {
+                &.hovered {
                     background-color: $primary-color;
                     color: white;
                 }

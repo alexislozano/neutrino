@@ -1,4 +1,4 @@
-use crate::utils::event::Event;
+use crate::utils::event::{Event, Key};
 use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::container::Direction;
 use crate::widgets::widget::Widget;
@@ -302,11 +302,12 @@ impl Widget for Tabs {
         let mut html = format!(
             r#"
             <div id="{}" class="tabs {} {}">
-                <div class="tab-titles">
+                <div class="tab-titles" tabindex="0" onkeydown="{}">
             "#,
             self.name,
             stretched,
-            self.state.direction().css()
+            self.state.direction().css(),
+            Event::keypress_js(&self.name, "down"),
         );
         let tabs_number = self.state.titles.len();
         for (i, title) in self.state.titles.iter().enumerate() {
@@ -320,7 +321,7 @@ impl Widget for Tabs {
             html.push_str(&format!(
                 r#"
                 <div class="tab-title {} {} {}" onclick="{}">
-                    {}
+                    <label>{}</label>
                 </div>
                 "#,
                 first,
@@ -352,10 +353,33 @@ impl Widget for Tabs {
                         .trigger(event);
                 };
             }
+            Event::Keypress { source, keys } => {
+                if source == &self.name {
+                    let new_selected = if keys.contains(&Key::Left) {
+                        if self.state.selected == 0 {
+                            self.state.titles.len() as u32 - 1
+                        } else {
+                            self.state.selected - 1
+                        }
+                    } else if keys.contains(&Key::Right) {
+                        if self.state.selected
+                            == self.state.titles.len() as u32 - 1
+                        {
+                            0
+                        } else {
+                            self.state.selected + 1
+                        }
+                    } else {
+                        self.state.selected
+                    };
+                    self.on_change(&format!("{}", new_selected));
+                } else {
+                    self.state.children[self.state.selected as usize]
+                        .trigger(event)
+                }
+            }
             _ => {
-                self.state.children[self.state.selected as usize].trigger(
-                    event
-                )
+                self.state.children[self.state.selected as usize].trigger(event)
             }
         }
     }

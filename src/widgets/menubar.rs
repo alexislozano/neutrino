@@ -1,5 +1,4 @@
-use crate::utils::event::Event;
-use crate::utils::event::Key;
+use crate::utils::event::{Event, Key};
 
 /// # The state of a MenuBar
 ///
@@ -7,12 +6,12 @@ use crate::utils::event::Key;
 ///
 /// ```text
 /// selected_item: Option<u32>
-/// selected_function: Option<u32
+/// selected_function: u32
+/// underlined: bool
 /// ```
 pub struct MenuBarState {
     selected_item: Option<u32>,
-    selected_function: Option<u32>,
-    hovered_function: Option<u32>,
+    selected_function: u32,
     underlined: bool,
 }
 
@@ -23,13 +22,8 @@ impl MenuBarState {
     }
 
     /// Get selected function index
-    pub fn selected_function(&self) -> Option<u32> {
+    pub fn selected_function(&self) -> u32 {
         self.selected_function
-    }
-
-    /// Get hovered function index
-    pub fn hovered_function(&self) -> Option<u32> {
-        self.hovered_function
     }
 
     /// Get underlined flag
@@ -43,13 +37,8 @@ impl MenuBarState {
     }
 
     /// Set selected function index
-    pub fn set_selected_function(&mut self, selected_function: Option<u32>) {
+    pub fn set_selected_function(&mut self, selected_function: u32) {
         self.selected_function = selected_function;
-    }
-
-    /// Set hovered function index
-    pub fn set_hovered_function(&mut self, hovered_function: Option<u32>) {
-        self.hovered_function = hovered_function;
     }
 
     /// Set underlined flag
@@ -80,7 +69,7 @@ pub trait MenuBarListener {
 /// items: vec![]
 /// state:
 ///     selected_item: None
-///     selected_function: None
+///     selected_function: 0
 /// listener: None
 /// ```
 ///
@@ -157,6 +146,7 @@ pub trait MenuBarListener {
 ///     );
 ///     
 ///     let mut my_menubar = MenuBar::new();
+///     my_menubar.set_trigger_key(Key::Shift);
 ///     my_menubar.set_listener(Box::new(my_menubarlistener));
 ///     my_menubar.add(file);
 /// }
@@ -164,6 +154,7 @@ pub trait MenuBarListener {
 pub struct MenuBar {
     items: Vec<MenuItem>,
     state: MenuBarState,
+    trigger_key: Key,
     listener: Option<Box<dyn MenuBarListener>>,
 }
 
@@ -173,10 +164,10 @@ impl Default for MenuBar {
             items: vec![],
             state: MenuBarState {
                 selected_item: None,
-                selected_function: None,
-                hovered_function: None,
+                selected_function: 0,
                 underlined: false,
             },
+            trigger_key: Key::Alt,
             listener: None,
         }
     }
@@ -186,6 +177,11 @@ impl MenuBar {
     /// Create a MenuBar
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// Set the trigger key
+    pub fn set_trigger_key(&mut self, key: Key) {
+        self.trigger_key = key;
     }
 
     /// Set the listener
@@ -198,6 +194,11 @@ impl MenuBar {
         self.items.push(item);
     }
 
+    /// Returns if one of the menu items is selected
+    pub fn selected(&self) -> bool {
+        self.state.selected_item.is_some()
+    }
+
     /// Return the HTML representation of the widget
     pub fn eval(&self) -> String {
         let mut s = r#"<div class="menubar">"#.to_string();
@@ -205,7 +206,7 @@ impl MenuBar {
             s.push_str(&item.eval(
                 i,
                 self.state.selected_item,
-                self.state.hovered_function,
+                self.state.selected_function,
                 self.state.underlined,
             ));
         }
@@ -220,82 +221,68 @@ impl MenuBar {
             Event::Change { source, value } => {
                 if *source == "menuitem" {
                     self.on_item_change(value);
-                    self.state.set_hovered_function(None);
+                    self.state.set_selected_function(0);
                 } else if *source == "menufunction" {
                     self.on_function_change(value);
                 } else {
                     self.state.set_selected_item(None);
-                    self.state.set_hovered_function(None);
+                    self.state.set_selected_function(0);
                 }
             }
-            Event::Keypress { source, keys } => {
-                if source == "app" {
-                    if keys.contains(&Key::Alt) {
-                        self.state.set_underlined(true);
-                        for (i, item) in self.items.iter().enumerate() {
-                            if keys.contains(&item.key) {
-                                self.state.set_selected_item(Some(i as u32));
-                            };
-                        }
-                    } else {
-                        self.state.set_underlined(false);
+            Event::Keypress { keys, .. } => {
+                if keys.contains(&self.trigger_key) {
+                    self.state.set_underlined(true);
+                    for (i, item) in self.items.iter().enumerate() {
+                        if keys.contains(&item.key) {
+                            self.state.set_selected_item(Some(i as u32));
+                        };
                     }
-                    if let Some(i) = self.state.selected_item {
-                        if keys.contains(&Key::Escape) {
-                            self.state.set_selected_item(None);
-                            self.state.set_hovered_function(None);
-                        } else if keys.contains(&Key::Left) {
-                            self.state.set_selected_item(Some(if i == 0 {
-                                self.items.len() as u32 - 1
+                } else {
+                    self.state.set_underlined(false);
+                }
+                if let Some(i) = self.state.selected_item {
+                    if keys.contains(&Key::Escape) || keys.contains(&Key::Tab) {
+                        self.state.set_selected_item(None);
+                        self.state.set_selected_function(0);
+                    } else if keys.contains(&Key::Left) {
+                        self.state.set_selected_item(Some(if i == 0 {
+                            self.items.len() as u32 - 1
+                        } else {
+                            i - 1
+                        }));
+                        self.state.set_selected_function(0);
+                    } else if keys.contains(&Key::Right) {
+                        self.state.set_selected_item(Some(
+                            if i == self.items.len() as u32 - 1 {
+                                0
                             } else {
-                                i - 1
-                            }));
-                            self.state.set_hovered_function(None);
-                        } else if keys.contains(&Key::Right) {
-                            self.state.set_selected_item(Some(
-                                if i == self.items.len() as u32 - 1 {
-                                    0
-                                } else {
-                                    i + 1
-                                },
-                            ));
-                            self.state.set_hovered_function(None);
-                        } else if keys.contains(&Key::Down) {
-                            let functions = &self.items[i as usize].functions;
-                            match self.state.hovered_function() {
-                                Some(j) => self.state.set_hovered_function(
-                                    if j == functions.len() as u32 - 1 {
-                                        Some(0)
-                                    } else {
-                                        Some(j + 1)
-                                    }
-                                ),
-                                None => self.state.set_hovered_function(
-                                    Some(0)
-                                )
+                                i + 1
+                            },
+                        ));
+                        self.state.set_selected_function(0);
+                    } else if keys.contains(&Key::Down) {
+                        let functions = &self.items[i as usize].functions;
+                        self.state.set_selected_function(
+                            if self.state.selected_function == functions.len() as u32 - 1 {
+                                0
+                            } else {
+                                self.state.selected_function + 1
                             }
-                        } else if keys.contains(&Key::Up) {
-                            let functions = &self.items[i as usize].functions;
-                            match self.state.hovered_function() {
-                                Some(j) => self.state.set_hovered_function(
-                                    if j == 0 {
-                                        Some(functions.len() as u32 - 1)
-                                    } else {
-                                        Some(j - 1)
-                                    }
-                                ),
-                                None => self.state.set_hovered_function(
-                                    Some(functions.len() as u32 - 1)
-                                )
+                        );
+                    } else if keys.contains(&Key::Up) {
+                        let functions = &self.items[i as usize].functions;
+                        self.state.set_selected_function(
+                            if self.state.selected_function == 0 {
+                                functions.len() as u32 - 1
+                            } else {
+                                self.state.selected_function - 1
                             }
-                        } else if keys.contains(&Key::Enter) {
-                            if let Some(j) = self.state.hovered_function() {
-                                self.on_function_change(&format!(
-                                    "click;{}", 
-                                    j
-                                ));
-                            }
-                        }
+                        );
+                    } else if keys.contains(&Key::Enter) {
+                        self.on_function_change(&format!(
+                            "click;{}",
+                            self.state.selected_function
+                        ));
                     }
                 }
             }
@@ -331,14 +318,14 @@ impl MenuBar {
                 match &self.listener {
                     None => (),
                     Some(listener) => {
-                        self.state.set_selected_function(Some(index));
+                        self.state.set_selected_function(index);
                         listener.on_change(&self.state);
-                        self.state.set_selected_function(None);
+                        self.state.set_selected_function(0);
                     }
                 };
                 self.state.set_selected_item(None)
             }
-            _ => self.state.set_hovered_function(Some(index)),
+            _ => self.state.set_selected_function(index),
         }
     }
 }
@@ -386,7 +373,7 @@ impl MenuItem {
         &self,
         index: usize,
         selected_item: Option<u32>,
-        hovered_function: Option<u32>,
+        selected_function: u32,
         underlined: bool,
     ) -> String {
         let selected_str = match selected_item {
@@ -443,7 +430,7 @@ impl MenuItem {
                         i,
                         i == 0,
                         i == functions_number - 1,
-                        hovered_function,
+                        selected_function,
                     ));
                 }
                 s.push_str(r#"</div>"#);
@@ -494,17 +481,12 @@ impl MenuFunction {
         index: usize,
         first: bool,
         last: bool,
-        hovered_function: Option<u32>,
+        selected_function: u32,
     ) -> String {
-        let hovered = match hovered_function {
-            Some(hovered_index) => {
-                if hovered_index == index as u32 {
-                    "hovered"
-                } else {
-                    ""
-                }
-            }
-            None => "",
+        let selected = if selected_function == index as u32 {
+            "hovered"
+        } else {
+            ""
         };
         format!(
             r#"
@@ -518,7 +500,7 @@ impl MenuFunction {
             "#,
             if first { "first" } else { "" },
             if last { "last" } else { "" },
-            hovered,
+            selected,
             Event::change_js("menufunction", &format!("'click;{}'", index)),
             Event::change_js("menufunction", &format!("'over;{}'", index)),
             self.name,

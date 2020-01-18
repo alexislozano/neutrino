@@ -146,8 +146,8 @@ pub trait TextInputListener {
 /// use std::rc::Rc;
 ///
 /// use neutrino::widgets::textinput::{
-///     TextInput, 
-///     TextInputListener, 
+///     TextInput,
+///     TextInputListener,
 ///     TextInputState
 /// };
 /// use neutrino::utils::theme::Theme;

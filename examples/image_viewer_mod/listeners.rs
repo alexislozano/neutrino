@@ -79,16 +79,11 @@ impl MenuBarListener for MyMenuBarListener {
     fn on_change(&self, state: &MenuBarState) {
         match state.selected_item() {
             None => (),
-            Some(_selected_item) => match state.selected_function() {
-                None => (),
-                Some(selected_function) => {
-                    if selected_function == 0 {
-                        self.images.borrow_mut().previous();
-                    } else {
-                        self.images.borrow_mut().next();
-                    }
-                }
-            },
+            Some(_selected_item) => if state.selected_function() == 0 {
+                self.images.borrow_mut().previous();
+            } else {
+                self.images.borrow_mut().next();
+            }
         }
     }
 }

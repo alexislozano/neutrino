@@ -1,4 +1,4 @@
-use crate::utils::event::Event;
+use crate::utils::event::{Event, Key};
 use crate::utils::icon::Icon;
 use crate::utils::pixmap::Pixmap;
 use crate::utils::style::{inline_style, scss_to_css};
@@ -255,27 +255,26 @@ impl Widget for Button {
             self.state.style(),
         )));
         let text_html = match self.state.text() {
-            Some(text) => format!(
-                r#"<span>{}</span>"#, 
-                text
-            ),
-            None => "".to_string()
+            Some(text) => format!(r#"<span>{}</span>"#, text),
+            None => "".to_string(),
         };
         let icon_html = match self.state.icon() {
             Some(icon) => format!(
                 r#"<img src="data:image/{};base64,{}" />"#,
                 icon.extension(),
                 icon.data(),
-            ), 
-            None => "".to_string()
+            ),
+            None => "".to_string(),
         };
         let html = format!(
-            r#"<button id="{}" class="{} {}" onclick="{}">
+            r#"<div id="{}" tabindex="0" class="button {} {}" 
+            onkeydown="{}" onclick="{}">
                 {}{}
-            </button>"#,
+            </div>"#,
             self.name,
             disabled,
             stretched,
+            Event::keypress_js(&self.name, "down"),
             Event::change_js(&self.name, "''"),
             icon_html,
             text_html,
@@ -289,6 +288,14 @@ impl Widget for Button {
             Event::Change { source, value } => {
                 if source == &self.name && !self.state.disabled() {
                     self.on_change(value)
+                }
+            }
+            Event::Keypress { source, keys } => {
+                if source == &self.name
+                    && !self.state.disabled()
+                    && keys.contains(&Key::Enter)
+                {
+                    self.on_change("");
                 }
             }
             _ => (),

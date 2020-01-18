@@ -272,7 +272,7 @@ impl Widget for Range {
                     min="{}" max="{}" value="{}" class="inner-range"
                 >
             </div>
-            "#, 
+            "#,
             self.name,
             disabled,
             stretched,

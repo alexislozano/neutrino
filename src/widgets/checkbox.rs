@@ -1,4 +1,4 @@
-use crate::utils::event::Event;
+use crate::utils::event::{Event, Key};
 use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
 
@@ -252,7 +252,8 @@ impl Widget for CheckBox {
         )));
         let html = format!(
             r#"
-            <div id="{}" class="checkbox {} {} {}" onclick="{}">
+            <div id="{}" class="checkbox {} {} {}" onclick="{}"
+            tabindex="0" onkeydown="{}">
                 <div class="checkbox-outer">
                     <div class="checkbox-inner">
                     </div>
@@ -265,6 +266,7 @@ impl Widget for CheckBox {
             checked,
             stretched,
             Event::change_js(&self.name, "''"),
+            Event::keypress_js(&self.name, "down"),
             self.state.text,
         );
         format!("{}{}", style, html)
@@ -276,6 +278,14 @@ impl Widget for CheckBox {
             Event::Change { source, value } => {
                 if source == &self.name && !self.state.disabled() {
                     self.on_change(value)
+                }
+            }
+            Event::Keypress { source, keys } => {
+                if source == &self.name
+                    && !self.state.disabled()
+                    && keys.contains(&Key::Enter)
+                {
+                    self.on_change("")
                 }
             }
             _ => (),

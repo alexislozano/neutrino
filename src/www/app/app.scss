@@ -99,7 +99,7 @@ body {
     }
 }
 
-button {
+.button {
     white-space: nowrap;
     font-size: inherit;
     font-family: inherit;
@@ -144,18 +144,23 @@ button {
     }
 }
 
-.radio {
+.radio-group {
     display: flex;
-    align-items: center;
-
-    label {
-        white-space: nowrap;
-    }
-
-    .radio-outer {
+    flex-direction: column;
+    
+    .radio {
         display: flex;
-        justify-content: center;
         align-items: center;
+    
+        label {
+            white-space: nowrap;
+        }
+    
+        .radio-outer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 }
 
@@ -195,7 +200,6 @@ button {
     .inner-range {
         padding: 0;
         box-sizing: border-box;
-        outline: none;
         width: 100%;
         appearance: none;
         -webkit-appearance: none;

@@ -1,12 +1,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use neutrino::utils::event::Key;
 use neutrino::utils::icon::BreezeIcon;
 use neutrino::widgets::button::Button;
 use neutrino::widgets::container::{Container, Direction};
 use neutrino::widgets::image::Image;
 use neutrino::widgets::menubar::{MenuBar, MenuFunction, MenuItem};
-use neutrino::utils::event::Key;
 use neutrino::{App, Window};
 
 mod image_viewer_mod;

@@ -7,12 +7,12 @@
 //!
 //! Neutrino is a MVC GUI framework written in Rust. It lets users create GUI
 //! applications by positioning widgets on a window and by handling events.
-//! Neutrino is based on the [web-view](https://crates.io/crates/web-view) 
-//! crate provided by Boscop. As such, Neutrino renders the application using 
+//! Neutrino is based on the [web-view](https://crates.io/crates/web-view)
+//! crate provided by Boscop. As such, Neutrino renders the application using
 //! web technologies as HTML and CSS.
 //!
 //! As it is based on web-view, Neutrino does not embed a whole web browser.
-//! So don't worry, due to the very lightweight footprint of web-view, you 
+//! So don't worry, due to the very lightweight footprint of web-view, you
 //! won't have to buy more memory for your computer.
 //!
 //! # Install
@@ -149,9 +149,9 @@ impl App {
                                 );
                                 match (key_str, source_str, state_str) {
                                     (
-                                        Some(key_str), 
-                                        Some(source_str), 
-                                        Some(state_str)
+                                        Some(key_str),
+                                        Some(source_str),
+                                        Some(state_str),
                                     ) => match Key::new(key_str) {
                                         Some(key) => {
                                             if state_str == "up" {
@@ -164,25 +164,24 @@ impl App {
                                                 source: s,
                                                 keys: window.keys.clone(),
                                             }
-                                        },
+                                        }
                                         None => Event::Undefined,
                                     },
-                                    _ => Event::Undefined
+                                    _ => Event::Undefined,
                                 }
                             }
                             "Change" => {
                                 let (source_str, value_str) = (
-                                    value["source"].as_str(), 
-                                    value["value"].as_str()
+                                    value["source"].as_str(),
+                                    value["value"].as_str(),
                                 );
                                 match (source_str, value_str) {
-                                    (
-                                        Some(source_str), 
-                                        Some(value_str)
-                                    ) => Event::Change {
-                                        source: source_str.to_string(),
-                                        value: value_str.to_string(),
-                                    },
+                                    (Some(source_str), Some(value_str)) => {
+                                        Event::Change {
+                                            source: source_str.to_string(),
+                                            value: value_str.to_string(),
+                                        }
+                                    }
                                     _ => Event::Undefined,
                                 }
                             }
@@ -370,7 +369,7 @@ impl Window {
         let mut html_minifier = HTMLMinifier::new();
         webview.eval(&match html_minifier.digest(rendered) {
             Ok(_) => html_minifier.get_html(),
-            Err(_) => "".to_string()
+            Err(_) => "".to_string(),
         })
     }
 
@@ -393,8 +392,10 @@ impl Window {
         }
         match (&mut self.menubar, &mut self.child) {
             (Some(menubar), Some(child)) => {
+                if !menubar.selected() {
+                    child.trigger(event);
+                }
                 menubar.trigger(event);
-                child.trigger(event);
             }
             (None, Some(child)) => child.trigger(event),
             (Some(menubar), None) => menubar.trigger(event),
@@ -403,7 +404,7 @@ impl Window {
         match &self.listener {
             Some(listener) => match event {
                 Event::Tick => listener.on_tick(),
-                Event::Keypress { source, keys } => {
+                Event::Keypress { source, keys, .. } => {
                     if source == "app" {
                         listener.on_keys(keys.clone());
                     }

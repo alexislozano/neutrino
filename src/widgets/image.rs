@@ -181,7 +181,7 @@ pub trait ImageListener {
 ///     let my_listener = MyImageListener::new(Rc::clone(&painting));
 ///
 ///     let mut my_image = Image::from_path(
-///         "my_image", 
+///         "my_image",
 ///         "/home/neutrino/le_radeau_de_la_meduse.jpg"
 ///     );
 ///     my_image.set_listener(Box::new(my_listener));
@@ -276,7 +276,7 @@ impl Widget for Image {
             <div id="{}" class="image {}" style="background:{};">
                 <img {} src="data:image/{};base64,{}" />
             </div>
-            "#, 
+            "#,
             self.name,
             stretched,
             self.state.background(),

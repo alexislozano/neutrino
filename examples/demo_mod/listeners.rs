@@ -91,14 +91,9 @@ impl MenuBarListener for MyMenuBarListener {
                 if selected_item == 0 {
                     std::process::exit(0);
                 } else if selected_item == 1 {
-                    match state.selected_function() {
-                        None => (),
-                        Some(selected_function) => {
-                            self.panes
-                                .borrow_mut()
-                                .set_value(selected_function as u8);
-                        }
-                    }
+                    self.panes
+                        .borrow_mut()
+                        .set_value(state.selected_function() as u8);
                 }
             }
         }
@@ -203,7 +198,9 @@ impl ButtonListener for MyButtonListener {
         state.set_disabled(self.state.borrow().disabled());
     }
 
-    fn on_change(&self, _state: &ButtonState) {}
+    fn on_change(&self, _state: &ButtonState) {
+        self.state.borrow_mut().set_range(0);
+    }
 }
 
 pub struct MyComboListener {

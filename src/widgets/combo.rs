@@ -1,4 +1,4 @@
-use crate::utils::event::Event;
+use crate::utils::event::{Event, Key};
 use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
 
@@ -9,6 +9,7 @@ use crate::widgets::widget::Widget;
 /// ```text
 /// choices: Vec<String>
 /// selected: u32
+/// hovered: u32
 /// opened: bool
 /// disabled: bool
 /// stretched: bool
@@ -17,6 +18,7 @@ use crate::widgets::widget::Widget;
 pub struct ComboState {
     choices: Vec<String>,
     selected: u32,
+    hovered: u32,
     opened: bool,
     disabled: bool,
     stretched: bool,
@@ -32,6 +34,11 @@ impl ComboState {
     /// Get the selected flag
     pub fn selected(&self) -> u32 {
         self.selected
+    }
+
+    /// Get the hovered flag
+    pub fn hovered(&self) -> u32 {
+        self.hovered
     }
 
     /// Get the opened flag
@@ -65,6 +72,11 @@ impl ComboState {
     /// Set the selected flag
     pub fn set_selected(&mut self, selected: u32) {
         self.selected = selected;
+    }
+
+    /// Set the hovered flag
+    pub fn set_hovered(&mut self, hovered: u32) {
+        self.hovered = hovered;
     }
 
     /// Set the opened flag
@@ -114,6 +126,7 @@ pub trait ComboListener {
 /// state:
 ///     choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
 ///     selected: 0,
+///     hovered: 0,
 ///     opened: false,
 ///     disabled: false,
 ///     stretched: false,
@@ -216,6 +229,7 @@ impl Combo {
             state: ComboState {
                 choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
                 selected: 0,
+                hovered: 0,
                 opened: false,
                 disabled: false,
                 stretched: false,
@@ -282,7 +296,8 @@ impl Widget for Combo {
         let mut html = format!(
             r#"
             <div id="{}" class="combo {} {} {}">
-                <div onclick="{}" class="combo-button">
+                <div onclick="{}" tabindex="0" class="combo-button"
+                onkeydown="{}">
                     {}
                     <div class="combo-icon"></div>
                 </div>
@@ -291,7 +306,8 @@ impl Widget for Combo {
             stretched,
             opened,
             disabled,
-            Event::change_js(&self.name, "'-1'"),
+            Event::change_js(&self.name, "'click;-1'"),
+            Event::keypress_js(&self.name, "down"),
             self.state.choices()[self.state.selected() as usize],
         );
         if self.state.opened() {
@@ -299,14 +315,22 @@ impl Widget for Combo {
             let combos_length = self.state.choices().len();
             for (i, choice) in self.state.choices().iter().enumerate() {
                 let last = if i == combos_length - 1 { "last" } else { "" };
+                let hovered = if i == self.state.hovered as usize {
+                    "hovered"
+                } else {
+                    ""
+                };
                 html.push_str(&format!(
                     r#"
-                    <div class="combo-choice {}" onclick="{}">
+                    <div class="combo-choice {} {}" onclick="{}"
+                    onmouseover="{}">
                         {}
                     </div>
                     "#,
                     last,
-                    Event::change_js(&self.name, &format!("'{}'", i)),
+                    hovered,
+                    Event::change_js(&self.name, &format!("'click;{}'", i)),
+                    Event::change_js(&self.name, &format!("'over;{}'", i)),
                     choice
                 ));
             }
@@ -326,6 +350,42 @@ impl Widget for Combo {
                     self.state.set_opened(false);
                 }
             }
+            Event::Keypress { source, keys } => {
+                if source == &self.name && !self.state.disabled() {
+                    if keys.contains(&Key::Enter) {
+                        if self.state.opened {
+                            self.state.set_selected(self.state.hovered);
+                            self.state.set_opened(false);
+                        } else {
+                            self.state.set_opened(true);
+                        }
+                    } else if keys.contains(&Key::Down) {
+                        self.state.set_hovered(
+                            if self.state.hovered
+                                == self.state.choices.len() as u32 - 1
+                            {
+                                0
+                            } else {
+                                self.state.hovered + 1
+                            },
+                        );
+                        if !self.state.opened {
+                            self.state.set_selected(self.state.hovered);
+                        }
+                    } else if keys.contains(&Key::Up) {
+                        self.state.set_hovered(if self.state.hovered == 0 {
+                            self.state.choices.len() as u32 - 1
+                        } else {
+                            self.state.hovered - 1
+                        });
+                        if !self.state.opened {
+                            self.state.set_selected(self.state.hovered);
+                        }
+                    } else if keys.contains(&Key::Tab) {
+                        self.state.set_opened(false);
+                    }
+                }
+            }
             _ => self.state.set_opened(false),
         }
     }
@@ -340,16 +400,23 @@ impl Widget for Combo {
     }
 
     fn on_change(&mut self, value: &str) {
-        self.state.set_opened(!self.state.opened());
-        let selected = value.parse::<i32>().unwrap();
-        if selected > -1 {
-            self.state.set_selected(selected as u32);
-        }
-        match &self.listener {
-            None => (),
-            Some(listener) => {
-                listener.on_change(&self.state);
+        let values = value.split(';').collect::<Vec<&str>>();
+        let e = values[0];
+        let index = values[1].parse::<i32>().unwrap();
+        match e {
+            "click" => {
+                self.state.set_opened(!self.state.opened());
+                if index > -1 {
+                    self.state.set_selected(index as u32);
+                }
+                match &self.listener {
+                    None => (),
+                    Some(listener) => {
+                        listener.on_change(&self.state);
+                    }
+                }
             }
+            _ => self.state.set_hovered(index as u32),
         }
     }
 }

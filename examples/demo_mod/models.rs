@@ -28,7 +28,7 @@ pub struct State {
 impl State {
     pub fn new() -> Self {
         Self {
-            range: 0,
+            range: 25,
             disabled: false,
         }
     }

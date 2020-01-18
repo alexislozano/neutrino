@@ -28,7 +28,7 @@ impl Event {
         format!(
             r#"(function() {{ emit( {{ 
                 type: 'Keypress', 
-                source: '{}', 
+                source: '{}',
                 state: '{}', 
                 key: event.key 
             }} ); event.stopPropagation(); }} )()"#,
@@ -97,6 +97,7 @@ pub enum Key {
     Space,
     Escape,
     Enter,
+    Tab,
 }
 
 impl Key {
@@ -143,13 +144,14 @@ impl Key {
             "ArrowRight" => Some(Key::Right),
             "ArrowUp" => Some(Key::Up),
             "ArrowDown" => Some(Key::Down),
-            "Shift" => Some(Key::Space),
+            "Shift" => Some(Key::Shift),
             "Control" => Some(Key::Control),
             "Super" => Some(Key::Super),
             "Alt" => Some(Key::Alt),
-            "Space" => Some(Key::Space),
+            " " => Some(Key::Space),
             "Escape" => Some(Key::Escape),
             "Enter" => Some(Key::Enter),
+            "Tab" => Some(Key::Tab),
             _ => None,
         }
     }

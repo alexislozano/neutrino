@@ -1,4 +1,4 @@
-use crate::utils::event::Event;
+use crate::utils::event::{Event, Key};
 use crate::utils::style::{inline_style, scss_to_css};
 use crate::widgets::widget::Widget;
 
@@ -202,10 +202,7 @@ impl Radio {
         Self {
             name: name.to_string(),
             state: RadioState {
-                choices: vec![
-                    "Choice 1".to_string(), 
-                    "Choice 2".to_string()
-                ],
+                choices: vec!["Choice 1".to_string(), "Choice 2".to_string()],
                 selected: 0,
                 disabled: false,
                 stretched: false,
@@ -263,32 +260,38 @@ impl Widget for Radio {
             self.name,
             self.state.style(),
         )));
-        let mut html = "".to_string();
+        let mut html = format!(
+            r#"
+                <div id="{}" class="radio-group {} {}"
+                tabindex="0" onkeydown="{}">
+            "#,
+            self.name,
+            stretched,
+            disabled,
+            Event::keypress_js(&self.name, "down"),
+        );
         for (i, choice) in self.state.choices().iter().enumerate() {
             let selected = if self.state.selected() == i as u32 {
                 "selected"
             } else {
                 ""
             };
-            html.push_str(
-                &format!(
-                    r#"
-                    <div id="{}" class="radio {} {} {}" onclick="{}">
+            html.push_str(&format!(
+                r#"
+                    <div id="{}" class="radio {}" onclick="{}">
                         <div class="radio-outer">
                             <div class="radio-inner"></div>
                         </div>
                         <label>{}</label>
                     </div>
-                    "#, 
-                    self.name,
-                    stretched,
-                    disabled,
-                    selected,
-                    Event::change_js(&self.name, &format!("'{}'", i)), 
-                    choice
-                )
-            );
+                    "#,
+                self.name,
+                selected,
+                Event::change_js(&self.name, &format!("'{}'", i)),
+                choice
+            ));
         }
+        html.push_str("</div>");
         format!("{}{}", style, html)
     }
 
@@ -298,6 +301,28 @@ impl Widget for Radio {
             Event::Change { source, value } => {
                 if source == &self.name && !self.state.disabled {
                     self.on_change(value);
+                }
+            }
+            Event::Keypress { source, keys } => {
+                if source == &self.name && !self.state.disabled() {
+                    let new_selected = if keys.contains(&Key::Up) {
+                        if self.state.selected == 0 {
+                            self.state.choices.len() as u32 - 1
+                        } else {
+                            self.state.selected - 1
+                        }
+                    } else if keys.contains(&Key::Down) {
+                        if self.state.selected
+                            == self.state.choices.len() as u32 - 1
+                        {
+                            0
+                        } else {
+                            self.state.selected + 1
+                        }
+                    } else {
+                        self.state.selected
+                    };
+                    self.on_change(&format!("{}", new_selected));
                 }
             }
             _ => (),
