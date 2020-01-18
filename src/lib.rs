@@ -404,10 +404,8 @@ impl Window {
         match &self.listener {
             Some(listener) => match event {
                 Event::Tick => listener.on_tick(),
-                Event::Keypress { source, keys, .. } => {
-                    if source == "app" {
-                        listener.on_keys(keys.clone());
-                    }
+                Event::Keypress { keys, .. } => {
+                    listener.on_keys(keys.clone());
                 }
                 _ => (),
             },
