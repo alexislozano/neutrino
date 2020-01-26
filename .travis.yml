@@ -25,6 +25,7 @@ addons:
       - libwebkit2gtk-4.0-dev
       - libdw-dev # Required by kcov for code coverage
       - libbfd-dev # Required by kcov for code coverage
+      - libelf-dev # Required by kcov for code coverage
       - binutils-dev # Required by kcov for code coverage
 
 # This saves doing CI builds twice on each PR (travis does a pre-merge with 'master' and tests that.
