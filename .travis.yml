@@ -1,0 +1,27 @@
+language: rust
+
+cache:
+  - cargo
+
+matrix:
+  include:
+    - os: linux
+      rust: stable
+    - os: linux
+      rust: beta
+    - os: linux
+      rust: nightly
+    - os: osx
+      rust: stable
+    - os: osx
+      rust: beta
+    - os: osx
+      rust: nightly
+
+# This saves doing CI builds and tests double on PRs
+branches:
+  only:
+    - "master"
+
+script:
+  - cargo test
