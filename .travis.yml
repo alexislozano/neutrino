@@ -18,7 +18,12 @@ matrix:
     - os: osx
       rust: nightly
 
-# This saves doing CI builds and tests double on PRs - uncomment when in neutrino repo
+addons:
+  apt:
+    packages:
+      - libwebkit2gtk-4.0-dev
+
+# This saves doing CI builds twice on each PRs - uncomment this when merged into neutrino upstream repo
 #branches:
 #  only:
 #    - "master"
