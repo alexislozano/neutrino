@@ -23,6 +23,8 @@ addons:
   apt:
     packages:
       - libwebkit2gtk-4.0-dev
+      - cmake
+      - gcc
       - libdw-dev # Required by kcov for code coverage
       - libbfd-dev # Required by kcov for code coverage
       - libelf-dev # Required by kcov for code coverage
@@ -49,7 +51,7 @@ after_success: |
     sudo make install &&
     cd ../.. &&
     rm -rf kcov-master &&
-    for file in target/debug/*.d; do mkdir -p "target/cov/$(basename $file)"; kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&
+    for file in target/debug/neutrino-*[^\.d]; do mkdir -p "target/cov/$(basename $file)"; kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&
     bash <(curl -s https://codecov.io/bash) &&
     echo "Uploaded code coverage"
   fi
