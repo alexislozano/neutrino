@@ -23,10 +23,28 @@ addons:
     packages:
       - libwebkit2gtk-4.0-dev
 
-# This saves doing CI builds twice on each PRs - uncomment this when merged into neutrino upstream repo
+# This saves doing CI builds twice on each PR (travis does a pre-merge with 'master' and tests that.
+# But it disables builds on "feature-branches" in forks of the repo, so not so good for contributors.
 #branches:
 #  only:
 #    - "master"
 
 script:
   - cargo test
+
+after_success: |
+  if [[ "$TRAVIS_OS_NAME" == "linux" && "$TRAVIS_RUST_VERSION" == "stable" ]]; then
+    wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
+    tar xzf master.tar.gz &&
+    cd kcov-master &&
+    mkdir build &&
+    cd build &&
+    cmake .. &&
+    make &&
+    sudo make install &&
+    cd ../.. &&
+    rm -rf kcov-master &&
+    for file in target/debug/*.d; do mkdir -p "target/cov/$(basename $file)"; kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&
+    bash <(curl -s https://codecov.io/bash) &&
+    echo "Uploaded code coverage"
+  fi
