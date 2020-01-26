@@ -18,10 +18,10 @@ matrix:
     - os: osx
       rust: nightly
 
-# This saves doing CI builds and tests double on PRs
-branches:
-  only:
-    - "master"
+# This saves doing CI builds and tests double on PRs - uncomment when in neutrino repo
+#branches:
+#  only:
+#    - "master"
 
 script:
   - cargo test
