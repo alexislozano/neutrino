@@ -73,6 +73,7 @@ impl App {
         let height = window.height;
         let resizable = window.resizable;
         let debug = window.debug;
+        let frameless = window.frameless;
 
         let context = if debug {
             ""
@@ -133,6 +134,7 @@ impl App {
             .content(Content::Html(html))
             .size(width, height)
             .resizable(resizable)
+            .frameless(frameless)
             .user_data("")
             .debug(debug)
             .invoke_handler(|webview, arg| {
@@ -273,6 +275,7 @@ pub struct Window {
     width: i32,
     height: i32,
     resizable: bool,
+    frameless: bool,
     debug: bool,
     theme: Theme,
     style: String,
@@ -290,6 +293,7 @@ impl Default for Window {
             width: 640,
             height: 480,
             resizable: false,
+            frameless: false,
             debug: false,
             theme: Theme::Default,
             style: "".to_string(),
@@ -332,6 +336,11 @@ impl Window {
     /// Set the resizable flag to true
     pub fn set_resizable(&mut self) {
         self.resizable = true;
+    }
+
+    /// Set the frameless flag to true
+    pub fn set_frameless(&mut self) {
+        self.frameless = true;
     }
 
     /// Set the debug flag to true
