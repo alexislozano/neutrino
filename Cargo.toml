@@ -1,6 +1,6 @@
 [package]
 name = "neutrino"
-version = "0.3.1"
+version = "0.4.0"
 authors = ["Alexis Lozano <alexis.pascal.lozano@gmail.com>"]
 edition = "2018"
 build = "build.rs"
@@ -12,13 +12,13 @@ categories = ["gui"]
 keywords = ["gui", "desktop", "web", "mvc"]
 
 [dependencies]
-web-view = "0.4.1"
-strfmt = "0.1.6"
-base64 = "0.10.1"
-json = "0.11.15"
-rsass = "0.11.0"
-html-minifier = "1.1.14"
+web-view = "~0.6.3"
+strfmt = "~0.1.6"
+base64 = "~0.12.1"
+json = "~0.12.4"
+rsass = "~0.13.0"
+html-minifier = "~1.2.1"
 
 [build-dependencies]
-rsass = "0.11.0"
-base64 = "0.10.1"
+rsass = "~0.13.0"
+base64 = "~0.12.1"

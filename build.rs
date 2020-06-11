@@ -1,5 +1,5 @@
 use base64::encode;
-use rsass::{compile_scss_file, OutputStyle};
+use rsass::{compile_scss_file, output::{Format, Style}};
 use std::env;
 use std::fs;
 use std::str;
@@ -21,7 +21,7 @@ fn scss(name: &str, out_dir: &str) {
     let path = format!("src/www/{}/{}.scss", name, name);
     let out = format!("{}/{}.css", out_dir, name);
     let css =
-        compile_scss_file(path.as_ref(), OutputStyle::Compressed).unwrap();
+        compile_scss_file(path.as_ref(), Format { style: Style::Compressed,  precision: 5 }).unwrap();
     fs::write(out, css).unwrap();
 }
 
@@ -53,7 +53,7 @@ fn themes(out_dir: &str) {
                     .unwrap()
                     .to_string();
                 let css =
-                    compile_scss_file(path.as_ref(), OutputStyle::Compressed)
+                    compile_scss_file(path.as_ref(), Format { style: Style::Compressed,  precision: 5 })
                         .unwrap();
                 let css_str = str::from_utf8(&css).unwrap();
                 enum_data.push_str(&format!(r#"{},"#, &filestem));

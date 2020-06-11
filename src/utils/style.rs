@@ -1,8 +1,8 @@
-use rsass::{compile_scss, OutputStyle};
+use rsass::{compile_scss, output::{Format, Style}};
 
 /// Transform SCSS into CSS
 pub fn scss_to_css(style: &str) -> String {
-    match compile_scss(style.as_bytes(), OutputStyle::Compressed) {
+    match compile_scss(style.as_bytes(), Format { style: Style::Compressed,  precision: 5 }) {
         Ok(css) => match std::str::from_utf8(&css) {
             Ok(css) => css.to_string(),
             Err(_) => "".to_string(),
