@@ -1,5 +1,7 @@
 # neutrino
 
+**I am not working anymore on this project. If you want to become a maintainer of neutrino, please answer to [this issue](https://github.com/alexislozano/neutrino/issues/87).**
+
 ## Preamble
 
 [Docs](https://docs.rs/neutrino) | 
